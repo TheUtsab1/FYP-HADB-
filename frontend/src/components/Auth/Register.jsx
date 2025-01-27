@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import '../Auth/Register.css'
+import "../Auth/Register.css";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
-    fullname: "",
-    uname: "",
+    full_name: "",
+    username: "",
     email: "",
     password: "",
     confirm_password: "",
@@ -39,10 +39,10 @@ export default function SignUpPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: formData.uname,
+          username: formData.username,
           email: formData.email,
           password: formData.password,
-          full_name: formData.fullname,
+          full_name: formData.full_name,
           contact_no: formData.contact_no,
           address: formData.address,
         }),
@@ -52,8 +52,8 @@ export default function SignUpPage() {
         const data = await response.json();
         setMessage(data.message || "Registration successful!");
         setFormData({
-          fullname: "",
-          uname: "",
+          full_name: "",
+          username: "",
           email: "",
           password: "",
           confirm_password: "",
@@ -81,8 +81,8 @@ export default function SignUpPage() {
           <label>Full Name:</label>
           <input
             type="text"
-            name="fullname"
-            value={formData.fullname}
+            name="full_name"
+            value={formData.full_name}
             onChange={handleChange}
             required
           />
@@ -91,8 +91,8 @@ export default function SignUpPage() {
           <label>Username:</label>
           <input
             type="text"
-            name="uname"
-            value={formData.uname}
+            name="username"
+            value={formData.username}
             onChange={handleChange}
             required
           />

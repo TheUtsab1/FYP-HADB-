@@ -12,7 +12,7 @@ export const Applayout = () => {
         <Navbar />
         {/* <Header /> */}
         <Outlet />
-        {/* <Footer /> */}
+        <Footer />
     </div>
   )
 }
