@@ -44,9 +44,12 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'overallBackend.authentication.CookiesJWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 MIDDLEWARE = [
@@ -153,9 +156,5 @@ SESSION_SAVE_EVERY_REQUEST = True
 # Ensure sessions are persistent (not expiring when the browser is closed)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-STATICFILES_DIRS = [
-    BASE_DIR / "frontend/build/static",  # Path to React build static files
-]
 
 
-AUTH_USER_MODEL = 'overallBackend.Users'

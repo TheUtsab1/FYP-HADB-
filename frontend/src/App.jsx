@@ -7,7 +7,7 @@ import {
 
 // import { Navbar } from "./components";
 import "./App.css";
-import SignInPage from "./components/Auth/LoginPage";
+import Login from "./components/Auth/LoginPage";
 import SignUpPage from "./components/Auth/Register";
 import { Applayout } from "./Applayout";
 import { LandingPage } from "./Page/LandingPage";
@@ -20,7 +20,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route path="aboutUs" element={<AboutUs />} />
         </Route>
-        <Route path="/signup" element={<SignInPage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUpPage />} />
       </Routes>
     </BrowserRouter>
