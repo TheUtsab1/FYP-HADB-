@@ -1,23 +1,56 @@
 from rest_framework import serializers
-from .models import Note
+from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review
 from django.contrib.auth.models import User
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+class TabelReservationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ('username', 'email', 'password')
-        
-    def create(self, validated_data):
-        user = User(
-            username = validated_data['username'],
-            email = validated_data['email']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+        model = TabelReservation
+        fields = "__all__"
 
-class NoteSerializer(serializers.ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = Cart
+        fields = ["user"]
+
+
+class FoodTasteSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Note
-        field=['id', 'description']
+        model = FoodTaste
+        fields = ["taste_type"]
+
+
+class FoodTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FoodType
+        fields = ["food_type"]
+
+
+class FoodSerializer(serializers.ModelSerializer):
+    food_type = FoodTypeSerializer()
+    taste = FoodTasteSerializer()
+
+    class Meta:
+        model = Food
+        fields = "__all__"
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    cart = CartSerializer(read_only = True)
+    food_item_id = serializers.PrimaryKeyRelatedField(queryset= Food.objects.all(), write_only = True, source= "food_item")
+    food_item = FoodSerializer(read_only = True)
+    class Meta:
+        model = CartItem
+        fields = "__all__"
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = User
+        fields = ["username"]
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Review
+        fields = "__all__"
+

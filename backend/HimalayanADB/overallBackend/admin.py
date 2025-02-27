@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Note
+from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review
+# Register your models here.
 
-# # Register your models here.
-admin.site.register(Note)
+admin.site.register((Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review))

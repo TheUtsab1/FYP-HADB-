@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "../Auth/Register.css";
+import "../routes/Register.css";
 
-export default function SignUpPage() {
+export default function Register() {
   const [formData, setFormData] = useState({
     full_name: "",
     username: "",
@@ -33,7 +33,7 @@ export default function SignUpPage() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/signup/", {
+      const response = await fetch("http://127.0.0.1:8000/api/register/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

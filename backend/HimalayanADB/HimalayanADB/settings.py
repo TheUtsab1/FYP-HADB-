@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,12 +45,16 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+   
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'overallBackend.authentication.CookiesJWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
+       
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+   
+}
+
+REST_FRAMEWORK ={
+    'Default_Filter_Backend' : ['django_filter.rest_framework.DjangoFilterBackend']
 }
 
 MIDDLEWARE = [
@@ -66,7 +71,7 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    "http://localhost:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -122,6 +127,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=15),  # Access token expires in 15 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=20),     # Refresh token expires in 7 days
+    'ROTATE_REFRESH_TOKENS': False,                  # If True, issue new refresh token with each access token refresh
+    'BLACKLIST_AFTER_ROTATION': False,               # If True, blacklist refresh tokens after use
+    'UPDATE_LAST_LOGIN': False,                      # Updates the last login time of the user upon refresh
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -155,6 +169,9 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # Ensure sessions are persistent (not expiring when the browser is closed)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
+RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
 
 
 
