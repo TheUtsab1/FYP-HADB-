@@ -1,19 +1,84 @@
-.menu-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.food-item {
-    width: 300px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+/* General Section Styling */
+.menu-section {
+    background-color: var(--color-red);
+    padding: 50px 20px;
     text-align: center;
-}
-
-.food-item img {
+  }
+  
+  .menu-title {
+    font-size: 2rem;
+    color: var(--color-golden);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  
+  /* Menu Grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  /* Individual Menu Card */
+  .menu-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .menu-card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Menu Item Image */
+  .menu-image {
     width: 100%;
-    height: 200px;
+    height: 180px;
     object-fit: cover;
-}
+    border-bottom: 2px solid #e1c699;
+  }
+  
+  /* Menu Item Info */
+  .menu-info {
+    padding: 15px;
+  }
+  
+  .menu-name {
+    font-size: 1.5rem;
+    color: #c47f00;
+    margin-bottom: 10px;
+  }
+  
+  .menu-description {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .menu-price {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .menu-category,
+  .menu-taste {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  /* Loading & Error Text */
+  .loading-text,
+  .error-text,
+  .no-items {
+    font-size: 1.2rem;
+    color: #c00;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  

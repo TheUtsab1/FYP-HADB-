@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'django.contrib.sites',  # Required for allauth
+    'allauth',
+    'allauth.account',
     'overallBackend',
 ]
 
@@ -65,7 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',   
+    'corsheaders.middleware.CorsMiddleware', 
+    'allauth.account.middleware.AccountMiddleware',  
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True

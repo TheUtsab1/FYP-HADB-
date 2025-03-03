@@ -34,7 +34,7 @@ class Food(models.Model):
     food_name = models.CharField(max_length=500, null=False)
     food_content = models.CharField(max_length=500, null=False)
     food_slug = AutoSlugField(populate_from = "food_name", unique=True, null=False)
-    food_img_url = models.CharField(max_length=500, null= False, default="")
+    food_img_url = models.ImageField(upload_to='products/', null=False, blank=True)
     food_price = models.IntegerField( null=False)
     food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE)
     view = models.IntegerField(default=0)

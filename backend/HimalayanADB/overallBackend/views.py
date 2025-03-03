@@ -12,14 +12,93 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
+from django.http import HttpResponse
+# from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.http import JsonResponse
+from django.conf import settings
+
 # from django.conf import settings 
 # import razorpay
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+# from django.utils.decorators import method_decorator
+# from django.views.decorators.csrf import csrf_exempt
+# from rest_framework import status
+# from django.http import JsonResponse
+
+# from rest_framework.parsers import JSONParser
+# from django.contrib.auth import authenticate
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from django.http import JsonResponse
 
 
 # client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
 # # Create your views here.
+
+
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def user_signup(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            username = data.get("username")
+            fname = data.get("fname")
+            lname = data.get("lname")
+            email = data.get("email")
+            password1 = data.get("password1")
+            password2 = data.get("password2")
+
+            # Check if passwords match
+            if password1 != password2:
+                return JsonResponse({"success": False, "error": "Passwords do not match"}, status=400)
+
+            # Check if user already exists
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({"success": False, "error": "Username already taken"}, status=400)
+
+            if User.objects.filter(email=email).exists():
+                return JsonResponse({"success": False, "error": "Email already registered"}, status=400)
+
+            # Create the user
+            user = User.objects.create_user(username=username, email=email, password=password1, first_name=fname, last_name=lname)
+            user.save()
+
+            return JsonResponse({"success": True, "message": "Account created successfully!"}, status=201)
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+@csrf_exempt
+def user_login(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            username = data.get("username")
+            password = data.get("password")
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return JsonResponse({"success": True, "token": "dummy-token"}, status=200)  # Token handling is optional
+            else:
+                return JsonResponse({"success": False, "error": "Invalid credentials"}, status=401)
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+# def handlelogout(request):
+#     logout(request)
+#     messages.success(request,"Suucessfully logged out")
+#     return redirect('home')
+#     return HttpResponse('handlelogout')
 
 class FoodPagination(PageNumberPagination):
     page_size = 6
@@ -96,16 +175,16 @@ class updateCartQuantity(APIView):
         return Response({"msg" : "there is problem in backend"})
 
 
-class Registerview(APIView):
-    permission_classes = [AllowAny]
+# class Registerview(APIView):
+#     permission_classes = [AllowAny]
 
-    def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
+#     def post(self, request):
+#         username = request.data.get("username")
+#         password = request.data.get("password")
 
-        user = User.objects.create_user(username= username, password= password)
-        user.save()
-        return Response({"message": "User Created Succuessfully"})
+#         user = User.objects.create_user(username= username, password= password)
+#         user.save()
+#         return Response({"message": "User Created Succuessfully"})
 
 
 class TabelReservationView(APIView):

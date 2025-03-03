@@ -1,0 +1,105 @@
+/* Login Page Styles */
+.app__login {
+  background-color: var(--color-red);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+.app__login-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.app__login-overlay img {
+  width: 900px;
+  height: 900px;
+  object-fit: cover;
+}
+
+.app__login-content {
+  background-color: var(--color-golden);
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 2;
+  width: 100%;
+  max-width: 400px;
+  color: white;
+}
+
+.app__login-content h2 {
+  font-family: var(--font-base);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  font-size: 24px;
+}
+
+.app__login-content p {
+  font-family: var(--font-base);
+  text-transform: uppercase;
+  margin: 1rem 0;
+  font-weight: bold;
+}
+
+.app__login-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.app__login-content input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.app__login-content button {
+  font-family: var(--font-base);
+  background-color: var(--color-red);
+  color: var(--color-white);
+  padding: 10px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.app__login-content button:hover {
+  background-color: var(--color-red);
+  color: var(--color-golden);
+}
+
+.app__login-links {
+  margin-top: 1rem;
+}
+
+.app__login-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.app__login-links a:hover {
+  color: var(--color-red);
+}
+
+/* Responsive Styling */
+@media screen and (max-width: 900px) {
+  .app__login-content {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .app__login-overlay img {
+    width: 80%;
+    height: 320px;
+  }
+}

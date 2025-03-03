@@ -5,13 +5,13 @@ import { AboutUs, SpecialMenu } from "./container";
 
 // import { Navbar } from "./components";
 import "./App.css";
-import Login from "./components/routes/LoginPage";
-// import SignUpPage from "./components/Auth/Register";
+import Login from "./components/routes/Login";
+
 import { Applayout } from "./Applayout";
 import { LandingPage } from "./Page/LandingPage";
-import Register from "./components/routes/Register";
-import { MenuItem } from "./components";
-import Table from "./components/Table/Table";
+import Signup from "./components/routes/Signup";
+import CateringForm from "./container/Laurels/CateringForm";
+import Cart from "./container/Cart/Cart";
 
 const App = () => (
   <>
@@ -19,12 +19,13 @@ const App = () => (
       <Routes>
         <Route path="/" element={<Applayout />}>
           <Route path="/" element={<LandingPage />} />
+          <Route path="Signup" element={<Signup />} />
+          <Route path="Login" element={<Login />} />
           <Route path="aboutUs" element={<AboutUs />} />
           <Route path="specialMenu" element={<SpecialMenu />} />
-          <Route path="Table" element={<Table />} />
+          <Route path="Cart" element={<Cart />} />
+          <Route path="CateringForm" element={<CateringForm />} />
         </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   </>
