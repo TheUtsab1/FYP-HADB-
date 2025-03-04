@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -79,6 +85,18 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Email settings for development
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'utsabmessi6@gmail.com'  # Replace with your SMTP server (e.g., Gmail, SendGrid, etc.)
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'utsabmessi6@gmail.com'
+EMAIL_HOST_PASSWORD = '_barcelona_100'
+
+
+DEFAULT_FROM_EMAIL = 'utsabmessi6@gmail.com'
 
 
 ROOT_URLCONF = 'HimalayanADB.urls'
@@ -174,8 +192,8 @@ SESSION_SAVE_EVERY_REQUEST = True
 # Ensure sessions are persistent (not expiring when the browser is closed)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
-RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
+# RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
+# RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
 
 
 

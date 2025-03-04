@@ -4,7 +4,7 @@ import FindUs from './Findus/FindUs';
 import Footer from './Footer/Footer';
 import Gallery from './Gallery/Gallery';
 import Header from './Header/Header';
-import Intro from './Intro/Intro';
+import Booking from './Booking/Booking';
 import Laurels from './Laurels/CateringForm';
 import SpecialMenu from './Menu/SpecialMenu';
 
@@ -15,7 +15,7 @@ export {
   Footer,
   Gallery,
   Header,
-  Intro,
+  Booking,
   Laurels,
   SpecialMenu,
 };

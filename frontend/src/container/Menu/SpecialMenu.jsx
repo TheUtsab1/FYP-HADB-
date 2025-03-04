@@ -6,13 +6,19 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [nextPage, setNextPage] = useState(null);
+  const [prevPage, setPrevPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
+  const fetchMenu = (url = "http://127.0.0.1:8000/listFood/") => {
+    setLoading(true);
     axios
-      .get("http://127.0.0.1:8000/listFood/")
+      .get(url)
       .then((response) => {
         console.log("API Response:", response.data); // Debugging
-        setMenuItems(response.data.results || response.data); // Adjust if needed
+        setMenuItems(response.data.results || response.data); // Adjust for pagination
+        setNextPage(response.data.next);
+        setPrevPage(response.data.previous);
         setLoading(false);
       })
       .catch((error) => {
@@ -20,7 +26,25 @@ const Menu = () => {
         setError("Failed to load menu");
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchMenu();
   }, []);
+
+  const handleNextPage = () => {
+    if (nextPage) {
+      fetchMenu(nextPage);
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (prevPage) {
+      fetchMenu(prevPage);
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   if (loading) return <p className="loading-text">Loading...</p>;
   if (error) return <p className="error-text">{error}</p>;
@@ -33,10 +57,15 @@ const Menu = () => {
           menuItems.map((food) => (
             <div key={food.food_slug} className="menu-card">
               <img
-                src={food.food_img_url}
+                src={
+                  food.food_img_url.startsWith("http")
+                    ? food.food_img_url
+                    : `http://127.0.0.1:8000${food.food_img_url}`
+                }
                 alt={food.food_name}
                 className="menu-image"
               />
+
               <div className="menu-info">
                 <h3 className="menu-name">{food.food_name}</h3>
                 <p className="menu-description">{food.food_content}</p>
@@ -51,6 +80,23 @@ const Menu = () => {
         ) : (
           <p className="no-items">No menu items available.</p>
         )}
+      </div>
+      <div className="pagination">
+        <button
+          onClick={handlePrevPage}
+          disabled={!prevPage}
+          className="pagination-btn"
+        >
+          Previous
+        </button>
+        <span className="current-page">Page {currentPage}</span>
+        <button
+          onClick={handleNextPage}
+          disabled={!nextPage}
+          className="pagination-btn"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

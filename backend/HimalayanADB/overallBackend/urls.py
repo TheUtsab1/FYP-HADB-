@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import * 
 from rest_framework.routers import DefaultRouter
+from django.conf.urls.static import static
 
 
 router = DefaultRouter()
@@ -14,6 +15,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("signup/", user_signup, name="signup"),
     path("login/", user_login, name="login"),
+    path('api/submit-booking/', submit_booking, name='submit-booking'),
     # path('logout', handlelogout, name='handleslogout'),
     path('accounts/', include('allauth.urls')),
     # path("register", Registerview.as_view()),
@@ -25,4 +27,4 @@ urlpatterns = [
     # path("verify-payment", verifyPayment.as_view()),
     path("food-rating/<foodId>", ReviewFood.as_view()),
     path("clear-cart", CartClear.as_view())
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

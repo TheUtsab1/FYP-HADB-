@@ -1,6 +1,6 @@
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { MdOutlineRestaurantMenu } from "react-icons/md"; 
+import { MdOutlineRestaurantMenu } from "react-icons/md";
 import images from "../../constants/images";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
@@ -19,8 +19,8 @@ const Navbar = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.setItem("loggedIn", "false");  // Mark as logged out
+  const handlelogout = () => {
+    localStorage.setItem("loggedIn", "false"); // Mark as logged out
     setLoggedIn(false);
     console.log("User logged out."); // Debug log
   };
@@ -51,7 +51,7 @@ const Navbar = () => {
       </ul>
       <div className="app__navbar-login">
         {loggedIn ? (
-          <button onClick={handleLogout} className="p__opensans">
+          <button onClick={handlelogout} className="p__opensans">
             Logout
           </button>
         ) : (
@@ -60,7 +60,7 @@ const Navbar = () => {
           </Link>
         )}
         <div />
-        <Link to="/book-table" className="p__opensans">
+        <Link to="/Booking" className="p__opensans">
           Book Table
         </Link>
       </div>
@@ -91,7 +91,7 @@ const Navbar = () => {
                 <Link to="/contact">Contact</Link>
               </li>
             </ul>
-          </div> 
+          </div>
         )}
       </div>
     </nav>

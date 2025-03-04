@@ -1,53 +1,101 @@
 import React from "react";
-import { FiFacebook, FiTwitter, FiInstagram } from "react-icons/fi";
-
-// import { FooterOverlay } from "../../components";
-import { images } from "../../constants";
+import {
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Clock,
+} from "lucide-react";
 import "./Footer.css";
+import logo from "../../assets/logo.png";
 
-const Footer = () => (
-  <div className="app__footer section__padding">
-    {/* <FooterOverlay /> */}
+const Footer = () => {
+  // const [email, setEmail] = useState("");
+  // const [setSubscribed] = useState(false);
 
-    <div className="app__footer-links">
-      <div className="app__footer-links_contact">
-        <h1 className="app__footer-headtext">Contact Us</h1>
-        <p className="p__opensans">Ibaraki Ken Kanakubo</p>
-        <p className="p__opensans">9806561880</p>
-        <p className="p__opensans">9817114887</p>
-      </div>
-      <div className="app__footer-links_logo">
-        <img src={images.logo} alt="footer_logo" />
-        <p className="p__opensans">
-          "The best way to find yourself is to lose yourself in the service of
-          others."
-        </p>
-        <img
-          src={images.spoon}
-          alt="spoon"
-          className="spoon__img"
-          style={{ marginTop: 15 }}
-        />
-        <div className="app__footer-links_icons">
-          <FiFacebook />
-          <FiTwitter />
-          <FiInstagram />
+  // const handleSubscribe = (e) => {
+  //   e.preventDefault();
+  //   if (email) {
+  //     setSubscribed(true);
+  //     setEmail("");
+  //     setTimeout(() => setSubscribed(false), 3000);
+  //   }
+  // };
+
+  return (
+    <footer className="footer">
+      <div className="footer-top">
+        <div className="footer-section about">
+          <div className="logo-container">
+            <img src={logo} width={100} height={100} alt="Logo" />
+            <h2>Himalayan Asian Dining & Bar</h2>
+          </div>
+          {/* <p>
+            Delicious cuisine and exceptional service since 2022. Our restaurant
+            management system helps us deliver the best dining experience.
+          </p> */}
+          <div className="social-links">
+            <a target="_blank" href="https://www.facebook.com/" className="social-link" aria-label="Facebook">
+              <Facebook size={20} />
+            </a>
+            <a target="_blank" href="https://www.facebook.com/" className="social-link" aria-label="Instagram">
+              <Instagram size={20} />
+            </a>
+          </div>
+        </div>
+
+        <div className="footer-section contact">
+          <h3>Contact Us</h3>
+          <ul>
+            <li>
+              <MapPin size={16} />
+              <span>123 Gourmet Street, Foodville</span>
+            </li>
+            <li>
+              <Phone size={16} />
+              <span>9806561880</span>
+            </li>
+            <li>
+              <Mail size={16} />
+              <span>info.utsab10@gmail.com</span>
+            </li>
+            <li>
+              <Clock size={16} />
+              <span>We're opened all along the week 10:00 AM - 11:00 PM except Wednesday</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="footer-section quick-links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/menuItem">Menu</a>
+            </li>
+            <li>
+              <a href="/about">About</a>
+            </li>
+            <li>
+              <a href="/catering">Catering</a>
+            </li>
+            <li>
+              <a href="/cart">Cart</a>
+            </li>
+          </ul>
         </div>
       </div>
-      <div className="app_footer-links_work">
-        <h1 className="app__footer-headtext">Working Hours</h1>
-        <p className="p__opensans">Monday - Friday</p>
-        <p className="p__opensans">08:00 am - 12:00 pm</p>
-        <p className="p__opensans">Saturday - Sunday</p>
-        <p className="p__opensans">07:00 am - 11:00 pm</p>
+
+      <div className="footer-bottom">
+        <p>
+          &copy; {new Date().getFullYear()} Himalayan Asian Dining and Bar. All rights reserved.
+        </p>
       </div>
-    </div>
-    <div className="footer__copyright">
-      <p className="p__opensans">
-        2024 Himalayan Asian Dining and Bar. All rights reserved.
-      </p>
-    </div>
-  </div>
-);
+    </footer>
+  );
+};
 
 export default Footer;

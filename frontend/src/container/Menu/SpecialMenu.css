@@ -81,4 +81,43 @@
     font-weight: bold;
     margin-top: 20px;
   }
-  
+  /* Pagination Container */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Pagination Buttons */
+.pagination-btn {
+  font-family: var(--font-base);
+  background-color: var(--color-golden); /* Use your theme color */
+  color: var(--color-red);
+  border: none;
+  width: 7rem;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.pagination-btn:hover {
+  background-color: var(--color-golden); /* Slightly darker shade on hover */
+  transform: scale(1.05);
+}
+
+.pagination-btn:disabled {
+  background-color: var(--color-golden);
+  cursor: not-allowed;
+}
+
+/* Current Page Number */
+.current-page {
+  font-family: var(--font-base);
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--color-golden);
+}

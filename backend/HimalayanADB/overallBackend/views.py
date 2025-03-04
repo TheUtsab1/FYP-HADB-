@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import FoodSerializer, FoodTypeSerializer, TabelReservationSerializer, CartItemSerializer, ReviewSerializer
+from .serializer import FoodSerializer, FoodTypeSerializer, TabelReservationSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
 from .models import Food, FoodType, Cart, CartItem, Review
 from django.contrib.auth.models import User
 from .filter import FoodFilter
@@ -18,6 +18,9 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
+from django.contrib.auth import logout
+from django.core.mail import send_mail
+
 
 # from django.conf import settings 
 # import razorpay
@@ -94,16 +97,15 @@ def user_login(request):
             return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
-# def handlelogout(request):
-#     logout(request)
-#     messages.success(request,"Suucessfully logged out")
-#     return redirect('home')
-#     return HttpResponse('handlelogout')
+def handlelogout(request):
+    logout(request)
+    messages.success(request, "Successfully logged out")
+    return redirect('home') 
 
 class FoodPagination(PageNumberPagination):
-    page_size = 6
+    page_size = 9
     page_query_param = "page_size"
-    max_page_size = 10
+    max_page_size = 9
 
 
 class FoodView(ModelViewSet):
@@ -299,3 +301,50 @@ class CartClear(APIView):
         except Exception as e: 
             return Response({"msg" : "Cart not Cleared"})
 
+@api_view(['POST'])
+def submit_booking(request):
+    if request.method == 'POST':
+        serializer = CateringBookingSerializer(data=request.data)
+        if serializer.is_valid():
+            # Save the form data to the database
+            booking = serializer.save()
+
+            # Send email to admin
+            admin_email = 'admin@example.com'  # Replace with actual admin email
+            subject = f"New Catering Booking: {booking.first_name} {booking.last_name}"
+            message = f"""
+            You have received a new catering booking:
+
+            Name: {booking.first_name} {booking.last_name}
+            Email: {booking.email}
+            Phone: {booking.phone}
+            Location: {booking.location}
+            Date: {booking.date}
+            Time: {booking.time}
+            Guests: {booking.guests}
+            Notes: {booking.notes}
+            """
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [admin_email])
+
+            # Send email to the user
+            subject_user = "Catering Booking Confirmation"
+            message_user = f"""
+            Dear {booking.first_name} {booking.last_name},
+
+            Your catering booking has been successfully submitted. Here are the details:
+
+            Date: {booking.date}
+            Time: {booking.time}
+            Location: {booking.location}
+            Number of Guests: {booking.guests}
+            Notes: {booking.notes}
+
+            Thank you for choosing our catering service!
+
+            Best regards,
+            The Catering Team
+            """
+            send_mail(subject_user, message_user, settings.DEFAULT_FROM_EMAIL, [booking.email])
+
+            return Response({"message": "Booking submitted successfully!"}, status=201)
+        return Response(serializer.errors, status=400)

@@ -34,123 +34,120 @@ export default function CateringForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    alert("Form submitted successfully!");
+
+    // Send the form data to Django API
+    fetch("http://localhost:8000/api/submit-booking/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert("Form submitted successfully!");
+        } else {
+          alert("Error submitting form. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Error submitting form. Please try again.");
+      });
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <label>Name (required)</label>
-        <div className="name-fields">
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            required
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            required
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-        </div>
+    <div className="catering__page">
+      <div className="catering__overlay">
+        <img src="/path-to-your-image.jpg" alt="Catering Background" />
+      </div>
 
-        <label>Email (required)</label>
-        <input
-          type="email"
-          name="email"
-          required
-          value={formData.email}
-          onChange={handleChange}
-        />
-
-        <div className="checkbox">
-          <input
-            type="checkbox"
-            name="signUp"
-            checked={formData.signUp}
-            onChange={handleChange}
-          />
-          <label>Sign up for news and updates</label>
-        </div>
-
-        <label>Phone (required)</label>
-        <input
-          type="tel"
-          name="phone"
-          required
-          value={formData.phone}
-          onChange={handleChange}
-        />
-
-        <label>Location</label>
-        <div className="checkbox-group">
-          <label>
+      <div className="catering__form-container">
+        <h2>Catering Request Form</h2>
+        <form className="catering__form" onSubmit={handleSubmit}>
+          <label>Name (required)</label>
+          <div className="catering__name-fields">
             <input
-              type="checkbox"
-              name="location"
-              value="Sherman Oaks"
-              checked={formData.location.includes("Sherman Oaks")}
+              type="text"
+              name="firstName"
+              className="catering__input"
+              placeholder="First Name"
+              required
+              value={formData.firstName}
               onChange={handleChange}
             />
-            Sherman Oaks
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="location"
-              value="Sycamore"
-              checked={formData.location.includes("Sycamore")}
-              onChange={handleChange}
-            />
-            Sycamore
-          </label>
-        </div>
+          </div>
+          <label>Email (required)</label>
+          <input
+            type="email"
+            name="email"
+            className="catering__input"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <label>Phone (required)</label>
+          <input
+            type="tel"
+            name="phone"
+            className="catering__input"
+            required
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          <label>Location</label>
+          <input
+            type="text"
+            name="location"
+            className="catering__input"
+            placeholder="Location"
+            required
+            value={formData.Location}
+            onChange={handleChange}
+          />
+          <label>Date of Catering (required)</label>
+          <input
+            type="date"
+            name="date"
+            className="catering__input"
+            required
+            value={formData.date}
+            onChange={handleChange}
+          />
+          <label>Time of Catering (required)</label>
+          <input
+            type="time"
+            name="time"
+            className="catering__input"
+            required
+            value={formData.time}
+            onChange={handleChange}
+          />
+          <label>Number of Guests (required)</label>
+          <input
+            type="number"
+            name="guests"
+            className="catering__input"
+            required
+            value={formData.guests}
+            onChange={handleChange}
+          />
 
-        <label>Date of Catering (required)</label>
-        <input
-          type="date"
-          name="date"
-          required
-          value={formData.date}
-          onChange={handleChange}
-        />
+          <label>Additional Notes</label>
+          <textarea
+            name="notes"
+            className="catering__textarea"
+            rows="4"
+            value={formData.notes}
+            onChange={handleChange}
+          ></textarea>
 
-        <label>Time of Catering (required)</label>
-        <input
-          type="time"
-          name="time"
-          required
-          value={formData.time}
-          onChange={handleChange}
-        />
-        <p className="time-note">in Pacific Time</p>
-
-        <label>Number of Guests (required)</label>
-        <input
-          type="number"
-          name="guests"
-          required
-          value={formData.guests}
-          onChange={handleChange}
-        />
-
-        <label>Additional Notes</label>
-        <textarea
-          name="notes"
-          rows="4"
-          value={formData.notes}
-          onChange={handleChange}
-        ></textarea>
-
-        <button type="submit">SUBMIT</button>
-      </form>
+          <button type="submit" className="catering__button">
+            SUBMIT
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -78,3 +78,17 @@ class CartItem(models.Model):
 
     def _str_(self):
         return f"{self.quantity} x {self.food_item.food_name} in {self.cart.user.username}'"
+    
+class CateringBooking(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    location = models.CharField(max_length=255)
+    date = models.DateField()
+    time = models.TimeField()
+    guests = models.IntegerField()
+    notes = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Booking by {self.first_name} {self.last_name} on {self.date}"
