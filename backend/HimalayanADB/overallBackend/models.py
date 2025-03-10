@@ -1,6 +1,7 @@
 from django.db import models
 from autoslug import AutoSlugField
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 # Create your models here.
 
@@ -52,16 +53,29 @@ class Review(models.Model):
 
 
 class TabelReservation(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Booked', 'Booked'),
+        ('Rejected', 'Rejected'),
+    ]
+    
     Booked_by = models.ForeignKey(User, on_delete=models.CASCADE)
     Booking_name = models.CharField(max_length=100, null=False)
     email = models.CharField(max_length=100, null=False)
     No_of_person = models.CharField(max_length=20, null=False)
     Date = models.DateField(null=False)
     time = models.TimeField(null=False)
-
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return self.Booking_name
+
+
+    def send_booking_confirmation(self):
+        subject = "Table Reservation Update"
+        message = f"Hello {self.booking_name},\n\nYour table reservation on {self.date} at {self.time} has been {self.status}."
+        send_mail(subject, message, 'your_email@example.com', [self.email])
+
     
 
 class Cart(models.Model):
