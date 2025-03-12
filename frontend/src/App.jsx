@@ -13,39 +13,61 @@ import Signup from "./components/routes/Signup";
 import CateringForm from "./container/Laurels/CateringForm";
 import Cart from "./container/Cart/Cart";
 import Booking from "./container/Booking/Booking";
+import FoodDetail from "./container/FoodDetail/FoodDetail";
 
-const App = () => (
-  <>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Applayout />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="Signup" element={<Signup />} />
-          <Route path="Login" element={<Login />} />
-          <Route path="aboutUs" element={<AboutUs />} />
-          <Route path="Booking" element={<Booking />} />
-          <Route path="specialMenu" element={<SpecialMenu />} />
-          <Route path="Cart" element={<Cart />} />
-          <Route path="CateringForm" element={<CateringForm />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </>
+const App = () => {
+  // const [loggedIn, setLoggedIn] = React.useState(
+  //   !!localStorage.getItem("token")
+  // );
+  // // const [isToken, setIsToken] = React.useState(false)
 
-  // <div>
-  //   {/* <Navbar />
-  //   <Header />
-  //   <AboutUs />
-  //   <SpecialMenu />
-  //   <Chef />
-  //   <Intro />
-  //   <Laurels />
-  //   <Gallery />
-  //   <FindUs />
-  //   <Footer />
-  //   <SignInPage />
-  //   <SignUpPage /> */}
-  // </div>
-);
+  // console.log(loggedIn);
+  // const token = localStorage.getItem("token");
+  // // Check login status from localStorage
+  // React.useEffect(() => {
+  //   console.log("Checking login status...");
+  //   console.log("Token: ", token);
+  //   setLoggedIn(!!token); // If token exists and is not empty, set loggedIn to true
+  // }, [loggedIn]);
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Applayout  />
+            }
+          >
+            <Route path="/" element={<LandingPage />} />
+            <Route path="Signup" element={<Signup />} />
+            <Route path="Login" element={<Login />} />
+            <Route path="aboutUs" element={<AboutUs />} />
+            <Route path="Booking" element={<Booking />} />
+            <Route path="specialMenu" element={<SpecialMenu />} />
+            <Route path="/food/:food_slug" element={<FoodDetail />} />
+            <Route path="Cart" element={<Cart />} />
+            <Route path="CateringForm" element={<CateringForm />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
+
+    // <div>
+    //   {/* <Navbar />
+    //   <Header />
+    //   <AboutUs />
+    //   <SpecialMenu />
+    //   <Chef />
+    //   <Intro />
+    //   <Laurels />
+    //   <Gallery />
+    //   <FindUs />
+    //   <Footer />
+    //   <SignInPage />
+    //   <SignUpPage /> */}
+    // </div>
+  );
+};
 
 export default App;

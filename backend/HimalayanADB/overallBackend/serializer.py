@@ -6,6 +6,16 @@ class TabelReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = TabelReservation
         fields = "__all__"
+        
+# class TableReservationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = TableReservations
+#         fields = '__all__'
+
+#     def validate(self, data):
+#         if data['Date'] < models.datetime.date.today():
+#             raise serializers.ValidationError("The reservation date cannot be in the past.")
+#         return data
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta :

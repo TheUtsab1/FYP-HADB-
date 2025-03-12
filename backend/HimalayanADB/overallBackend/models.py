@@ -58,22 +58,30 @@ class TabelReservation(models.Model):
         ('Booked', 'Booked'),
         ('Rejected', 'Rejected'),
     ]
-    
+
     Booked_by = models.ForeignKey(User, on_delete=models.CASCADE)
     Booking_name = models.CharField(max_length=100, null=False)
     email = models.CharField(max_length=100, null=False)
     No_of_person = models.CharField(max_length=20, null=False)
     Date = models.DateField(null=False)
     time = models.TimeField(null=False)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
 
     def __str__(self):
         return self.Booking_name
 
-
     def send_booking_confirmation(self):
         subject = "Table Reservation Update"
-        message = f"Hello {self.booking_name},\n\nYour table reservation on {self.date} at {self.time} has been {self.status}."
+        message = f"""
+        Hello {self.Booking_name},
+
+        Your table reservation on {self.Date} at {self.time} has been {self.status}.
+
+        Thank you for choosing us!
+
+        Best regards,
+        The Reservation Team
+        """
         send_mail(subject, message, 'your_email@example.com', [self.email])
 
     
@@ -98,7 +106,6 @@ class CateringBooking(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
-    location = models.CharField(max_length=255)
     date = models.DateField()
     time = models.TimeField()
     guests = models.IntegerField()
@@ -106,3 +113,51 @@ class CateringBooking(models.Model):
 
     def __str__(self):
         return f"Booking by {self.first_name} {self.last_name} on {self.date}"
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+
+class TableReservations(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Booked', 'Booked'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
+    Booked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="table_reservations")
+    Booking_name = models.CharField(max_length=100, null=False)
+    email = models.EmailField(max_length=100, null=False)
+    No_of_person = models.PositiveIntegerField(null=False)
+    Date = models.DateField(null=False)
+    time = models.TimeField(null=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+
+    def __str__(self):
+        return f"{self.Booking_name} - {self.status}"
+
+    def send_confirmation_email(self):
+        if self.status == 'Booked':
+            subject = "Table Reservation Confirmed"
+            message = f"""
+            Hello {self.Booking_name},
+
+            Your table reservation is confirmed!
+
+            Details:
+            - Date: {self.Date}
+            - Time: {self.time}
+            - Number of Persons: {self.No_of_person}
+
+            Thank you for choosing us!
+
+            Regards,
+            Restaurant Team
+            """
+            send_mail(
+                subject,
+                message,
+                'your_email@example.com',  # Replace with your email
+                [self.email],
+                fail_silently=False,
+            )

@@ -1,31 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import images from "../../constants/images";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
-// import Popup from "../routes/Popup";
+import useAuthStore from "../../store/useAuthStore";
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = React.useState(false);
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const { isUserAuthenticated, setIsUserAuthenticated } = useAuthStore();
+  // const [loggedIn, setLoggedIn] = React.useState(!!localStorage.getItem("token"));
 
-  // Check login status from localStorage or a similar mechanism
-  React.useEffect(() => {
-    const userLoggedIn = localStorage.getItem("loggedIn");
-    console.log("User logged in status:", userLoggedIn); // Debug log
-    if (userLoggedIn === "true") {
-      setLoggedIn(true);
-    }
-  }, []);
+  // // Check login status from localStorage
+  // React.useEffect(() => {
+  //   console.log("Checking login status...");
+  //   const token = localStorage.getItem("token");
+  //   console.log("Token: ", token);
+  //   setLoggedIn(!!token); // If token exists and is not empty, set loggedIn to true
+  // }, [loggedIn]);
 
-  const handlelogout = () => {
-    localStorage.setItem("loggedIn", "false"); // Mark as logged out
-    setLoggedIn(false);
-    console.log("User logged out."); // Debug log
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Properly remove token
+    setIsUserAuthenticated(false);
+    console.log("User logged out.");
   };
-
-  console.log("LoggedIn state:", loggedIn); // Debug log
+  useEffect(()=>{
+    console.log(isUserAuthenticated)
+  },[isUserAuthenticated])
+  // Debug log
 
   return (
     <nav className="app__navbar">
@@ -50,8 +52,8 @@ const Navbar = () => {
         </li>
       </ul>
       <div className="app__navbar-login">
-        {loggedIn ? (
-          <button onClick={handlelogout} className="p__opensans">
+        {isUserAuthenticated ? (
+          <button onClick={handleLogout} className="p__opensans">
             Logout
           </button>
         ) : (

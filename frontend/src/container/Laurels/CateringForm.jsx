@@ -1,153 +1,140 @@
-import { useState } from "react";
-import "../Laurels/CateringForm.css";
+import React, { useState } from "react";
+import "./CateringForm.css";
 
-export default function CateringForm() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+const Booking = () => {
+  const [reservationData, setReservationData] = useState({
+    first_name: "",
+    last_name: "",
     phone: "",
-    signUp: false,
-    location: [],
+    email: "",
+    guests: "2",
     date: "",
-    time: "",
-    guests: "",
-    notes: "",
+    time: "10:00",
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const [message, setMessage] = useState("");
 
-    if (type === "checkbox" && name === "location") {
-      setFormData((prev) => ({
-        ...prev,
-        location: checked
-          ? [...prev.location, value]
-          : prev.location.filter((loc) => loc !== value),
-      }));
-    } else if (type === "checkbox") {
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleReservationData = (e) => {
+    const { name, value } = e.target;
+    setReservationData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const reservationDataSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/submit-booking/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reservationData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Reservation submitted successfully!");
+        setReservationData({
+          first_name: "",
+          last_name: "",
+          phone: "",
+          email: "",
+          guests: "2",
+          date: "",
+          time: "10:00",
+        });
+      } else {
+        setMessage("Failed to submit reservation: " + JSON.stringify(data));
+      }
+    } catch (error) {
+      setMessage("An error occurred: " + error.message);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Send the form data to Django API
-    fetch("http://localhost:8000/api/submit-booking/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message) {
-          alert("Form submitted successfully!");
-        } else {
-          alert("Error submitting form. Please try again.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Error submitting form. Please try again.");
-      });
-  };
-
   return (
-    <div className="catering__page">
-      <div className="catering__overlay">
-        <img src="/path-to-your-image.jpg" alt="Catering Background" />
-      </div>
-
-      <div className="catering__form-container">
-        <h2>Catering Request Form</h2>
-        <form className="catering__form" onSubmit={handleSubmit}>
-          <label>Name (required)</label>
-          <div className="catering__name-fields">
-            <input
-              type="text"
-              name="firstName"
-              className="catering__input"
-              placeholder="First Name"
-              required
-              value={formData.firstName}
-              onChange={handleChange}
-            />
-          </div>
-          <label>Email (required)</label>
-          <input
-            type="email"
-            name="email"
-            className="catering__input"
-            required
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <label>Phone (required)</label>
-          <input
-            type="tel"
-            name="phone"
-            className="catering__input"
-            required
-            value={formData.phone}
-            onChange={handleChange}
-          />
-          <label>Location</label>
-          <input
-            type="text"
-            name="location"
-            className="catering__input"
-            placeholder="Location"
-            required
-            value={formData.Location}
-            onChange={handleChange}
-          />
-          <label>Date of Catering (required)</label>
-          <input
-            type="date"
-            name="date"
-            className="catering__input"
-            required
-            value={formData.date}
-            onChange={handleChange}
-          />
-          <label>Time of Catering (required)</label>
-          <input
-            type="time"
-            name="time"
-            className="catering__input"
-            required
-            value={formData.time}
-            onChange={handleChange}
-          />
-          <label>Number of Guests (required)</label>
-          <input
-            type="number"
-            name="guests"
-            className="catering__input"
-            required
-            value={formData.guests}
-            onChange={handleChange}
-          />
-
-          <label>Additional Notes</label>
-          <textarea
-            name="notes"
-            className="catering__textarea"
-            rows="4"
-            value={formData.notes}
-            onChange={handleChange}
-          ></textarea>
-
-          <button type="submit" className="catering__button">
-            SUBMIT
-          </button>
-        </form>
-      </div>
+    <div className="booking-container">
+      <h2 className="booking-title">Book Your Table</h2>
+      <form className="booking-form" onSubmit={reservationDataSubmit}>
+        <input
+          type="text"
+          name="first_name"
+          value={reservationData.first_name}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="First Name"
+          required
+        />
+        <input
+          type="text"
+          name="last_name"
+          value={reservationData.last_name}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="Last Name"
+          required
+        />
+        <input
+          type="tel"
+          name="phone"
+          value={reservationData.phone}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="Phone"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          value={reservationData.email}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="number"
+          name="guests"
+          value={reservationData.guests}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="Number of Guests"
+          required
+        />
+        <input
+          type="date"
+          name="date"
+          value={reservationData.date}
+          onChange={handleReservationData}
+          className="booking-input"
+          required
+        />
+        <select
+          name="time"
+          value={reservationData.time}
+          onChange={handleReservationData}
+          className="booking-select"
+          required
+        >
+          <option value="10:00">10:00 AM</option>
+          <option value="11:00">11:00 AM</option>
+          <option value="12:00">12:00 PM</option>
+          <option value="13:00">01:00 PM</option>
+          <option value="14:00">02:00 PM</option>
+          <option value="15:00">03:00 PM</option>
+          <option value="16:00">04:00 PM</option>
+          <option value="17:00">05:00 PM</option>
+          <option value="18:00">06:00 PM</option>
+          <option value="19:00">07:00 PM</option>
+          <option value="20:00">08:00 PM</option>
+        </select>
+        <button type="submit" className="booking-button">
+          Book Now
+        </button>
+      </form>
+      {message && <p className="booking-message">{message}</p>}
     </div>
   );
-}
+};
+
+export default Booking;

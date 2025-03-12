@@ -4,7 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer import FoodSerializer, FoodTypeSerializer, TabelReservationSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
-from .models import Food, FoodType, Cart, CartItem, Review
+
+from .models import Food, FoodType, Cart, CartItem, Review, TableReservations
 from django.contrib.auth.models import User
 from .filter import FoodFilter
 from rest_framework.decorators import api_view
@@ -192,15 +193,19 @@ class updateCartQuantity(APIView):
 class TabelReservationView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         data = request.data.copy()
-        print(request.user.id)
         data["Booked_by"] = request.user.id
-        serializer = TabelReservationSerializer(data= data)
+        serializer = TabelReservationSerializer(data=data)
+
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message" : "data Saved Successfully", "data": data})
-        return Response({"message" : "Error in saving data", "error": serializer.errors})
+            reservation = serializer.save()  # Save the reservation to the database
+            reservation.send_confirmation_email()  # Send the confirmation email
+            return Response({"message": "Reservation successfully saved!", "data": serializer.data}, status=201)
+
+        return Response({"message": "Error in saving reservation", "errors": serializer.errors}, status=400)
+
     
 
 # class create_order(APIView):
@@ -318,7 +323,6 @@ def submit_booking(request):
             Name: {booking.first_name} {booking.last_name}
             Email: {booking.email}
             Phone: {booking.phone}
-            Location: {booking.location}
             Date: {booking.date}
             Time: {booking.time}
             Guests: {booking.guests}
@@ -335,7 +339,6 @@ def submit_booking(request):
 
             Date: {booking.date}
             Time: {booking.time}
-            Location: {booking.location}
             Number of Guests: {booking.guests}
             Notes: {booking.notes}
 

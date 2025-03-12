@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Import Link
 import axios from "axios";
 import "./SpecialMenu.css";
 
@@ -15,8 +16,8 @@ const Menu = () => {
     axios
       .get(url)
       .then((response) => {
-        console.log("API Response:", response.data); // Debugging
-        setMenuItems(response.data.results || response.data); // Adjust for pagination
+        console.log("API Response:", response.data);
+        setMenuItems(response.data.results || response.data);
         setNextPage(response.data.next);
         setPrevPage(response.data.previous);
         setLoading(false);
@@ -55,27 +56,30 @@ const Menu = () => {
       <div className="menu-grid">
         {menuItems.length > 0 ? (
           menuItems.map((food) => (
-            <div key={food.food_slug} className="menu-card">
-              <img
-                src={
-                  food.food_img_url.startsWith("http")
-                    ? food.food_img_url
-                    : `http://127.0.0.1:8000${food.food_img_url}`
-                }
-                alt={food.food_name}
-                className="menu-image"
-              />
+            <Link to={`/food/${food.food_slug}`} key={food.food_slug} className="menu-card-link">
+              {/* Wrapped entire card with Link */}
+              <div className="menu-card">
+                <img
+                  src={
+                    food.food_img_url.startsWith("http")
+                      ? food.food_img_url
+                      : `http://127.0.0.1:8000${food.food_img_url}`
+                  }
+                  alt={food.food_name}
+                  className="menu-image"
+                />
 
-              <div className="menu-info">
-                <h3 className="menu-name">{food.food_name}</h3>
-                <p className="menu-description">{food.food_content}</p>
-                <p className="menu-price">Price: ${food.food_price}</p>
-                <p className="menu-category">
-                  Category: {food.food_type?.food_type}
-                </p>
-                <p className="menu-taste">Taste: {food.taste?.taste_type}</p>
+                <div className="menu-info">
+                  <h3 className="menu-name">{food.food_name}</h3>
+                  <p className="menu-description">{food.food_content}</p>
+                  <p className="menu-price">Price: ${food.food_price}</p>
+                  <p className="menu-category">
+                    Category: {food.food_type?.food_type}
+                  </p>
+                  <p className="menu-taste">Taste: {food.taste?.taste_type}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           ))
         ) : (
           <p className="no-items">No menu items available.</p>

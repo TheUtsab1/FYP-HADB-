@@ -39,6 +39,19 @@
   justify-content: flex-end;
   align-items: center;
 }
+
+.app__navbar-login button {
+  color: white;
+  background-color: transparent;
+  border: none;
+  margin: 0 1rem;
+  text-decoration: none;
+  transition: 0.5s ease;
+}
+.app__navbar-login button:hover {
+  border-bottom: 3px solid var(--color-red);
+}
+
 .app__navbar-login a {
   margin: 0 1rem;
   text-decoration: none;

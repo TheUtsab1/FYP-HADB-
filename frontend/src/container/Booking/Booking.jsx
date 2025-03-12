@@ -3,12 +3,16 @@ import "./Booking.css";
 
 const Booking = () => {
   const [reservationData, setReservationData] = useState({
-    Booking_name: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
     email: "",
-    No_of_person: "2 Person",
-    Date: "",
+    guests: "2",
+    date: "",
     time: "10:00",
   });
+
+  const [message, setMessage] = useState("");
 
   const handleReservationData = (e) => {
     const { name, value } = e.target;
@@ -18,10 +22,34 @@ const Booking = () => {
     }));
   };
 
-  const reservationDataSubmit = (e) => {
+  const reservationDataSubmit = async (e) => {
     e.preventDefault();
-    console.log("Reservation Data:", reservationData);
-    // Add API call or other logic here
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/submit-booking/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reservationData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Reservation submitted successfully!");
+        setReservationData({
+          first_name: "",
+          last_name: "",
+          phone: "",
+          email: "",
+          guests: "2",
+          date: "",
+          time: "10:00",
+        });
+      } else {
+        setMessage("Failed to submit reservation: " + JSON.stringify(data));
+      }
+    } catch (error) {
+      setMessage("An error occurred: " + error.message);
+    }
   };
 
   return (
@@ -30,45 +58,63 @@ const Booking = () => {
       <form className="booking-form" onSubmit={reservationDataSubmit}>
         <input
           type="text"
-          name="Booking_name"
-          value={reservationData.Booking_name}
+          name="first_name"
+          value={reservationData.first_name}
           onChange={handleReservationData}
           className="booking-input"
-          placeholder="Full Name"
+          placeholder="First Name"
+          required
         />
         <input
           type="text"
+          name="last_name"
+          value={reservationData.last_name}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="Last Name"
+          required
+        />
+        <input
+          type="tel"
+          name="phone"
+          value={reservationData.phone}
+          onChange={handleReservationData}
+          className="booking-input"
+          placeholder="Phone"
+          required
+        />
+        <input
+          type="email"
           name="email"
           value={reservationData.email}
           onChange={handleReservationData}
           className="booking-input"
           placeholder="Email"
+          required
         />
-        <select
-          name="No_of_person"
-          value={reservationData.No_of_person}
-          onChange={handleReservationData}
-          className="booking-select"
-        >
-          <option value="2 Person">2 Person</option>
-          <option value="3 Person">3 Person</option>
-          <option value="4 Person">4 Person</option>
-          <option value="5 Person">5 Person</option>
-          <option value="6 Person">6 Person</option>
-          <option value="Family Table">Family Table (10 chairs)</option>
-        </select>
         <input
-          type="date"
-          name="Date"
-          value={reservationData.Date}
+          type="number"
+          name="guests"
+          value={reservationData.guests}
           onChange={handleReservationData}
           className="booking-input"
+          placeholder="Number of Guests"
+          required
+        />
+        <input
+          type="date"
+          name="date"
+          value={reservationData.date}
+          onChange={handleReservationData}
+          className="booking-input"
+          required
         />
         <select
           name="time"
           value={reservationData.time}
           onChange={handleReservationData}
           className="booking-select"
+          required
         >
           <option value="10:00">10:00 AM</option>
           <option value="11:00">11:00 AM</option>
@@ -86,6 +132,7 @@ const Booking = () => {
           Book Now
         </button>
       </form>
+      {message && <p className="booking-message">{message}</p>}
     </div>
   );
 };

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'overallBackend',
+    'djoser',
 ]
 
 REST_FRAMEWORK = {
@@ -58,6 +59,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
        
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
     )
    
 }
@@ -86,14 +88,13 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Email settings for development
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'utsabmessi6@gmail.com'  # Replace with your SMTP server (e.g., Gmail, SendGrid, etc.)
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'utsabmessi6@gmail.com'
-EMAIL_HOST_PASSWORD = '_barcelona_100'
+EMAIL_HOST_PASSWORD = 'ytzg btbr uqgw srtb'
 
 
 DEFAULT_FROM_EMAIL = 'utsabmessi6@gmail.com'
@@ -152,6 +153,7 @@ AUTH_PASSWORD_VALIDATORS = [
 from datetime import timedelta
 
 SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(days=15),  # Access token expires in 15 minutes
     'REFRESH_TOKEN_LIFETIME': timedelta(days=20),     # Refresh token expires in 7 days
     'ROTATE_REFRESH_TOKENS': False,                  # If True, issue new refresh token with each access token refresh
