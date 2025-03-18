@@ -3,9 +3,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from .serializer import FoodSerializer, FoodTypeSerializer, TabelReservationSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
 
-from .models import Food, FoodType, Cart, CartItem, Review, TableReservations
+from .models import Food, FoodType, Cart, CartItem, Review
 from django.contrib.auth.models import User
 from .filter import FoodFilter
 from rest_framework.decorators import api_view
@@ -46,7 +47,9 @@ from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt
+
+
+@csrf_exempt # Add API View for user signup and login
 def user_signup(request):
     if request.method == "POST":
         try:
@@ -107,10 +110,11 @@ class FoodPagination(PageNumberPagination):
     page_size = 9
     page_query_param = "page_size"
     max_page_size = 9
-
+    
 
 class FoodView(ModelViewSet):
-    queryset = Food.objects.all().order_by("?")
+    # queryset = Food.objects.all().order_by("?")
+    queryset = Food.objects.all()
     serializer_class = FoodSerializer
     lookup_field = "food_slug"
     filter_backends = [DjangoFilterBackend, SearchFilter]
@@ -124,8 +128,17 @@ class FoodCategoryView(ModelViewSet):
     serializer_class = FoodTypeSerializer
 
 class FoodTopView(ModelViewSet):
-    queryset = Food.objects.all().order_by("-view")[0:3]
+    queryset = Food.objects.all()
     serializer_class = FoodSerializer
+
+@api_view(["GET"])
+def food_detail(request, food_slug):
+    try:
+        food = Food.objects.get(food_slug=food_slug)
+        serializer = FoodSerializer(food)
+        return Response(serializer.data)
+    except Food.DoesNotExist:
+        return Response({"error": "Food not found"}, status=404)
 
 
 

@@ -7,9 +7,9 @@ const Booking = () => {
     last_name: "",
     phone: "",
     email: "",
-    guests: "2",
+    guests: "",
     date: "",
-    time: "10:00",
+    time: "",
   });
 
   const [message, setMessage] = useState("");
@@ -40,9 +40,9 @@ const Booking = () => {
           last_name: "",
           phone: "",
           email: "",
-          guests: "2",
+          guests: "",
           date: "",
-          time: "10:00",
+          time: "",
         });
       } else {
         setMessage("Failed to submit reservation: " + JSON.stringify(data));
@@ -54,7 +54,7 @@ const Booking = () => {
 
   return (
     <div className="booking-container">
-      <h2 className="booking-title">Book Your Table</h2>
+      <h2 className="booking-title">Book Your Catering</h2>
       <form className="booking-form" onSubmit={reservationDataSubmit}>
         <input
           type="text"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review, TableReservations
+from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review
 from django.contrib import admin
 # Register your models here.
 
@@ -20,17 +20,17 @@ class TabelReservationAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         
         
-@admin.register(TableReservations)
-class TableReservationAdmin(admin.ModelAdmin):
-    list_display = ('Booking_name', 'email', 'No_of_person', 'Date', 'time', 'status')
-    list_filter = ('status', 'Date')
-    search_fields = ('Booking_name', 'email')
+# @admin.register(TableReservations)
+# class TableReservationAdmin(admin.ModelAdmin):
+#     list_display = ('Booking_name', 'email', 'No_of_person', 'Date', 'time', 'status')
+#     list_filter = ('status', 'Date')
+#     search_fields = ('Booking_name', 'email')
 
-    def save_model(self, request, obj, form, change):
-        if change and 'status' in form.changed_data:
-            if obj.status == 'Booked':
-                obj.send_confirmation_email()
-        super().save_model(request, obj, form, change)
+#     def save_model(self, request, obj, form, change):
+#         if change and 'status' in form.changed_data:
+#             if obj.status == 'Booked':
+#                 obj.send_confirmation_email()
+#         super().save_model(request, obj, form, change)
 
 # @admin.register(TabelReservation)
 # class TabelReservationAdmin(admin.ModelAdmin):

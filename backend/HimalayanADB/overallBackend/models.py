@@ -34,12 +34,11 @@ class FoodTaste(models.Model):
 class Food(models.Model):
     food_name = models.CharField(max_length=500, null=False)
     food_content = models.CharField(max_length=500, null=False)
-    food_slug = AutoSlugField(populate_from = "food_name", unique=True, null=False)
-    food_img_url = models.ImageField(upload_to='products/', null=False, blank=True)
+    food_slug = AutoSlugField(populate_from = "food_name", unique=True, null=True)
+    food_img_url = models.ImageField(upload_to='products/', null=True, blank=True)
     food_price = models.IntegerField( null=False)
-    food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE)
-    view = models.IntegerField(default=0)
-    taste = models.ForeignKey(FoodTaste, on_delete=models.CASCADE)
+    food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE, null=True)
+    taste = models.ForeignKey(FoodTaste, on_delete=models.CASCADE, null=True)
 
 
     def __str__(self):
@@ -75,12 +74,12 @@ class TabelReservation(models.Model):
         message = f"""
         Hello {self.Booking_name},
 
-        Your table reservation on {self.Date} at {self.time} has been {self.status}.
+        Your reservation on {self.Date} at {self.time} has been {self.status}.
 
         Thank you for choosing us!
 
         Best regards,
-        The Reservation Team
+        Himalayan Asian Dining and Bar Team
         """
         send_mail(subject, message, 'your_email@example.com', [self.email])
 
@@ -114,50 +113,50 @@ class CateringBooking(models.Model):
     def __str__(self):
         return f"Booking by {self.first_name} {self.last_name} on {self.date}"
 
-from django.db import models
-from django.contrib.auth.models import User
-from django.core.mail import send_mail
+# from django.db import models
+# from django.contrib.auth.models import User
+# from django.core.mail import send_mail
 
-class TableReservations(models.Model):
-    STATUS_CHOICES = [
-        ('Pending', 'Pending'),
-        ('Booked', 'Booked'),
-        ('Cancelled', 'Cancelled'),
-    ]
+# class TableReservations(models.Model):
+#     STATUS_CHOICES = [
+#         ('Pending', 'Pending'),
+#         ('Booked', 'Booked'),
+#         ('Cancelled', 'Cancelled'),
+#     ]
 
-    Booked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="table_reservations")
-    Booking_name = models.CharField(max_length=100, null=False)
-    email = models.EmailField(max_length=100, null=False)
-    No_of_person = models.PositiveIntegerField(null=False)
-    Date = models.DateField(null=False)
-    time = models.TimeField(null=False)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+#     Booked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="table_reservations")
+#     Booking_name = models.CharField(max_length=100, null=False)
+#     email = models.EmailField(max_length=100, null=False)
+#     No_of_person = models.PositiveIntegerField(null=False)
+#     Date = models.DateField(null=False)
+#     time = models.TimeField(null=False)
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
 
-    def __str__(self):
-        return f"{self.Booking_name} - {self.status}"
+#     def __str__(self):
+#         return f"{self.Booking_name} - {self.status}"
 
-    def send_confirmation_email(self):
-        if self.status == 'Booked':
-            subject = "Table Reservation Confirmed"
-            message = f"""
-            Hello {self.Booking_name},
+#     def send_confirmation_email(self):
+#         if self.status == 'Booked':
+#             subject = "Table Reservation Confirmed"
+#             message = f"""
+#             Hello {self.Booking_name},
 
-            Your table reservation is confirmed!
+#             Your table reservation is confirmed!
 
-            Details:
-            - Date: {self.Date}
-            - Time: {self.time}
-            - Number of Persons: {self.No_of_person}
+#             Details:
+#             - Date: {self.Date}
+#             - Time: {self.time}
+#             - Number of Persons: {self.No_of_person}
 
-            Thank you for choosing us!
+#             Thank you for choosing us!
 
-            Regards,
-            Restaurant Team
-            """
-            send_mail(
-                subject,
-                message,
-                'your_email@example.com',  # Replace with your email
-                [self.email],
-                fail_silently=False,
-            )
+#             Regards,
+#             Restaurant Team
+#             """
+#             send_mail(
+#                 subject,
+#                 message,
+#                 'your_email@example.com',  # Replace with your email
+#                 [self.email],
+#                 fail_silently=False,
+#             )
