@@ -34,7 +34,7 @@ class FoodTaste(models.Model):
 class Food(models.Model):
     food_name = models.CharField(max_length=500, null=False)
     food_content = models.CharField(max_length=500, null=False)
-    food_slug = AutoSlugField(populate_from = "food_name", unique=True, null=True)
+    food_slug = models.SlugField(max_length=500, null=True, blank=True)
     food_img_url = models.ImageField(upload_to='products/', null=True, blank=True)
     food_price = models.IntegerField( null=False)
     food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE, null=True)
@@ -43,6 +43,12 @@ class Food(models.Model):
 
     def __str__(self):
         return f"{self.food_name}"
+    
+    def save(self, *args, **kwargs):
+        if not self.food_slug:
+            self.food_slug = AutoSlugField(populate_from='food_name', unique=True)
+        super(Food, self).save(*args, **kwargs)
+
     
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

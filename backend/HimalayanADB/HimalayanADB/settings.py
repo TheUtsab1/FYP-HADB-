@@ -52,21 +52,17 @@ INSTALLED_APPS = [
     'allauth.account',
     'overallBackend',
     'djoser',
+    'drf_spectacular',
 ]
 
 REST_FRAMEWORK = {
-   
     'DEFAULT_AUTHENTICATION_CLASSES': (
-       
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        
-    )
-   
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],  # Corrected key name
 }
 
-REST_FRAMEWORK ={
-    'Default_Filter_Backend' : ['django_filter.rest_framework.DjangoFilterBackend']
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -159,6 +155,13 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,                  # If True, issue new refresh token with each access token refresh
     'BLACKLIST_AFTER_ROTATION': False,               # If True, blacklist refresh tokens after use
     'UPDATE_LAST_LOGIN': False,                      # Updates the last login time of the user upon refresh
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Internationalization
