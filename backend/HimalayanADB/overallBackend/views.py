@@ -22,6 +22,8 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth import logout
 from django.core.mail import send_mail
+from .models import Feedback
+from django.contrib.auth.decorators import login_required
 
 
 # from django.conf import settings 
@@ -145,39 +147,36 @@ def food_detail(request, food_slug):
 class showCart(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
-        queryset = CartItem.objects.all()
+        queryset = CartItem.objects.filter(cart__user=request.user)  # Filter by logged-in user
         serializer = CartItemSerializer(queryset, many=True)
         return Response(serializer.data)
-    
-    
+
     def post(self, request):
-        
-        queryset = CartItem.objects.all()
         data = request.data
-        cart, create = Cart.objects.get_or_create(user = request.user)
-        
-        ItemExist = CartItem.objects.filter(cart__user = request.user, food_item_id= data.get("food_item_id")).exists()
-        if ItemExist:
-            return Response({"msg" : "Item Already exist"})
-        
-        serializer = CartItemSerializer(data=data)
+        cart, created = Cart.objects.get_or_create(user=request.user)
 
-        if serializer.is_valid():
-            serializer.save(cart = cart)
-            return Response({"message": "completed"})
-        else:
-            return Response({"msg": "not completed", "err": serializer.errors})
-    
-    def delete(self, request, item_id):
-        print("item_id", item_id)
         try:
-            cart_item = CartItem.objects.get(cart__user = request.user, id = item_id)
-            cart_item.delete()
-            return Response({"msg" : "item removed"})
+            cart_item = CartItem.objects.get(cart=cart, food_item_id=data.get("food_item_id"))
+            cart_item.quantity += int(data.get("quantity", 1))  # Increment quantity
+            cart_item.save()
+            return Response({"msg": "Item quantity updated!"})
+        except CartItem.DoesNotExist:
+            serializer = CartItemSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save(cart=cart)
+                return Response({"msg": "Item added to cart!"})
+            return Response({"msg": "Error", "err": serializer.errors})
 
-        except:
-            return Response({"msg" : "Something error"})
+    def delete(self, request, item_id):
+        try:
+            cart_item = CartItem.objects.get(cart__user=request.user, id=item_id)
+            cart_item.delete()
+            return Response({"msg": "Item removed"})
+        except CartItem.DoesNotExist:
+            return Response({"msg": "Item not found"})
+
     
 class updateCartQuantity(APIView):
     def patch(self, request):
@@ -364,3 +363,21 @@ def submit_booking(request):
 
             return Response({"message": "Booking submitted successfully!"}, status=201)
         return Response(serializer.errors, status=400)
+    
+    
+    
+@csrf_exempt
+@login_required  # Ensures only logged-in users can submit
+def submit_feedback(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        feedback = Feedback.objects.create(
+            user=request.user,
+            name=data.get("name"),
+            email=data.get("email"),
+            rating=data.get("rating"),
+            feedback_type=data.get("feedbackType"),
+            message=data.get("message"),
+        )
+        return JsonResponse({"message": "Feedback submitted successfully!"}, status=201)
+    return JsonResponse({"error": "Invalid request"}, status=400)

@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review
+from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review, Feedback
 from django.contrib import admin
+
 # Register your models here.
 
 admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, Review))
@@ -19,6 +20,13 @@ class TabelReservationAdmin(admin.ModelAdmin):
             obj.send_booking_confirmation()
         super().save_model(request, obj, form, change)
         
+        
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'rating', 'feedback_type', 'created_at')
+    search_fields = ('name', 'email', 'feedback_type')
+    list_filter = ('rating', 'feedback_type', 'created_at')
+
+admin.site.register(Feedback, FeedbackAdmin)
         
 # @admin.register(TableReservations)
 # class TableReservationAdmin(admin.ModelAdmin):

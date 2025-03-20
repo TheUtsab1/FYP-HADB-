@@ -13,6 +13,7 @@ import Signup from "./components/routes/Signup";
 import CateringForm from "./container/Laurels/CateringForm";
 import Cart from "./container/Cart/Cart";
 import Booking from "./container/Booking/Booking";
+import Aboutus from "./container/About-Us/about-us";
 import FoodDetail from "./container/FoodDetail/FoodDetail";
 
 const App = () => {
@@ -33,20 +34,16 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Applayout  />
-            }
-          >
+          <Route path="/" element={<Applayout />}>
             <Route path="/" element={<LandingPage />} />
             <Route path="Signup" element={<Signup />} />
             <Route path="Login" element={<Login />} />
             <Route path="aboutUs" element={<AboutUs />} />
+            <Route path="about-us" element={<Aboutus />} />
             <Route path="Booking" element={<Booking />} />
             <Route path="specialMenu" element={<SpecialMenu />} />
             <Route path="/food/:food_slug" element={<FoodDetail />} />
-            <Route path="Cart" element={<Cart />} />
+            <Route path="/cart" element={<Cart />} />
             <Route path="CateringForm" element={<CateringForm />} />
           </Route>
         </Routes>

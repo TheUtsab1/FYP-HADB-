@@ -39,7 +39,7 @@ const Navbar = () => {
           <Link to="/">Home</Link>
         </li>
         <li className="p__opensans">
-          <Link to="/about">About</Link>
+          <Link to="/about-us">About</Link>
         </li>
         <li className="p__opensans">
           <Link to="/specialMenu">Menu</Link>

@@ -39,6 +39,7 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import * 
+from .views import submit_feedback
 
 router = DefaultRouter()
 router.register(r"listFood", FoodView, basename="list-food")  # Unique basename
@@ -52,9 +53,13 @@ urlpatterns = [
     path('api/submit-booking/', submit_booking, name='submit_booking'),
     path('accounts/', include('allauth.urls')),
     path('api/reservations/', TabelReservationView.as_view(), name='table_reservations'),
-    path("showCart", showCart.as_view()),
+    # path("showCart", showCart.as_view()),
     path("showCart/<item_id>", showCart.as_view()),
-    path("cart/updateQuantity", updateCartQuantity.as_view()),
+    # path("cart/updateQuantity", updateCartQuantity.as_view()),
     path("food-rating/<foodId>", ReviewFood.as_view()),
-    path("clear-cart", CartClear.as_view())
+    path("submit-feedback/", submit_feedback, name="submit_feedback"),
+    # path("clear-cart", CartClear.as_view()),
+    path("cart/", showCart.as_view()),  # Ensure this exists
+    path("cart/update/", updateCartQuantity.as_view()),  # Ensure this exists
+    path("cart/clear/", CartClear.as_view()),  # Ensure this exists
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
