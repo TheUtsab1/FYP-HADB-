@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { MapPin, Clock, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import "./SpecialMenu.css";
 
 const Menu = () => {
@@ -132,7 +132,7 @@ const Menu = () => {
                   <div className="menu-card">
                     <div className="menu-image-container">
                       <img
-                        src={`http://127.0.0.1:8000${food.food_img_url}`}
+                        src={`${food.food_img_url}`}
                         alt={food.food_name}
                         className="menu-image"
                         loading="lazy"

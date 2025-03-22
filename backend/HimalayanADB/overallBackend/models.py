@@ -36,9 +36,10 @@ class FoodTaste(models.Model):
 class Food(models.Model):
     food_name = models.CharField(max_length=500, null=False)
     food_content = models.CharField(max_length=500, null=False)
-    food_slug = models.SlugField(max_length=500, null=True, blank=True)
+    # food_slug = models.SlugField(max_length=500, null=True, blank=True)
+    food_slug = AutoSlugField(populate_from = "food_name", unique=True, null=True)
     food_img_url = models.ImageField(upload_to='products/', null=True, blank=True)
-    food_price = models.IntegerField(null=False, validators=[MinValueValidator(0)])  # Ensures price is not negative
+    food_price = models.IntegerField(null=False, validators=[MinValueValidator(0)]) 
     food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE, null=True)
     taste = models.ForeignKey(FoodTaste, on_delete=models.CASCADE, null=True)
 

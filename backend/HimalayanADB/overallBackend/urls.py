@@ -61,5 +61,6 @@ urlpatterns = [
     # path("clear-cart", CartClear.as_view()),
     path("cart/", showCart.as_view()),  # Ensure this exists
     path("cart/update/", updateCartQuantity.as_view()),  # Ensure this exists
-    path("cart/clear/", CartClear.as_view()),  # Ensure this exists
+    # path("cart/clear/", CartClear.as_view()),
+    path('cart/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

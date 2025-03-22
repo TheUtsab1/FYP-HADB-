@@ -20,12 +20,12 @@
   padding: 2rem 1rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text-dark);
-  background-color: var(--background-light);
+  /* background-color: var(--background-light); */
   min-height: 80vh;
 }
 
 .cart-title {
-  color: var(--secondary-color);
+  color: var(--color-golden);
   text-align: center;
   margin-bottom: 2rem;
   font-size: 2.5rem;

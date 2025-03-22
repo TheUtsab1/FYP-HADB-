@@ -9,7 +9,7 @@ from .serializer import FoodSerializer, FoodTypeSerializer, TabelReservationSeri
 from .models import Food, FoodType, Cart, CartItem, Review
 from django.contrib.auth.models import User
 from .filter import FoodFilter
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import SearchFilter
@@ -170,11 +170,12 @@ class showCart(APIView):
 
     def delete(self, request, item_id):
         try:
-            cart_item = CartItem.objects.get(cart__user=request.user, id=item_id)
+            cart_item = CartItem.objects.get(id=item_id, cart__user=request.user)
             cart_item.delete()
             return Response({"msg": "Item removed"})
         except CartItem.DoesNotExist:
             return Response({"msg": "Item not found"})
+
 
     
 class updateCartQuantity(APIView):
@@ -295,17 +296,30 @@ class ReviewFood(APIView):
         return Response(serializer.data)
 
 
-class CartClear(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-    def delete(self, request):
-        try:
-            allCart = Cart.objects.filter(user = request.user)
-            allCart.delete()
-            return Response({"msg" : "Cart Cleared"})
+# class CartClear(APIView):
+#     permission_classes = [IsAuthenticated]
+#     authentication_classes = [JWTAuthentication]
+#     def delete(self, request):
+#         try:
+#             allCart = Cart.objects.filter(user = request.user)
+#             allCart.delete()
+#             return Response({"msg" : "Cart Cleared"})
         
-        except Exception as e: 
-            return Response({"msg" : "Cart not Cleared"})
+#         except Exception as e: 
+#             return Response({"msg" : "Cart not Cleared"})
+        
+        
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_cart_item(request, item_id):
+    try:
+        # print("-------------------------------------------------", item_id)
+        cart = Cart.objects.get(user=request.user)
+        cart_item = CartItem.objects.get(id=item_id, cart=cart)
+        cart_item.delete()
+        return Response({"message": "Item removed from cart"}, status=status.HTTP_200_OK)
+    except CartItem.DoesNotExist:
+        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def submit_booking(request):

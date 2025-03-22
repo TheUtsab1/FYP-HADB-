@@ -22,8 +22,10 @@ export default function Cart() {
         },
       });
       setCartItems(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching cart:", error);
+      
     }
   };
 
@@ -48,6 +50,7 @@ export default function Cart() {
 
   const removeItem = async (id) => {
     try {
+      console.log(id);
       await axios.delete(`http://127.0.0.1:8000/cart/${id}/`, {
         headers: {
           Authorization: `JWT ${localStorage.getItem("token")}`,
@@ -77,8 +80,8 @@ export default function Cart() {
     (total, item) => total + item.food_item.food_price * item.quantity,
     0
   );
-  const deliveryFee = 3.99;
-  const total = subtotal + deliveryFee;
+  // const deliveryFee = 3.99;
+  const total = subtotal;
 
   return (
     <div className="cart-container">
@@ -90,7 +93,7 @@ export default function Cart() {
             <div className="cart-item" key={item.id}>
               <div className="item-image">
                 <img
-                  src={item.food_item.food_img_url || "/placeholder.svg"}
+                  src={`http://127.0.0.1:8000/${item.food_item.food_img_url}`}
                   alt={item.food_item.food_name}
                 />
               </div>
@@ -150,10 +153,10 @@ export default function Cart() {
             <span>NPR {subtotal.toFixed(2)}</span>
           </div>
 
-          <div className="summary-row">
+          {/* <div className="summary-row">
             <span>Delivery Fee</span>
             <span>NPR {deliveryFee.toFixed(2)}</span>
-          </div>
+          </div> */}
 
           <div className="summary-row total">
             <span>Total</span>
