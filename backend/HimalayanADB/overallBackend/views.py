@@ -115,7 +115,6 @@ class FoodPagination(PageNumberPagination):
     
 
 class FoodView(ModelViewSet):
-    # queryset = Food.objects.all().order_by("?")
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
     lookup_field = "food_slug"
@@ -190,33 +189,23 @@ class updateCartQuantity(APIView):
         return Response({"msg" : "there is problem in backend"})
 
 
-# class Registerview(APIView):
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         username = request.data.get("username")
-#         password = request.data.get("password")
-
-#         user = User.objects.create_user(username= username, password= password)
-#         user.save()
-#         return Response({"message": "User Created Succuessfully"})
-
-
 class TabelReservationView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = TabelReservationSerializer  # Add this
 
     def post(self, request):
         data = request.data.copy()
         data["Booked_by"] = request.user.id
-        serializer = TabelReservationSerializer(data=data)
+        serializer = self.serializer_class(data=data)  # Use self.serializer_class
 
         if serializer.is_valid():
-            reservation = serializer.save()  # Save the reservation to the database
-            reservation.send_confirmation_email()  # Send the confirmation email
+            reservation = serializer.save()
+            reservation.send_confirmation_email()  
             return Response({"message": "Reservation successfully saved!", "data": serializer.data}, status=201)
 
         return Response({"message": "Error in saving reservation", "errors": serializer.errors}, status=400)
+
 
     
 
@@ -367,17 +356,25 @@ def submit_booking(request):
     
     
 @csrf_exempt
-@login_required  # Ensures only logged-in users can submit
+@login_required
 def submit_feedback(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        feedback = Feedback.objects.create(
-            user=request.user,
-            name=data.get("name"),
-            email=data.get("email"),
-            rating=data.get("rating"),
-            feedback_type=data.get("feedbackType"),
-            message=data.get("message"),
-        )
-        return JsonResponse({"message": "Feedback submitted successfully!"}, status=201)
+        try:
+            data = json.loads(request.body)
+            print("Received Data:", data)  # Debugging: Check received data
+
+            feedback = Feedback.objects.create(
+                user=request.user,
+                name=data.get("name"),
+                email=data.get("email"),
+                rating=int(data.get("rating")),  # Ensure integer
+                feedback_type=data.get("feedbackType"),
+                message=data.get("message"),
+            )
+
+            return JsonResponse({"message": "Feedback submitted successfully!"}, status=201)
+        except Exception as e:
+            print("Error:", str(e))  # Debugging: Print error
+            return JsonResponse({"error": "Failed to save feedback", "details": str(e)}, status=400)
+
     return JsonResponse({"error": "Invalid request"}, status=400)

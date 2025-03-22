@@ -14,7 +14,7 @@ export default function Aboutus() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("access_token")}`, // Ensure user is logged in
+        "Authorization": `JWT ${localStorage.getItem("access_token")}`, // Ensure user is logged in
       },
       body: JSON.stringify(data),
     });

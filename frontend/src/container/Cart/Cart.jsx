@@ -1,83 +1,172 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Cart.css";
 
-const Cart = () => {
+export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [specialInstructions, setSpecialInstructions] = useState("");
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log("Fetching cart with token:", token); // Check if the token exists
-        const response = await axios.get("http://127.0.0.1:8000/cart/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        console.log("Cart items fetched:", response.data); // Log the response structure
-        setCartItems(response.data); // Assuming response.data is an array of cart items
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-        setLoading(false);
-        setMessage("Failed to load cart.");
-      }
-    };
-
-    fetchCart();
+    fetchCartItems();
   }, []);
 
-  const handleRemoveFromCart = async (itemId) => {
+  const fetchCartItems = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://127.0.0.1:8000/cart/${itemId}/`, {
+      const response = await axios.get("http://127.0.0.1:8000/cart/", {
         headers: {
           Authorization: `JWT ${token}`,
         },
       });
-
-      setCartItems(cartItems.filter((item) => item.id !== itemId));
-      setMessage("Item removed successfully.");
+      setCartItems(response.data);
     } catch (error) {
-      console.error("Error removing item:", error);
-      setMessage("Failed to remove item.");
+      console.error("Error fetching cart:", error);
     }
   };
 
-  if (loading) return <div>Loading cart...</div>;
+  const updateQuantity = async (id, newQuantity) => {
+    if (newQuantity < 1) return;
+
+    try {
+      await axios.patch(
+        "http://127.0.0.1:8000/cart/update/",
+        { id, quantity: newQuantity },
+        {
+          headers: {
+            Authorization: `JWT ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      fetchCartItems();
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  };
+
+  const removeItem = async (id) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/cart/${id}/`, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("token")}`,
+        },
+      });
+      fetchCartItems();
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
+  };
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="cart-container">
+        <div className="cart-empty">
+          <h2>Your Cart is Empty</h2>
+          <p>Looks like you haven't added any items to your cart yet.</p>
+          <Link to="/specialMenu">
+            <button className="btn-primary">Browse Menu</button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.food_item.food_price * item.quantity,
+    0
+  );
+  const deliveryFee = 3.99;
+  const total = subtotal + deliveryFee;
 
   return (
-    <div className="cart-page">
-      <h2>Your Cart</h2>
-      {message && <p className="cart-message">{message}</p>}
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <ul className="cart-list">
+    <div className="cart-container">
+      <h1 className="cart-title">Your Order</h1>
+
+      <div className="cart-content">
+        <div className="cart-items">
           {cartItems.map((item) => (
-            <li key={item.id} className="cart-item">
-              <img
-                src={item.food_item.food_img_url}
-                alt={item.food_item.food_name}
-              />
-              <div>
-                <h3>{item.food_item.food_name}</h3>
-                <p>Price: NPR {item.food_item.food_price}</p>
-                <p>Quantity: {item.quantity}</p>
+            <div className="cart-item" key={item.id}>
+              <div className="item-image">
+                <img
+                  src={item.food_item.food_img_url || "/placeholder.svg"}
+                  alt={item.food_item.food_name}
+                />
               </div>
-              <button onClick={() => handleRemoveFromCart(item.id)}>
-                Remove
-              </button>
-            </li>
+
+              <div className="item-details">
+                <h3>{item.food_item.food_name}</h3>
+                <p className="item-price">
+                  NPR {item.food_item.food_price.toFixed(2)}
+                </p>
+              </div>
+
+              <div className="item-actions">
+                <div className="quantity-controls">
+                  <button
+                    className="quantity-btn"
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  >
+                    -
+                  </button>
+                  <span className="quantity">{item.quantity}</span>
+                  <button
+                    className="quantity-btn"
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  className="remove-btn"
+                  onClick={() => removeItem(item.id)}
+                >
+                  Remove
+                </button>
+              </div>
+
+              <div className="item-total">
+                NPR {(item.food_item.food_price * item.quantity).toFixed(2)}
+              </div>
+            </div>
           ))}
-        </ul>
-      )}
+
+          <div className="special-instructions">
+            <h3>Special Instructions</h3>
+            <textarea
+              placeholder="Add notes about your order (allergies, spice level preferences, etc.)"
+              value={specialInstructions}
+              onChange={(e) => setSpecialInstructions(e.target.value)}
+            ></textarea>
+          </div>
+        </div>
+
+        <div className="order-summary">
+          <h2>Order Summary</h2>
+
+          <div className="summary-row">
+            <span>Subtotal</span>
+            <span>NPR {subtotal.toFixed(2)}</span>
+          </div>
+
+          <div className="summary-row">
+            <span>Delivery Fee</span>
+            <span>NPR {deliveryFee.toFixed(2)}</span>
+          </div>
+
+          <div className="summary-row total">
+            <span>Total</span>
+            <span>NPR {total.toFixed(2)}</span>
+          </div>
+
+          <button className="btn-checkout">Proceed to Checkout</button>
+
+          <Link to="/menu" className="continue-shopping">
+            Continue Shopping
+          </Link>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Cart;
+}

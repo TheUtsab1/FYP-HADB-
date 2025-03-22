@@ -61,9 +61,9 @@ const Menu = () => {
               <div className="menu-card">
                 <img
                   src={
-                    food.food_img_url.startsWith("http")
-                      ? food.food_img_url
-                      : `http://127.0.0.1:8000${food.food_img_url}`
+                    // food.food_img_url.startsWith("http")
+                    //   ? food.food_img_url
+                      `http://127.0.0.1:8000${food.food_img_url}`
                   }
                   alt={food.food_name}
                   className="menu-image"
