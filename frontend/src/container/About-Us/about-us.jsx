@@ -1,7 +1,8 @@
+"use client";
+
 import "./about-us.css";
 import { images } from "../../constants";
 import { Link } from "react-router-dom";
-// import { Banner } from "../../assets/HADBBanner.jpg";
 
 export default function Aboutus() {
   // Add this function to handle form submission
@@ -9,16 +10,16 @@ export default function Aboutus() {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
-  
+
     const response = await fetch("http://127.0.0.1:8000/submit-feedback/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `JWT ${localStorage.getItem("access_token")}`, // Ensure user is logged in
+        Authorization: `JWT ${localStorage.getItem("access_token")}`, // Ensure user is logged in
       },
       body: JSON.stringify(data),
     });
-  
+
     const result = await response.json();
     if (response.ok) {
       alert("Thank you for your feedback!");
@@ -28,48 +29,8 @@ export default function Aboutus() {
     }
   };
 
-// function FeedbackList() {
-//   const [feedbacks, setFeedbacks] = useState([]);
-
-//   useEffect(() => {
-//     fetch("http://127.0.0.1:8000/get-feedback/")
-//       .then((response) => response.json())
-//       .then((data) => setFeedbacks(data))
-//       .catch((error) => console.error("Error fetching feedback:", error));
-//   }, []);
-
-//   return (
-//     <div className="feedback-list">
-//       <h2>Customer Feedback</h2>
-//       {feedbacks.length > 0 ? (
-//         feedbacks.map((fb, index) => (
-//           <div key={index} className="feedback-item">
-//             <p><strong>{fb.name}:</strong> {fb.message}</p>
-//             <p>Rating: {fb.rating}/5 | Type: {fb.feedback_type}</p>
-//           </div>
-//         ))
-//       ) : (
-//         <p>No feedback available.</p>
-//       )}
-//     </div>
-//   );
-// }
-
-
   return (
     <div className="about-us-container">
-      {/* Hero Section
-      <section className="hero-section">
-        <div className="overlay"></div>
-        <div className="hero-content">
-          <h1 className="hero-title">Himalayan Asian Dining and Bar</h1>
-          <p className="hero-subtitle">
-            Where tradition meets technology for an exceptional dining
-            experience
-          </p>
-        </div>
-      </section> */}
-
       {/* Welcome Section */}
       <section className="welcome-section">
         <div className="section-content">
@@ -96,7 +57,7 @@ export default function Aboutus() {
                 bite, we bring convenience to your fingertips.
               </p>
               <Link to="/Booking">
-                <button className="primary-button">Book a Table</button>
+                <button className="exp-button">Book a Table</button>
               </Link>
             </div>
             <div className="vision-image-container">
@@ -113,7 +74,7 @@ export default function Aboutus() {
       {/* Why Choose Us Section */}
       <section className="features-section">
         <div className="section-content">
-          <h2 className="section-title centered">Why Choose Us?</h2>
+          <h2 className="section-title centered">Why Us?</h2>
 
           <div className="features-grid">
             <FeatureCard
@@ -167,20 +128,16 @@ export default function Aboutus() {
 
           <div className="button-group">
             <Link to="/specialMenu">
-              <button className="primary-button">
-                Order Online
-              </button>
+              <button className="exp-button">Order Online</button>
             </Link>
             <Link to="/Booking">
-              <button className="outline-button">
-                Book a Table
-              </button>
+              <button className="exp-button">Book a Table</button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Feedback Form Section */}
+      {/* Feedback Form Section - Redesigned */}
       <section className="feedback-section">
         <div className="section-content">
           <h2 className="section-title centered">Share Your Feedback</h2>
@@ -251,10 +208,14 @@ export default function Aboutus() {
                 ></textarea>
               </div>
 
-              <div className="form-group centered">
+              <div className="form-group">
                 <button type="submit" className="primary-button">
-                  Submit Feedback
+                  SUBMIT FEEDBACK
                 </button>
+              </div>
+
+              <div className="helper-text">
+                Your feedback helps us improve our services
               </div>
             </form>
           </div>

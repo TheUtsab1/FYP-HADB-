@@ -1,99 +1,141 @@
-import React from "react";
 import {
-  Facebook,
-  Instagram,
+  Phone,
   Mail,
   MapPin,
-  Phone,
   Clock,
+  Facebook,
+  Instagram,
+  Twitter,
 } from "lucide-react";
 import "./Footer.css";
 import logo from "../../assets/logo.png";
 
 const Footer = () => {
-  // const [email, setEmail] = useState("");
-  // const [setSubscribed] = useState(false);
-
-  // const handleSubscribe = (e) => {
-  //   e.preventDefault();
-  //   if (email) {
-  //     setSubscribed(true);
-  //     setEmail("");
-  //     setTimeout(() => setSubscribed(false), 3000);
-  //   }
-  // };
-
   return (
-    <footer className="footer">
-      <div className="footer-top">
-        <div className="footer-section about">
-          <div className="logo-container">
-            <img src={logo} width={100} height={100} alt="Logo" />
-            <h2>Himalayan Asian Dining & Bar</h2>
+    <footer className="restaurant-footer">
+      <div className="footer-container">
+        <div className="footer-main">
+          <div className="footer-left">
+            <div className="footer-logo">
+              <img
+                src={logo || "/placeholder.svg"}
+                alt="Himalayan Asian Dining & Bar"
+              />
+              <div className="logo-text">
+                <h2>Himalayan Asian</h2>
+                <p>DINING & BAR</p>
+              </div>
+            </div>
+
+            <div className="footer-contact-info">
+              <div className="contact-row">
+                <div className="contact-item">
+                  <MapPin className="contact-icon" />
+                  <p>123 Gourmet Street, Foodville</p>
+                </div>
+                <div className="contact-item">
+                  <Phone className="contact-icon" />
+                  <p>9806561880</p>
+                </div>
+              </div>
+              <div className="contact-row">
+                <div className="contact-item">
+                  <Mail className="contact-icon" />
+                  <p>info.utsab10@gmail.com</p>
+                </div>
+                <div className="contact-item">
+                  <Clock className="contact-icon" />
+                  <p>10:00 AM - 11:00 PM (Closed Wed)</p>
+                </div>
+              </div>
+            </div>
           </div>
-          {/* <p>
-            Delicious cuisine and exceptional service since 2022. Our restaurant
-            management system helps us deliver the best dining experience.
-          </p> */}
+
+          <div className="footer-right">
+            <div className="footer-nav">
+              <div className="nav-column">
+                <h3>Quick Access</h3>
+                <ul>
+                  <li>
+                    <a href="/">Home</a>
+                  </li>
+                  <li>
+                    <a href="/about-us">About Us</a>
+                  </li>
+                  <li>
+                    <a href="/specialMenu">Menu</a>
+                  </li>
+                  <li>
+                    <a href="/Catering">Catering</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="nav-column">
+                <h3>About</h3>
+                <ul>
+                  <li>
+                    <a href="/about">Our Story</a>
+                  </li>
+                  <li>
+                    <a href="/about">Our History</a>
+                  </li>
+                </ul>
+              </div>
+              <div className="nav-column">
+                <h3>Services</h3>
+                <ul>
+                  <li>
+                    <a href="/reservations">Reservations</a>
+                  </li>
+                  <li>
+                    <a href="/catering">Catering</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <div className="copyright">
+            <p>
+              &copy; {new Date().getFullYear()} Himalayan Asian Dining and Bar.
+              All rights reserved.
+            </p>
+          </div>
           <div className="social-links">
-            <a target="_blank" href="https://www.facebook.com/" className="social-link" aria-label="Facebook">
-              <Facebook size={20} />
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <Facebook />
             </a>
-            <a target="_blank" href="https://www.facebook.com/" className="social-link" aria-label="Instagram">
-              <Instagram size={20} />
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <Instagram />
+            </a>
+            <a
+              href="https://www.twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+            >
+              <Twitter />
             </a>
           </div>
-        </div>
-
-        <div className="footer-section contact">
-          <h3>Contact Us</h3>
-          <ul>
-            <li>
-              <MapPin size={16} />
-              <span>123 Gourmet Street, Foodville</span>
-            </li>
-            <li>
-              <Phone size={16} />
-              <span>9806561880</span>
-            </li>
-            <li>
-              <Mail size={16} />
-              <span>info.utsab10@gmail.com</span>
-            </li>
-            <li>
-              <Clock size={16} />
-              <span>We're opened all along the week 10:00 AM - 11:00 PM except Wednesday</span>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section quick-links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/menuItem">Menu</a>
-            </li>
-            <li>
-              <a href="/about">About</a>
-            </li>
-            <li>
-              <a href="/catering">Catering</a>
-            </li>
-            <li>
-              <a href="/cart">Cart</a>
-            </li>
-          </ul>
+          <div className="legal-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+          </div>
         </div>
       </div>
 
-      <div className="footer-bottom">
-        <p>
-          &copy; {new Date().getFullYear()} Himalayan Asian Dining and Bar. All rights reserved.
-        </p>
-      </div>
     </footer>
   );
 };

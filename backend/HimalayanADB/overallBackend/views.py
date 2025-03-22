@@ -312,11 +312,10 @@ def submit_booking(request):
     if request.method == 'POST':
         serializer = CateringBookingSerializer(data=request.data)
         if serializer.is_valid():
-            # Save the form data to the database
             booking = serializer.save()
 
             # Send email to admin
-            admin_email = 'admin@example.com'  # Replace with actual admin email
+            admin_email = 'utsabmessi6@gmail.com'  # Replace with actual admin email
             subject = f"New Catering Booking: {booking.first_name} {booking.last_name}"
             message = f"""
             You have received a new catering booking:
@@ -324,33 +323,38 @@ def submit_booking(request):
             Name: {booking.first_name} {booking.last_name}
             Email: {booking.email}
             Phone: {booking.phone}
+            Event Type: {booking.event_type}
             Date: {booking.date}
             Time: {booking.time}
             Guests: {booking.guests}
-            Notes: {booking.notes}
+            Menu Preference: {booking.menu_preference}
+            Special Requests: {booking.special_requests}
             """
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [admin_email])
 
-            # Send email to the user
+            # Send confirmation email to the user
             subject_user = "Catering Booking Confirmation"
             message_user = f"""
             Dear {booking.first_name} {booking.last_name},
 
             Your catering booking has been successfully submitted. Here are the details:
 
+            Event Type: {booking.event_type}
             Date: {booking.date}
             Time: {booking.time}
             Number of Guests: {booking.guests}
-            Notes: {booking.notes}
+            Menu Preference: {booking.menu_preference}
+            Special Requests: {booking.special_requests}
 
             Thank you for choosing our catering service!
 
             Best regards,
-            The Catering Team
+            Himalayan Asian Dining and Bar Team
             """
             send_mail(subject_user, message_user, settings.DEFAULT_FROM_EMAIL, [booking.email])
 
             return Response({"message": "Booking submitted successfully!"}, status=201)
+        
         return Response(serializer.errors, status=400)
     
     

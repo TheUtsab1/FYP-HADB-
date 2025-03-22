@@ -2,6 +2,7 @@ from django.db import models
 from autoslug import AutoSlugField
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 
@@ -11,7 +12,8 @@ class FoodType(models.Model):
         ("LUNCH", "Lunch"),
         ("DINNER", "Dinner"),
         ("BEVRAGE", "Bevrage"),
-        ("DESSERT", "Dissert"),
+        ("DESSERT", "Dessert"),
+        ("SNACKS", "Snacks"),
 
     ]
     food_type = models.CharField(choices=type_name, max_length=40)
@@ -36,10 +38,9 @@ class Food(models.Model):
     food_content = models.CharField(max_length=500, null=False)
     food_slug = models.SlugField(max_length=500, null=True, blank=True)
     food_img_url = models.ImageField(upload_to='products/', null=True, blank=True)
-    food_price = models.IntegerField( null=False)
+    food_price = models.IntegerField(null=False, validators=[MinValueValidator(0)])  # Ensures price is not negative
     food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE, null=True)
     taste = models.ForeignKey(FoodTaste, on_delete=models.CASCADE, null=True)
-
 
     def __str__(self):
         return f"{self.food_name}"
@@ -106,18 +107,23 @@ class CartItem(models.Model):
     def _str_(self):
         return f"{self.quantity} x {self.food_item.food_name} in {self.cart.user.username}'"
     
+
 class CateringBooking(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100 , null=False)
+    last_name = models.CharField(max_length=100, null=False)
     email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    date = models.DateField()
-    time = models.TimeField()
+    phone = models.CharField(max_length=15, null=False)
+    event_type = models.CharField(max_length=50, null=False, default="other")
     guests = models.IntegerField()
-    notes = models.TextField(blank=True, null=True)
+    date = models.DateField()
+    time = models.CharField(max_length=20, null=False, default="other")
+    # venue_address = models.TextField()
+    menu_preference = models.CharField(max_length=50, null=False, default="other")
+    special_requests = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Booking by {self.first_name} {self.last_name} on {self.date}"
+
 
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Ensures only logged-in users can submit

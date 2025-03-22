@@ -114,7 +114,11 @@ body {
   left: 0;
   width: 100%;
   height: 6px;
-  background: linear-gradient(90deg, var(--color-golden) 0%, var(--color-red) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-golden) 0%,
+    var(--color-red) 100%
+  );
 }
 
 /* Title */
@@ -334,7 +338,12 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: 0.5s;
 }
 
@@ -579,4 +588,3 @@ body {
 .add-to-cart-btn.added {
   animation: pulse 0.5s ease;
 }
-
