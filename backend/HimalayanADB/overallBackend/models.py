@@ -9,11 +9,15 @@ from django.core.validators import MinValueValidator
 class FoodType(models.Model):
     type_name = [
         ("BREAKFAST", "Breakfast"),
+        ("BRUNCH", "Brunch"),
         ("LUNCH", "Lunch"),
         ("DINNER", "Dinner"),
         ("BEVRAGE", "Bevrage"),
         ("DESSERT", "Dessert"),
+        ("APPETIZERS", "Appetizers"),
         ("SNACKS", "Snacks"),
+        ("BUFFET", "Buffet"),
+        ("SMOOTIES", "Smooties"),
 
     ]
     food_type = models.CharField(choices=type_name, max_length=40)

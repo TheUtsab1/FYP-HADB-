@@ -109,9 +109,9 @@ def handlelogout(request):
     return redirect('home') 
 
 class FoodPagination(PageNumberPagination):
-    page_size = 9
+    page_size = 12
     page_query_param = "page_size"
-    max_page_size = 9
+    max_page_size = 12
     
 
 class FoodView(ModelViewSet):
