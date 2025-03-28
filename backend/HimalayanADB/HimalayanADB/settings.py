@@ -48,9 +48,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'django.contrib.sites',  # Required for allauth
-    'allauth',
-    'allauth.account',
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     'overallBackend',
     'djoser',
     'drf_spectacular',
@@ -63,6 +65,21 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],  # Corrected key name
 }
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["email", "profile"],
+        "AUTH_PARAMS": {"access_type": "online"},
+    }
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '219385369763-kgepco7akv2founom70opk4lrfp5o0pd.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 
 MIDDLEWARE = [

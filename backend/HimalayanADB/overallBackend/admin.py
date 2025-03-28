@@ -1,11 +1,40 @@
 from django.contrib import admin
-from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review, Feedback
+from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review, Feedback, Table, Reservation
 from django.contrib import admin
+
 
 # Register your models here.
 
 admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, Review))
 
+
+@admin.register(Table)
+class TableAdmin(admin.ModelAdmin):
+    list_display = ("table_number", "capacity", "status")
+    list_filter = ("status",)
+    search_fields = ("table_number",)
+
+# @admin.register(Reservation)
+# class ReservationAdmin(admin.ModelAdmin):
+#     list_display = ("table", "user_email", "phone_number", "status")
+#     list_filter = ("status",)
+#     search_fields = ("user_email", "table__table_number")
+    
+
+@admin.register(Reservation)
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ('table', 'status')
+    list_filter = ('status',)
+    actions = ['approve_reservations', 'reject_reservations']
+    
+    def approve_reservations(self, request, queryset):
+        queryset.update(status='approved')
+        for reservation in queryset:
+            reservation.table.status = 'occupied'
+            reservation.table.save()
+    
+    def reject_reservations(self, request, queryset):
+        queryset.update(status='rejected')
 
 @admin.register(TabelReservation)
 class TabelReservationAdmin(admin.ModelAdmin):
@@ -21,12 +50,36 @@ class TabelReservationAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         
         
-class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'rating', 'feedback_type', 'created_at')
-    search_fields = ('name', 'email', 'feedback_type')
-    list_filter = ('rating', 'feedback_type', 'created_at')
+from django import forms
+from django.contrib import admin
+from .models import Feedback
 
+class FeedbackAdmin(admin.ModelAdmin):
+    # Include the 'user' field in list_display to ensure it shows up in the list view
+    list_display = ('id', 'name', 'email', 'rating', 'feedback_type', 'message', 'created_at', 'user')  # Added 'message'
+    
+    # Allow filtering by 'user' field in the admin
+    list_filter = ('rating', 'feedback_type', 'created_at', 'user')  # Added 'user' to filter
+    
+    # Allow searching by these fields
+    search_fields = ('name', 'email', 'message')
+    
+    # Mark the 'created_at' field as read-only in the admin
+    readonly_fields = ('created_at',)
+    
+    # Enable date-based filtering in the admin
+    date_hierarchy = 'created_at'
+
+    # If the user field is not showing correctly, we can manually define the save_model method
+    def save_model(self, request, obj, form, change):
+        if not obj.user:  # Make sure the user is set if not present
+            obj.user = request.user
+        super().save_model(request, obj, form, change)
+
+# Register the Feedback model with the custom admin class
 admin.site.register(Feedback, FeedbackAdmin)
+
+
         
 # @admin.register(TableReservations)
 # class TableReservationAdmin(admin.ModelAdmin):

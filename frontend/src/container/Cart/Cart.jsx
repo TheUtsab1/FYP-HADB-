@@ -165,7 +165,7 @@ export default function Cart() {
 
           <button className="btn-checkout">Proceed to Checkout</button>
 
-          <Link to="/menu" className="continue-shopping">
+          <Link to="/specialMenu" className="continue-shopping">
             Continue Shopping
           </Link>
         </div>

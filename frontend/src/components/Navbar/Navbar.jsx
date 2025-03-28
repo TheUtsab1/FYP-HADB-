@@ -24,9 +24,9 @@ const Navbar = () => {
     setIsUserAuthenticated(false);
     console.log("User logged out.");
   };
-  useEffect(()=>{
-    console.log(isUserAuthenticated)
-  },[isUserAuthenticated])
+  useEffect(() => {
+    console.log(isUserAuthenticated);
+  }, [isUserAuthenticated]);
   // Debug log
 
   return (
@@ -62,7 +62,7 @@ const Navbar = () => {
           </Link>
         )}
         <div />
-        <Link to="/Booking" className="p__opensans">
+        <Link to="/table-booking" className="p__opensans">
           Book Table
         </Link>
       </div>

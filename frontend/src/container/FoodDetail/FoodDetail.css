@@ -25,9 +25,10 @@
 }
 
 body {
-  background: url("../../assets/bg.png");
+  background-color: var(--color-red);
+  /* background: url("../../assets/bg.png");
   background-position: center;
-  background-size: cover;
+  background-size: cover; */
   font-family: "Poppins", sans-serif;
   color: #333;
   line-height: 1.6;

@@ -5,27 +5,33 @@ import { images } from "../../constants";
 import { Link } from "react-router-dom";
 
 export default function Aboutus() {
-  // Add this function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
 
-    const response = await fetch("http://127.0.0.1:8000/submit-feedback/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${localStorage.getItem("access_token")}`, // Ensure user is logged in
-      },
-      body: JSON.stringify(data),
-    });
+    console.log("Submitting:", data); // Debug what's being sent
 
-    const result = await response.json();
-    if (response.ok) {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/submit-feedback/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${localStorage.getItem("access_token")}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      console.log("Server response:", result); // Debug response
+
+      if (!response.ok) throw new Error(result.error || "Submission failed");
+
       alert("Thank you for your feedback!");
       event.target.reset();
-    } else {
-      alert("Error submitting feedback. Please log in first.");
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert(error.message);
     }
   };
 

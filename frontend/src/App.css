@@ -1,4 +1,4 @@
-body{
+body {
   overflow-x: hidden;
 }
 .section__padding {
@@ -12,11 +12,11 @@ body{
 }
 
 .app__bg {
-  background: url('./assets/bg.png');
-  background-position: center;
+  background-color: #5b0017;
+  /* background-position: center;
   background-size: cover;
   background-repeat: repeat;
-  background-attachment: fixed;
+  background-attachment: fixed; */
 }
 
 .app__wrapper {
@@ -57,17 +57,17 @@ body{
 
 .custom__button {
   background-color: var(--color-crimson);
-    color: var(--color-black);
-    font-family: var(--font-base);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 28px;
-    font-size: 16px;
-    padding: 0.5rem 1.5rem;
-    border-radius: 1px;
-    border: none;
-    outline: none;
-    cursor: pointer;
+  color: var(--color-black);
+  font-family: var(--font-base);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 28px;
+  font-size: 16px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1px;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
 
 .p__cormorant {
@@ -76,7 +76,7 @@ body{
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: capitalize;
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  font-feature-settings: "tnum" on, "lnum" on;
   line-height: 29.9px;
   font-size: 23px;
 }
@@ -154,7 +154,7 @@ body{
   .section__padding {
     padding: 4rem 2rem;
   }
-  
+
   .p__cormorant {
     font-size: 21px;
   }
@@ -178,7 +178,6 @@ body{
     line-height: 70px;
   }
 }
-
 
 .auth__box {
   background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */

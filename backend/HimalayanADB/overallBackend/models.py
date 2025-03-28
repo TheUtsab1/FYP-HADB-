@@ -95,6 +95,65 @@ class TabelReservation(models.Model):
         """
         send_mail(subject, message, 'your_email@example.com', [self.email])
 
+
+# class Table(models.Model):
+#     STATUS_CHOICES = [
+#         ('available', 'Available'),
+#         ('occupied', 'Occupied'),
+#     ]
+
+#     table_number = models.IntegerField(unique=True)
+#     capacity = models.IntegerField()
+#     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='available')
+#     reserved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+#     reserved_at = models.DateTimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return f"Table {self.table_number} ({self.capacity} seats) - {self.status}"
+
+
+# class Table(models.Model):
+#     STATUS_CHOICES = [
+#         ('available', 'Available'),
+#         ('pending', 'Pending Approval'),
+#         ('occupied', 'Occupied'),
+#     ]
+
+#     table_number = models.IntegerField(unique=True)
+#     capacity = models.IntegerField()
+#     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='available')
+#     reserved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+#     reserved_at = models.DateTimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return f"Table {self.table_number} ({self.capacity} seats) - {self.status}"
+
+class Table(models.Model):
+    STATUS_CHOICES = [
+        ("available", "Available"),
+        ("occupied", "Occupied"),
+    ]
+    table_number = models.CharField(max_length=10, unique=True)
+    capacity = models.PositiveIntegerField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="available")
+
+    def __str__(self):
+        return f"Table {self.table_number} ({self.capacity} seats)"
+
+
+class Reservation(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
+    ]
+    table = models.ForeignKey(Table, on_delete=models.CASCADE)
+    # user_email = models.EmailField()
+    # phone_number = models.CharField(max_length=15)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+
+    def __str__(self):
+        return f"Reservation for {self.table} - {self.status}"
     
 
 class Cart(models.Model):

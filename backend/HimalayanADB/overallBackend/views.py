@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from .filter import FoodFilter
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
@@ -24,6 +25,14 @@ from django.contrib.auth import logout
 from django.core.mail import send_mail
 from .models import Feedback
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+# from django.shortcuts import get_object_or_404
+from .models import Table
+from .serializer import TableSerializer, ReservationSerializer
+from .models import Table, Reservation
+from django.core.mail import send_mail
+from .utils import send_booking_email
+
 
 
 # from django.conf import settings 
@@ -48,7 +57,27 @@ from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
+
+
+def google_login(request):
+    import json
+    body = json.loads(request.body)
+    token = body.get("token")
+
+    try:
+        # Verify token with Google
+        google_info = id_token.verify_oauth2_token(token, requests.Request())
+
+        # Check if user exists, otherwise create
+        user, created = User.objects.get_or_create(email=google_info["email"], defaults={"username": google_info["name"]})
+
+        return JsonResponse({"message": "Login successful", "user": user.username})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
 
 @csrf_exempt # Add API View for user signup and login
@@ -82,6 +111,41 @@ def user_signup(request):
 
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
+        
+# @api_view(['POST'])
+# def user_login(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+#             username = data.get('username')
+#             password = data.get('password')
+
+#             user = authenticate(username=username, password=password)
+
+#             if user is not None:
+#                 # Create JWT tokens
+#                 refresh = RefreshToken.for_user(user)
+#                 access_token = str(refresh.access_token)
+
+#                 # You can store the refresh token and send it if needed
+#                 return JsonResponse({
+#                     "success": True,
+#                     "access_token": access_token,  # Send the JWT token to the frontend
+#                     "refresh_token": str(refresh),  # Send refresh token if needed
+#                     "message": "Login successful"
+#                 }, status=200)
+
+#             else:
+#                 return JsonResponse({
+#                     "success": False,
+#                     "error": "Invalid username or password"
+#                 }, status=401)
+
+#         except Exception as e:
+#             return JsonResponse({
+#                 "success": False,
+#                 "error": str(e)
+#             }, status=500)
 
 @csrf_exempt
 def user_login(request):
@@ -208,7 +272,92 @@ class TabelReservationView(APIView):
         return Response({"message": "Error in saving reservation", "errors": serializer.errors}, status=400)
 
 
+
+# @api_view(['GET'])
+# def get_tables(request):
+#     tables = Table.objects.all()
+#     serializer = TableSerializer(tables, many=True)
+#     return JsonResponse(serializer.data, safe=False)
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def reserve_table(request, table_id):
+#     table = get_object_or_404(Table, id=table_id)
+
+#     if table.status == 'occupied':
+#         return JsonResponse({"error": "Table is already occupied"}, status=400)
+
+#     table.status = 'occupied'
+#     table.reserved_by = request.user
+#     table.reserved_at = now()
+#     table.save()
     
+#     return JsonResponse({"message": "Table reserved successfully!"})
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def release_table(request, table_id):
+#     table = get_object_or_404(Table, id=table_id)
+
+#     if table.status == 'available':
+#         return JsonResponse({"error": "Table is already available"}, status=400)
+
+#     table.status = 'available'
+#     table.reserved_by = None
+#     table.reserved_at = None
+#     table.save()
+    
+#     return JsonResponse({"message": "Table released successfully!"})
+
+
+@api_view(['GET'])
+def get_tables(request):
+    tables = Table.objects.all()
+    serializer = TableSerializer(tables, many=True)
+    return Response(serializer.data)  # DRF auto-sets renderer
+
+
+@api_view(['POST'])
+def request_booking(request, table_id):
+    try:
+        table = Table.objects.get(id=table_id, status="available")
+        Reservation.objects.create(table=table)
+        return Response({"message": "Booking requested!"}, status=status.HTTP_201_CREATED)
+    except Table.DoesNotExist:
+        return Response({"error": "Table not available"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PATCH'])
+def update_booking(request, reservation_id):
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+        status = request.data.get('status')
+        
+        if status not in ['approved', 'rejected']:
+            return Response(
+                {"error": "Invalid status"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        reservation.status = status
+        reservation.save()
+        
+        if status == 'approved':
+            reservation.table.status = 'occupied'
+            reservation.table.save()
+        
+        return Response(
+            {"message": "Reservation updated successfully"},
+            status=status.HTTP_200_OK
+        )
+        
+    except Reservation.DoesNotExist:
+        return Response(
+            {"error": "Reservation not found"}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+
+
 
 # class create_order(APIView):
 #     def post(self, request):
@@ -379,20 +528,30 @@ def submit_feedback(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
-            print("Received Data:", data)  # Debugging: Check received data
-
+            
+            # Validate required fields
+            required_fields = ['name', 'email', 'rating', 'feedbackType', 'message']
+            if not all(field in data for field in required_fields):
+                return JsonResponse({"error": "Missing required fields"}, status=400)
+            
+            # Create feedback
             feedback = Feedback.objects.create(
                 user=request.user,
-                name=data.get("name"),
-                email=data.get("email"),
-                rating=int(data.get("rating")),  # Ensure integer
-                feedback_type=data.get("feedbackType"),
-                message=data.get("message"),
+                name=data['name'],
+                email=data['email'],
+                rating=int(data['rating']),
+                feedback_type=data['feedbackType'],
+                message=data['message'],
             )
-
-            return JsonResponse({"message": "Feedback submitted successfully!"}, status=201)
+            
+            return JsonResponse({
+                "message": "Feedback submitted successfully!",
+                "id": feedback.id
+            }, status=201)
+            
+        except ValueError as e:
+            return JsonResponse({"error": "Invalid data format", "details": str(e)}, status=400)
         except Exception as e:
-            print("Error:", str(e))  # Debugging: Print error
-            return JsonResponse({"error": "Failed to save feedback", "details": str(e)}, status=400)
+            return JsonResponse({"error": "Failed to save feedback", "details": str(e)}, status=500)
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    return JsonResponse({"error": "Invalid request method"}, status=405)
