@@ -39,13 +39,14 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import * 
-from .views import submit_feedback
+from .views import FeedbackViewSet
 
 
 router = DefaultRouter()
 router.register(r"listFood", FoodView, basename="list-food")  # Unique basename
 router.register(r'category', FoodCategoryView)
 router.register(r'topList', FoodTopView, basename='foodtop')
+router.register('feedback', FeedbackViewSet, basename='feedback')
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -57,7 +58,7 @@ urlpatterns = [
     path('api/reservations/', TabelReservationView.as_view(), name='table_reservations'),
     path("showCart/<item_id>", showCart.as_view()),
     path("food-rating/<foodId>", ReviewFood.as_view()),
-    path("submit-feedback/", submit_feedback, name="submit_feedback"),
+    # path("submit-feedback/", submit_feedback, name="submit_feedback"),
     path("cart/", showCart.as_view()),
     path("cart/update/", updateCartQuantity.as_view()),
     path('cart/<int:item_id>/', remove_cart_item, name='remove_cart_item'),

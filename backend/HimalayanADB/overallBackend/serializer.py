@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review, CateringBooking, Table, Reservation
+from .models import Food, FoodTaste, FoodType, TabelReservation, Cart, CartItem, Review, CateringBooking, Table, Reservation, Feedback
 from django.contrib.auth.models import User
 
 class TabelReservationSerializer(serializers.ModelSerializer):
@@ -79,3 +79,14 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = '__all__'
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model = Feedback
+        fields = '__all__'
+        
+    def create(self, validated_data):
+        user = self.context['request'].user
+        feedback = Feedback.objects.create(user=user, **validated_data)
+        return feedback

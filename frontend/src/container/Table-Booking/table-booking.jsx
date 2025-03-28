@@ -36,10 +36,18 @@ export default function TableBooking() {
   const handleReservation = async (tableId) => {
     setReservingTable(tableId);
     try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+  
       await axios.post(
         `http://localhost:8000/api/tables/request-booking/${tableId}/`,
-        {}
+        {},
+        {
+          headers: {
+            Authorization: `JWT ${token}`, // Include token in request headers
+          },
+        }
       );
+  
       alert("Booking requested! Admin will confirm shortly.");
       fetchTables(); // Immediate refresh after booking
     } catch (error) {

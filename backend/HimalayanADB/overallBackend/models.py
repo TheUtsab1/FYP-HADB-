@@ -129,9 +129,12 @@ class TabelReservation(models.Model):
 #         return f"Table {self.table_number} ({self.capacity} seats) - {self.status}"
 
 class Table(models.Model):
+    STATUS_AVAILABLE = "available"
+    STATUS_OCCUPIED = "occupied"
+
     STATUS_CHOICES = [
-        ("available", "Available"),
-        ("occupied", "Occupied"),
+        (STATUS_AVAILABLE, "Available"),
+        (STATUS_OCCUPIED, "Occupied"),
     ]
     table_number = models.CharField(max_length=10, unique=True)
     capacity = models.PositiveIntegerField()
@@ -142,15 +145,29 @@ class Table(models.Model):
 
 
 class Reservation(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_APPROVED = "approved"
+    STATUS_REJECTED = "rejected"
+
     STATUS_CHOICES = [
-        ("pending", "Pending"),
-        ("approved", "Approved"),
-        ("rejected", "Rejected"),
+        (STATUS_PENDING, "Pending"),
+        (STATUS_APPROVED, "Approved"),
+        (STATUS_REJECTED, "Rejected"),
     ]
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     # user_email = models.EmailField()
     # phone_number = models.CharField(max_length=15)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    
+    def save(self, *args, **kwargs):
+        if self.status == self.STATUS_APPROVED:
+            self.table.status = Table.STATUS_OCCUPIED
+            self.table.save()
+        else:
+            self.table.status = Table.STATUS_AVAILABLE
+            self.table.save()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Reservation for {self.table} - {self.status}"

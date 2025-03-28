@@ -25,16 +25,51 @@ class TableAdmin(admin.ModelAdmin):
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('table', 'status')
     list_filter = ('status',)
-    actions = ['approve_reservations', 'reject_reservations']
+    # actions = ['approve_reservations', 'reject_reservations']
+
+    # def approve_reservations(self, request, queryset):
+    #     for reservation in queryset:
+    #         if reservation.table:  # Ensure table is assigned
+    #             reservation.status = 'approved'
+    #             reservation.table.status = 'occupied'
+    #             reservation.table.save()  # Save table update
+    #             reservation.save()  # Save reservation update
+
+    # approve_reservations.short_description = "Approve selected reservations and mark tables as occupied"
+
+    # def reject_reservations(self, request, queryset):
+    #     queryset.update(status='rejected')
+
+    # reject_reservations.short_description = "Reject selected reservations"
     
-    def approve_reservations(self, request, queryset):
-        queryset.update(status='approved')
-        for reservation in queryset:
-            reservation.table.status = 'occupied'
-            reservation.table.save()
     
-    def reject_reservations(self, request, queryset):
-        queryset.update(status='rejected')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 @admin.register(TabelReservation)
 class TabelReservationAdmin(admin.ModelAdmin):

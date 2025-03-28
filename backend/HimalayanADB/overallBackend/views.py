@@ -28,7 +28,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 # from django.shortcuts import get_object_or_404
 from .models import Table
-from .serializer import TableSerializer, ReservationSerializer
+from .serializer import TableSerializer, ReservationSerializer, FeedbackSerializer
 from .models import Table, Reservation
 from django.core.mail import send_mail
 from .utils import send_booking_email
@@ -320,8 +320,9 @@ def get_tables(request):
 @api_view(['POST'])
 def request_booking(request, table_id):
     try:
+        print(request.user)
         table = Table.objects.get(id=table_id, status="available")
-        Reservation.objects.create(table=table)
+        Reservation.objects.create(table=table, user=request.user)
         return Response({"message": "Booking requested!"}, status=status.HTTP_201_CREATED)
     except Table.DoesNotExist:
         return Response({"error": "Table not available"}, status=status.HTTP_400_BAD_REQUEST)
@@ -522,36 +523,41 @@ def submit_booking(request):
     
     
     
-@csrf_exempt
-@login_required
-def submit_feedback(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
+# @csrf_exempt
+# @login_required
+# def submit_feedback(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body)
             
-            # Validate required fields
-            required_fields = ['name', 'email', 'rating', 'feedbackType', 'message']
-            if not all(field in data for field in required_fields):
-                return JsonResponse({"error": "Missing required fields"}, status=400)
+#             # Validate required fields
+#             required_fields = ['name', 'email', 'rating', 'feedbackType', 'message']
+#             if not all(field in data for field in required_fields):
+#                 return JsonResponse({"error": "Missing required fields"}, status=400)
             
-            # Create feedback
-            feedback = Feedback.objects.create(
-                user=request.user,
-                name=data['name'],
-                email=data['email'],
-                rating=int(data['rating']),
-                feedback_type=data['feedbackType'],
-                message=data['message'],
-            )
+#             # Create feedback
+#             feedback = Feedback.objects.create(
+#                 user=request.user,
+#                 name=data['name'],
+#                 email=data['email'],
+#                 rating=int(data['rating']),
+#                 feedback_type=data['feedbackType'],
+#                 message=data['message'],
+#             )
             
-            return JsonResponse({
-                "message": "Feedback submitted successfully!",
-                "id": feedback.id
-            }, status=201)
+#             return JsonResponse({
+#                 "message": "Feedback submitted successfully!",
+#                 "id": feedback.id
+#             }, status=201)
             
-        except ValueError as e:
-            return JsonResponse({"error": "Invalid data format", "details": str(e)}, status=400)
-        except Exception as e:
-            return JsonResponse({"error": "Failed to save feedback", "details": str(e)}, status=500)
+#         except ValueError as e:
+#             return JsonResponse({"error": "Invalid data format", "details": str(e)}, status=400)
+#         except Exception as e:
+#             return JsonResponse({"error": "Failed to save feedback", "details": str(e)}, status=500)
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+#     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+class FeedbackViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Feedback.objects.all();
+    serializer_class = FeedbackSerializer
