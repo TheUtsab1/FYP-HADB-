@@ -1,12 +1,5 @@
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  Facebook,
-  Instagram,
-  Twitter,
-} from "lucide-react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Link } from "react-router-dom";
 import "./Footer.css";
 import logo from "../../assets/logo.png";
 
@@ -17,37 +10,30 @@ const Footer = () => {
         <div className="footer-main">
           <div className="footer-left">
             <div className="footer-logo">
-              <img
-                src={logo || "/placeholder.svg"}
-                alt="Himalayan Asian Dining & Bar"
-              />
+              <div className="logo-img">
+                <Link to="/">
+                  <img
+                    src={logo}
+                    alt="Himalayan Asian Dining & Bar"
+                    width={60}
+                    height={60}
+                  />
+                </Link>
+              </div>
               <div className="logo-text">
                 <h2>Himalayan Asian</h2>
                 <p>DINING & BAR</p>
               </div>
             </div>
 
-            <div className="footer-contact-info">
-              <div className="contact-row">
-                <div className="contact-item">
-                  <MapPin className="contact-icon" />
-                  <p>123 Gourmet Street, Foodville</p>
-                </div>
-                <div className="contact-item">
-                  <Phone className="contact-icon" />
-                  <p>9806561880</p>
-                </div>
-              </div>
-              <div className="contact-row">
-                <div className="contact-item">
-                  <Mail className="contact-icon" />
-                  <p>info.utsab10@gmail.com</p>
-                </div>
-                <div className="contact-item">
-                  <Clock className="contact-icon" />
-                  <p>10:00 AM - 11:00 PM (Closed Wed)</p>
-                </div>
-              </div>
+            <div className="footer-info-box">
+              <p>
+                We are located at 123 Gourmet Street, Foodville.
+                <br />
+                Contact us at 9806561880 or email us at info.utsab10@gmail.com.
+                <br />
+                We are available 10:00 AM - 11:00 PM (Closed Wednesday).
+              </p>
             </div>
           </div>
 
@@ -63,10 +49,10 @@ const Footer = () => {
                     <a href="/about-us">About Us</a>
                   </li>
                   <li>
-                    <a href="/specialMenu">Menu</a>
+                    <a href="/menu">Menu</a>
                   </li>
                   <li>
-                    <a href="/Catering">Catering</a>
+                    <a href="/catering">Catering</a>
                   </li>
                 </ul>
               </div>
@@ -74,10 +60,10 @@ const Footer = () => {
                 <h3>About</h3>
                 <ul>
                   <li>
-                    <a href="/about">Our Story</a>
+                    <a href="/our-story">Our Story</a>
                   </li>
                   <li>
-                    <a href="/about">Our History</a>
+                    <a href="/our-history">Our History</a>
                   </li>
                 </ul>
               </div>
@@ -130,12 +116,11 @@ const Footer = () => {
             </a>
           </div>
           <div className="legal-links">
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Service</a>
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/terms-of-service">Terms of Service</a>
           </div>
         </div>
       </div>
-
     </footer>
   );
 };

@@ -65,10 +65,11 @@ export default function Aboutus() {
             </div>
             <div className="vision-image-container">
               <img
-                src={images.FrontView || "/placeholder.svg"}
+                src={images.FrontView}
                 alt="Restaurant interior"
                 className="vision-image"
               />
+              <div className="image-overlay"></div>
             </div>
           </div>
         </div>
@@ -131,7 +132,7 @@ export default function Aboutus() {
 
           <div className="button-group">
             <Link to="/specialMenu">
-              <button className="exp-button">Order Online</button>
+              <button className="exp-button">View our Menu</button>
             </Link>
             <Link to="/Booking">
               <button className="exp-button">Book a Table</button>
