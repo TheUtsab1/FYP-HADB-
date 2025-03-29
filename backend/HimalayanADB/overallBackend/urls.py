@@ -55,7 +55,7 @@ urlpatterns = [
     path("api/google-login/", google_login, name="google_login"),
     path('api/submit-booking/', submit_booking, name='submit_booking'),
     # path('accounts/', include('allauth.urls')),
-    path('api/reservations/', TabelReservationView.as_view(), name='table_reservations'),
+    # path('api/reservations/', TabelReservationView.as_view(), name='table_reservations'),
     path("showCart/<item_id>", showCart.as_view()),
     path("food-rating/<foodId>", ReviewFood.as_view()),
     # path("submit-feedback/", submit_feedback, name="submit_feedback"),

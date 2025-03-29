@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializer import FoodSerializer, FoodTypeSerializer, TabelReservationSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
+from .serializer import FoodSerializer, FoodTypeSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
 
 from .models import Food, FoodType, Cart, CartItem, Review
 from django.contrib.auth.models import User
@@ -254,22 +254,22 @@ class updateCartQuantity(APIView):
         return Response({"msg" : "there is problem in backend"})
 
 
-class TabelReservationView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    serializer_class = TabelReservationSerializer  # Add this
+# class TabelReservationView(APIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = TabelReservationSerializer  # Add this
 
-    def post(self, request):
-        data = request.data.copy()
-        data["Booked_by"] = request.user.id
-        serializer = self.serializer_class(data=data)  # Use self.serializer_class
+#     def post(self, request):
+#         data = request.data.copy()
+#         data["Booked_by"] = request.user.id
+#         serializer = self.serializer_class(data=data)  # Use self.serializer_class
 
-        if serializer.is_valid():
-            reservation = serializer.save()
-            reservation.send_confirmation_email()  
-            return Response({"message": "Reservation successfully saved!", "data": serializer.data}, status=201)
+#         if serializer.is_valid():
+#             reservation = serializer.save()
+#             reservation.send_confirmation_email()  
+#             return Response({"message": "Reservation successfully saved!", "data": serializer.data}, status=201)
 
-        return Response({"message": "Error in saving reservation", "errors": serializer.errors}, status=400)
+#         return Response({"message": "Error in saving reservation", "errors": serializer.errors}, status=400)
 
 
 

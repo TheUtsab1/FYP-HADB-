@@ -63,37 +63,37 @@ class Review(models.Model):
     comment = models.CharField(max_length=500)
 
 
-class TabelReservation(models.Model):
-    STATUS_CHOICES = [
-        ('Pending', 'Pending'),
-        ('Booked', 'Booked'),
-        ('Rejected', 'Rejected'),
-    ]
+# class TabelReservation(models.Model):
+#     STATUS_CHOICES = [
+#         ('Pending', 'Pending'),
+#         ('Booked', 'Booked'),
+#         ('Rejected', 'Rejected'),
+#     ]
 
-    Booked_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    Booking_name = models.CharField(max_length=100, null=False)
-    email = models.CharField(max_length=100, null=False)
-    No_of_person = models.CharField(max_length=20, null=False)
-    Date = models.DateField(null=False)
-    time = models.TimeField(null=False)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+#     Booked_by = models.ForeignKey(User, on_delete=models.CASCADE)
+#     Booking_name = models.CharField(max_length=100, null=False)
+#     email = models.CharField(max_length=100, null=False)
+#     No_of_person = models.CharField(max_length=20, null=False)
+#     Date = models.DateField(null=False)
+#     time = models.TimeField(null=False)
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
 
-    def __str__(self):
-        return self.Booking_name
+#     def __str__(self):
+#         return self.Booking_name
 
-    def send_booking_confirmation(self):
-        subject = "Table Reservation Update"
-        message = f"""
-        Hello {self.Booking_name},
+#     def send_booking_confirmation(self):
+#         subject = "Table Reservation Update"
+#         message = f"""
+#         Hello {self.Booking_name},
 
-        Your reservation on {self.Date} at {self.time} has been {self.status}.
+#         Your reservation on {self.Date} at {self.time} has been {self.status}.
 
-        Thank you for choosing us!
+#         Thank you for choosing us!
 
-        Best regards,
-        Himalayan Asian Dining and Bar Team
-        """
-        send_mail(subject, message, 'your_email@example.com', [self.email])
+#         Best regards,
+#         Himalayan Asian Dining and Bar Team
+#         """
+#         send_mail(subject, message, 'your_email@example.com', [self.email])
 
 
 # class Table(models.Model):
@@ -174,19 +174,23 @@ class Reservation(models.Model):
     
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_cart')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
-        return f"Cart of {self.user.username}"
+    def __str__(self):
+        return f"{self.user.username}"
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     food_item = models.ForeignKey(Food, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    def _str_(self):
-        return f"{self.quantity} x {self.food_item.food_name} in {self.cart.user.username}'"
+    def __str__(self):
+        return f"{self.quantity} x {self.food_item.food_name} by {self.cart.user.username}"
+
+
+
     
 
 class CateringBooking(models.Model):

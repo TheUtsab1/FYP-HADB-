@@ -218,5 +218,29 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
 # RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
 
+# JAZZMIN_SETTINGS = {
+#     "site_logo": "../media/logo.png",
+#     "site_header": "Himalayan Asian Dining and Bar",
+#     "site_title": "Himalayan Asian Dining and Bar",
+#     "site_icon": "./media/logo.png",
+#     "copyright": "Himalayan Asian Dining and Bar",
+#     "show_ui_builder": False,
+# }
+
+JAZZMIN_SETTINGS = {
+    "site_logo": "../media/logo.png",
+    "site_title": "HimalayanADB Admin",
+    "site_header": "Himalayan Asian Dining & Bar",
+    "welcome_sign": "Welcome to HimalayanADB Admin Panel",
+    "copyright": "Himalayan Asian Dining and Bar",
+    "search_model": "auth.User",  # Enable search in Django Admin
+
+    # Side menu customization
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"model": "auth.User"},
+        {"model": "overallBackend.Reservations"},
+    ],
+}
 
 
