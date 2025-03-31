@@ -110,7 +110,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'utsabmessi6@gmail.com'
 EMAIL_HOST_PASSWORD = 'ytzg btbr uqgw srtb'
 
-
 DEFAULT_FROM_EMAIL = 'utsabmessi6@gmail.com'
 
 

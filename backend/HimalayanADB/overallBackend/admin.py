@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Food, FoodTaste, FoodType, Cart, CartItem, Review, Feedback, Table, Reservation
 from django.contrib import admin
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Register your models here.
@@ -14,17 +16,54 @@ class TableAdmin(admin.ModelAdmin):
     list_filter = ("status",)
     search_fields = ("table_number",)
 
-# @admin.register(Reservation)
-# class ReservationAdmin(admin.ModelAdmin):
-#     list_display = ("table", "user_email", "phone_number", "status")
-#     list_filter = ("status",)
-#     search_fields = ("user_email", "table__table_number")
-    
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('table', 'status')
+    list_display = ('table', 'user', 'status')
     list_filter = ('status',)
+    search_fields = ('user__email', 'table__table_number')
+    
+    # Override save_model to send an email when the status is updated
+    def save_model(self, request, obj, form, change):
+        # Check if status is updated to 'approved' or 'rejected'
+        if obj.status == 'approved':
+            subject = f'Booking Approved'
+            message = (
+                f"Dear {obj.user.username},\n\n"
+                f"Your table booking for Table {obj.table.table_number} has been approved!\n\n"
+                f"Table Number: {obj.table.table_number}\n"
+                f"Seats: {obj.table.capacity}\n"
+                f"Status: {obj.status}\n\n"
+                "Thank you for choosing our restaurant. We look forward to serving you!"
+            )
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [obj.user.email],
+                fail_silently=False,
+            )
+        
+        elif obj.status == 'rejected':
+            subject = f'Booking Rejected'
+            message = (
+                f"Dear {obj.user.username},\n\n"
+                f"Your table booking for Table {obj.table.table_number} has been rejected.\n\n"
+                "We apologize for any inconvenience. Please feel free to book another available table."
+            )
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [obj.user.email],
+                fail_silently=False,
+            )
+
+        # After sending the email, save the model
+        super().save_model(request, obj, form, change)
+        
+        
+
     # actions = ['approve_reservations', 'reject_reservations']
 
     # def approve_reservations(self, request, queryset):

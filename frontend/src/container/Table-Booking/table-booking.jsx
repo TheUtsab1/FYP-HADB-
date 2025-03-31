@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Users,
-  Check,
-  X,
-  RefreshCw,
-  DoorClosedIcon as CloseIcon,
-} from "lucide-react";
+import { Users, Check, X, RefreshCw, ChevronDown } from "lucide-react";
 import "./table-booking.css";
 
 export default function TableBooking() {
@@ -20,8 +14,13 @@ export default function TableBooking() {
   const [capacityFilter, setCapacityFilter] = useState("all");
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  const [popupType, setPopupType] = useState("success"); // success or error
-  const [statusFilter, setStatusFilter] = useState(null);
+  const [popupType, setPopupType] = useState("success");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const fetchTables = async () => {
     setLoading(true);
@@ -29,7 +28,7 @@ export default function TableBooking() {
     try {
       const response = await axios.get("http://localhost:8000/api/tables/");
       setTables(response.data);
-      setFilteredTables(response.data);
+      applyFilters(response.data);
     } catch (err) {
       console.error("Error fetching tables:", err);
       setError("Failed to load tables. Please refresh.");
@@ -38,214 +37,317 @@ export default function TableBooking() {
     }
   };
 
+  const refreshTables = async () => {
+    setRefreshing(true);
+    try {
+      const response = await axios.get("http://localhost:8000/api/tables/");
+      setTables(response.data);
+      applyFilters(response.data);
+
+      // Show success notification
+      setPopupMessage("Tables refreshed successfully!");
+      setPopupType("success");
+      setShowNotification(true);
+
+      // Hide notification after 3 seconds
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 3000);
+    } catch (err) {
+      console.error("Error refreshing tables:", err);
+      setPopupMessage("Failed to refresh tables.");
+      setPopupType("error");
+      setShowNotification(true);
+
+      // Hide notification after 3 seconds
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 3000);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
     fetchTables();
-
-    // Auto-refresh every 30 seconds
     const interval = setInterval(fetchTables, 30000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    let filtered = tables;
+    applyFilters(tables);
+  }, [capacityFilter, statusFilter]);
 
-    // Apply capacity filter
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownOpen && !event.target.closest(".filter-dropdown")) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  const applyFilters = (tableData) => {
+    let filtered = [...tableData];
+
+    // Filter by capacity
     if (capacityFilter !== "all") {
       const capacity = Number.parseInt(capacityFilter);
       filtered = filtered.filter((table) => table.capacity === capacity);
     }
 
-    // Apply status filter
-    if (statusFilter) {
+    // Filter by status
+    if (statusFilter !== "all") {
       filtered = filtered.filter((table) => table.status === statusFilter);
     }
 
     setFilteredTables(filtered);
-  }, [capacityFilter, statusFilter, tables]);
+  };
 
   const handleReservation = async (tableId) => {
-    setReservingTable(tableId);
     try {
       const token = localStorage.getItem("token");
-
       await axios.post(
         `http://localhost:8000/api/tables/request-booking/${tableId}/`,
-        {},
-        {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        }
+        { username, email },
+        { headers: { Authorization: `JWT ${token}` } }
       );
-
       setPopupMessage("Booking requested! Admin will confirm shortly.");
       setPopupType("success");
-      setShowPopup(true);
+      setShowPopup(false);
+      setShowNotification(true);
       fetchTables();
+
+      // Hide notification after 5 seconds
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
     } catch (error) {
       console.error("Booking error:", error);
       setPopupMessage(error.response?.data?.error || "Failed to book table.");
       setPopupType("error");
-      setShowPopup(true);
+      setShowNotification(true);
+
+      // Hide notification after 5 seconds
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
     } finally {
       setReservingTable(null);
     }
   };
 
-  const closePopup = () => {
-    setShowPopup(false);
-  };
-
-  // Get unique capacity values for filter
+  // Capacity options for dropdown
   const capacityOptions = [
-    ...new Set(tables.map((table) => table.capacity)),
-  ].sort((a, b) => a - b);
+    { value: "all", label: "ALL CAPACITIES" },
+    { value: "2", label: "2 PEOPLE" },
+    { value: "4", label: "4 PEOPLE" },
+    { value: "6", label: "6 PEOPLE" },
+    { value: "8", label: "8 PEOPLE" },
+  ];
+
+  // Status options for filter - removed "pending" as requested
+  const statusOptions = [
+    { value: "all", label: "ALL" },
+    { value: "available", label: "AVAILABLE" },
+    { value: "occupied", label: "OCCUPIED" },
+  ];
+
+  // Get current capacity label
+  const getCurrentCapacityLabel = () => {
+    const option = capacityOptions.find((opt) => opt.value === capacityFilter);
+    return option ? option.label : "ALL CAPACITIES";
+  };
 
   return (
     <div className="booking-page">
-      <div className="page-header">
-        <h1>TABLE RESERVATION</h1>
-        <p>Book your dining experience at our restaurant</p>
-      </div>
+      <h1 className="booking-title">OUR TABLE RESERVATIONS</h1>
+      <p className="booking-subtitle">
+        Browse available tables and make a reservation
+      </p>
 
-      <div className="filter-section">
-        <div className="filter-tabs">
+      <div className="filter-container">
+        {/* Capacity Dropdown */}
+        <div className="filter-dropdown">
           <button
-            className={`filter-tab ${!statusFilter ? "active" : ""}`}
-            onClick={() => setStatusFilter(null)}
+            className="dropdown-button"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
           >
-            All
+            {getCurrentCapacityLabel()}
+            <ChevronDown size={16} />
           </button>
-          <button
-            className={`filter-tab ${
-              statusFilter === "available" ? "active" : ""
-            }`}
-            onClick={() => setStatusFilter("available")}
-          >
-            Available
-          </button>
-          <button
-            className={`filter-tab ${
-              statusFilter === "occupied" ? "active" : ""
-            }`}
-            onClick={() => setStatusFilter("occupied")}
-          >
-            Booked
-          </button>
-        </div>
 
-        <div className="capacity-filter">
-          <select
-            id="capacity-select"
-            value={capacityFilter}
-            onChange={(e) => setCapacityFilter(e.target.value)}
-          >
-            <option value="all">All Seats</option>
-            {capacityOptions.map((capacity) => (
-              <option key={capacity} value={capacity}>
-                {capacity} seats
-              </option>
-            ))}
-          </select>
-
-          <button
-            onClick={fetchTables}
-            className="refresh-button"
-            disabled={loading}
-          >
-            <RefreshCw size={16} /> Refresh
-          </button>
-        </div>
-      </div>
-
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="tables-grid">
-        {loading ? (
-          <div className="loading-state">Loading tables...</div>
-        ) : filteredTables.length === 0 ? (
-          <div className="empty-state">
-            No tables available for this capacity
-          </div>
-        ) : (
-          filteredTables.map((table) => (
-            <div key={table.id} className={`table-card ${table.status}`}>
-              <div className={`table-category ${table.status}`}>
-                {table.status === "available" ? "AVAILABLE" : "OCCUPIED"}
-              </div>
-              <div className="table-content">
-                <h3>Table {table.table_number || table.id}</h3>
-                <div className="table-price">{table.capacity} seats</div>
-                <div className="table-info">
-                  <div className="seat-info">
-                    <Users size={16} /> {table.capacity} seats
-                  </div>
-                  <div className="status-badge">
-                    {table.status === "available" ? (
-                      <span className="status-available">
-                        <Check size={14} /> Available
-                      </span>
-                    ) : (
-                      <span className="status-occupied">
-                        <X size={14} /> Occupied
-                      </span>
-                    )}
-                  </div>
+          {dropdownOpen && (
+            <div className="dropdown-content">
+              {capacityOptions.map((option) => (
+                <div
+                  key={option.value}
+                  className={`dropdown-item ${
+                    capacityFilter === option.value ? "active" : ""
+                  }`}
+                  onClick={() => {
+                    setCapacityFilter(option.value);
+                    setDropdownOpen(false);
+                  }}
+                >
+                  {option.label}
                 </div>
-                <div className="table-action">
-                  {table.status === "available" ? (
-                    <button
-                      onClick={() => handleReservation(table.id)}
-                      disabled={reservingTable === table.id}
-                      className="view-details-button"
-                    >
-                      {reservingTable === table.id
-                        ? "Requesting..."
-                        : "Reserve Table"}
-                    </button>
-                  ) : (
-                    <div className="view-details-button disabled">
-                      Not Available
-                    </div>
-                  )}
-                </div>
-              </div>
+              ))}
             </div>
-          ))
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="reservation-info">
-        <h2>Reservation Information</h2>
-        <ul>
-          <li>Reservations can be made up to 30 days in advance</li>
-          <li>A credit card is required to hold your reservation</li>
-          <li>Cancellations must be made at least 24 hours in advance</li>
-          <li>For parties larger than 8, please call us directly</li>
-        </ul>
+      {/* Status Filter Pills */}
+      <div className="filter-container">
+        <div className="filter-pills">
+          {statusOptions.map((option) => (
+            <button
+              key={option.value}
+              className={`filter-pill ${
+                statusFilter === option.value ? "active" : ""
+              }`}
+              onClick={() => setStatusFilter(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Custom Popup */}
-      {showPopup && (
-        <div className="popup-overlay" onClick={closePopup}>
-          <div className="popup-container" onClick={(e) => e.stopPropagation()}>
-            <div className={`popup-content ${popupType}`}>
-              <button className="close-button" onClick={closePopup}>
-                <CloseIcon size={18} />
+      {/* Floating Refresh Button */}
+      <button
+        className="refresh-button"
+        onClick={refreshTables}
+        disabled={refreshing}
+        aria-label="Refresh tables"
+      >
+        <RefreshCw size={24} className={refreshing ? "animate-spin" : ""} />
+      </button>
+
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+        </div>
+      ) : error ? (
+        <div className="error-message">
+          <p>{error}</p>
+          <button className="form-submit" onClick={fetchTables}>
+            <RefreshCw size={16} className="mr-2" />
+            Try Again
+          </button>
+        </div>
+      ) : (
+        <div className="tables-grid">
+          {filteredTables.length === 0 ? (
+            <div className="error-message">
+              <p>No tables match your filters.</p>
+              <button
+                className="form-submit"
+                onClick={() => {
+                  setCapacityFilter("all");
+                  setStatusFilter("all");
+                }}
+              >
+                Reset Filters
               </button>
-              <div className="popup-icon">
-                {popupType === "success" ? (
-                  <Check size={32} />
+            </div>
+          ) : (
+            filteredTables.map((table) => (
+              <div key={table.id} className="table-card">
+                <div className={`table-status-tag status-${table.status}`}>
+                  {table.status === "available"
+                    ? "Available"
+                    : table.status === "occupied"
+                    ? "Occupied"
+                    : "Pending"}
+                </div>
+
+                <div className="table-content">
+                  <h3 className="table-number">Table {table.table_number}</h3>
+                  <div className="table-capacity">
+                    <Users size={20} />
+                    <span>{table.capacity} People</span>
+                  </div>
+                </div>
+
+                {table.status === "available" ? (
+                  <button
+                    className="table-action action-reserve"
+                    onClick={() => {
+                      setReservingTable(table.id);
+                      setShowPopup(true);
+                    }}
+                  >
+                    Reserve Now
+                  </button>
+                ) : table.status === "occupied" ? (
+                  <button className="table-action action-occupied" disabled>
+                    Currently Occupied
+                  </button>
                 ) : (
-                  <X size={32} />
+                  <button className="table-action action-pending" disabled>
+                    Pending Confirmation
+                  </button>
                 )}
               </div>
-              <div className="popup-message">{popupMessage}</div>
-              <button className="popup-button" onClick={closePopup}>
-                OK
+            ))
+          )}
+        </div>
+      )}
+
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container">
+            <button className="popup-close" onClick={() => setShowPopup(false)}>
+              <X size={20} />
+            </button>
+            <h2 className="popup-title">Reserve Table</h2>
+            <div className="popup-form">
+              <div className="form-group">
+                <label className="form-label">Your Name</label>
+                <div className="form-input-wrapper">
+                  <input
+                    className="form-input"
+                    placeholder="Enter your name"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Email Address</label>
+                <div className="form-input-wrapper">
+                  <input
+                    className="form-input"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button
+                className="form-submit"
+                onClick={() => handleReservation(reservingTable)}
+                disabled={!username || !email}
+              >
+                Confirm Reservation
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {showNotification && (
+        <div className={`notification notification-${popupType}`}>
+          {popupType === "success" ? <Check size={20} /> : <X size={20} />}
+          <span>{popupMessage}</span>
         </div>
       )}
     </div>

@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializer import FoodSerializer, FoodTypeSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
+# from .serializer import FoodSerializer, FoodTypeSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
 
 from .models import Food, FoodType, Cart, CartItem, Review
 from django.contrib.auth.models import User
@@ -27,11 +27,12 @@ from .models import Feedback
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 # from django.shortcuts import get_object_or_404
-from .models import Table
-from .serializer import TableSerializer, ReservationSerializer, FeedbackSerializer
-from .models import Table, Reservation
+# from .models import Table
+from .serializer import *
+from .models import *
 from django.core.mail import send_mail
 from .utils import send_booking_email
+from django.shortcuts import get_object_or_404
 
 
 
@@ -317,15 +318,66 @@ def get_tables(request):
     return Response(serializer.data)  # DRF auto-sets renderer
 
 
+from django.core.mail import send_mail
+
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Table, Reservation
+
 @api_view(['POST'])
 def request_booking(request, table_id):
     try:
         print(request.user)
         table = Table.objects.get(id=table_id, status="available")
-        Reservation.objects.create(table=table, user=request.user)
+        reservation = Reservation.objects.create(table=table, user=request.user)
+
+        # Email to Admin
+        admin_subject = "New Table Booking Request"
+        admin_message = (
+            f"A new booking request has been made for Table {table.table_number}.\n\n"
+            f"User: {request.user.username}\n"
+            f"Email: {request.user.email}\n"
+            f"Table Number: {table.table_number}\n"
+            f"Seats: {table.capacity}\n"
+            f"Status: {reservation.status}"
+        )
+        send_mail(
+            admin_subject,
+            admin_message,
+            from_email='utsabmessi6@gmail.com',
+            recipient_list=['utsabmessi6@gmail.com'],  # Replace with your admin email
+            fail_silently=False,
+        )
+
+        # Email to User
+        user_subject = "Table Booking Request Submitted"
+        user_message = (
+            f"Dear {request.user.username},\n\n"
+            f"Your table booking request has been successfully submitted!\n\n"
+            f"Table Number: {table.table_number}\n"
+            f"Seats: {table.capacity}\n"
+            f"Status: {reservation.status}\n\n"
+            "You will be notified once the booking is approved by the admin."
+        )
+        send_mail(
+            user_subject,
+            user_message,
+            from_email='utsabmessi6@gmail.com',
+            recipient_list=[request.user.email],  # Send to the user's email
+            fail_silently=False,
+        )
+
         return Response({"message": "Booking requested!"}, status=status.HTTP_201_CREATED)
+
     except Table.DoesNotExist:
         return Response({"error": "Table not available"}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print("Error while booking:", str(e))
+        return Response({"error": "Failed to book table. Please try again later."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 @api_view(['PATCH'])
 def update_booking(request, reservation_id):
@@ -341,11 +393,29 @@ def update_booking(request, reservation_id):
         
         reservation.status = status
         reservation.save()
+
+        # Send email to the user about the approval or rejection
+        subject = f'Booking {status.capitalize()}'
+        message = (
+            f"Dear {reservation.user.username},\n\n"
+            f"Your table booking for Table {reservation.table.table_number} has been {status}.\n\n"
+            f"Table Number: {reservation.table.table_number}\n"
+            f"Seats: {reservation.table.capacity}\n"
+            f"Status: {reservation.status}\n\n"
+            "Thank you for choosing our restaurant."
+        )
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [reservation.user.email],
+            fail_silently=False,
+        )
         
         if status == 'approved':
             reservation.table.status = 'occupied'
             reservation.table.save()
-        
+
         return Response(
             {"message": "Reservation updated successfully"},
             status=status.HTTP_200_OK
@@ -356,6 +426,70 @@ def update_booking(request, reservation_id):
             {"error": "Reservation not found"}, 
             status=status.HTTP_404_NOT_FOUND
         )
+
+
+# Correct the models in approve and reject functions:
+def approve_booking(request, booking_id):
+    try:
+        booking = get_object_or_404(Reservation, id=booking_id)  # Use Reservation, not TableBooking
+
+        # Update booking status to approved
+        booking.status = 'approved'
+        booking.save()
+
+        # Send approval email to the user
+        subject = 'Booking Approved'
+        message = (
+            f"Dear {booking.user.username},\n\n"
+            f"Your table booking for Table {booking.table.table_number} has been approved!\n\n"
+            f"Table Number: {booking.table.table_number}\n"
+            f"Seats: {booking.table.capacity}\n"
+            f"Status: {booking.status}\n\n"
+            "Thank you for choosing our restaurant. We look forward to serving you!"
+        )
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [booking.user.email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({'message': 'Booking approved!'})
+
+    except Exception as e:
+        print("Error approving booking:", str(e))
+        return JsonResponse({'error': 'Failed to approve booking. Please try again later.'}, status=500)
+
+
+def reject_booking(request, booking_id):
+    try:
+        booking = get_object_or_404(Reservation, id=booking_id)  # Use Reservation, not TableBooking
+
+        # Update booking status to rejected
+        booking.status = 'rejected'
+        booking.save()
+
+        # Send rejection email to the user
+        subject = 'Booking Rejected'
+        message = (
+            f"Dear {booking.user.username},\n\n"
+            f"Your table booking for Table {booking.table.table_number} has been rejected.\n\n"
+            "We apologize for any inconvenience. Please feel free to book another available table."
+        )
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [booking.user.email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({'message': 'Booking rejected!'})
+
+    except Exception as e:
+        print("Error rejecting booking:", str(e))
+        return JsonResponse({'error': 'Failed to reject booking. Please try again later.'}, status=500)
 
 
 
