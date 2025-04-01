@@ -13,7 +13,7 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
-  color: #333;
+  color: var(--color-golden);
 }
 
 .cart-content {
@@ -194,7 +194,7 @@
 
 .special-instructions textarea:focus {
   outline: none;
-  border-color: #4a90e2;
+  border-color: var(--color-red);
 }
 
 /* Order summary */
@@ -233,7 +233,7 @@
 .btn-checkout {
   width: 100%;
   padding: 0.9rem;
-  background-color: #4a90e2;
+  background-color: var(--color-red);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -245,26 +245,29 @@
 }
 
 .btn-checkout:hover {
-  background-color: #3a7bc8;
+  background-color: var(--color-red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(103, 0, 26, 0.3);
 }
+
+
 
 .continue-shopping {
   display: block;
   text-align: center;
-  color: #4a90e2;
+  color: var(--color-red);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
 }
 
 .continue-shopping:hover {
-  color: #3a7bc8;
   text-decoration: underline;
 }
 
 .btn-primary {
   padding: 0.75rem 1.5rem;
-  background-color: #4a90e2;
+  background-color: var(--color-red);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -275,7 +278,9 @@
 }
 
 .btn-primary:hover {
-  background-color: #3a7bc8;
+  background-color: var(--color-red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(103, 0, 26, 0.3);
 }
 
 /* Loading state */
