@@ -11,14 +11,15 @@ router = DefaultRouter()
 router.register(r"listFood", FoodView, basename="list-food")  # Unique basename
 router.register(r'category', FoodCategoryView)
 router.register(r'topList', FoodTopView, basename='foodtop')
-router.register('feedback', FeedbackViewSet, basename='feedback')
+# router.register('feedback', FeedbackViewSet, basename='feedback')
 
 urlpatterns = [
     path("", include(router.urls)),
-    path('signup/', user_signup, name='signup'),
-    path('login/', user_login, name='login'),
+    # path('signup/', user_signup, name='signup'),
+    # path('login/', user_login, name='login'),
     path("api/google-login/", google_login, name="google_login"),
     path('api/submit-booking/', submit_booking, name='submit_booking'),
+    path('feedback/', FeedbackApiView.as_view(), name='feedback'),
     # path('accounts/', include('allauth.urls')),
     # path('api/reservations/', TabelReservationView.as_view(), name='table_reservations'),
     path("showCart/<item_id>", showCart.as_view()),

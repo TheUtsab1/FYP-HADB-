@@ -588,6 +588,15 @@ class FeedbackViewSet(ModelViewSet):
     serializer_class = FeedbackSerializer
     
     
+class FeedbackApiView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = FeedbackSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Feedback submitted successfully!"}, status=201)
+        return Response(serializer.errors, status=400)
+    
 def verify_payment(request):
     token = request.POST.get('token')
     amount = request.POST.get('amount')

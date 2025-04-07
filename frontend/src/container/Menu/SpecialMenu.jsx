@@ -210,18 +210,6 @@ const Menu = () => {
           </div>
         </>
       )}
-
-      {/* Restaurant Info
-      <div className="restaurant-info">
-        <div className="info-item">
-          <MapPin size={20} />
-          <span>123 Mountain View, Himalayan Heights</span>
-        </div>
-        <div className="info-item">
-          <Clock size={20} />
-          <span>Open daily: 10:00 AM - 10:00 PM</span>
-        </div>
-      </div> */}
     </div>
   );
 };

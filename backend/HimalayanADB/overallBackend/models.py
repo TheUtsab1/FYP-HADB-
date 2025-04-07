@@ -6,6 +6,9 @@ from django.core.validators import MinValueValidator
 
 # Create your models here.
 
+
+
+
 class FoodType(models.Model):
     type_name = [
         ("BREAKFAST", "Breakfast"),
