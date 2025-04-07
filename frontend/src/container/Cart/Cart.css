@@ -1,5 +1,12 @@
 /* Cart.css - Beautiful styling for your cart component */
 
+:root {
+  --color-khalti: #5c2d91;
+  --color-khalti-hover: #4a2275;
+  --color-esewa: #4d9938;
+  --color-esewa-hover: #60bb46;
+}
+
 .cart-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -250,8 +257,6 @@
   box-shadow: 0 6px 20px rgba(103, 0, 26, 0.3);
 }
 
-
-
 .continue-shopping {
   display: block;
   text-align: center;
@@ -307,6 +312,153 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* New Payment Modal Styles */
+.payment-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.payment-modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.payment-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.payment-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.payment-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-modal-close:hover {
+  color: #333;
+}
+
+.payment-options {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Payment option images styling */
+.payment-option img {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  object-fit: contain;
+}
+
+/* For better alignment with text */
+.payment-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Specific adjustments for each payment method */
+.payment-option.khalti img {
+  filter: brightness(0) invert(1); /* Makes the image white if needed */
+}
+
+/* Optional: Add a slight scale effect on hover for better UX */
+.payment-option:hover img {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.payment-option.khalti {
+  background-color: var(--color-khalti);
+  color: white;
+}
+
+.payment-option.khalti:hover {
+  background-color: var(--color-khalti-hover);
+}
+
+.payment-option.esewa {
+  background-color: var(--color-esewa);
+  color: white;
+}
+
+.payment-option.esewa:hover {
+  background-color: var(--color-esewa-hover);
+}
+
+.payment-option.cash {
+  background-color: #e2e8f0;
+  color: #333;
+}
+
+.payment-option.cash:hover {
+  background-color: #cbd5e0;
+}
+
+.payment-icon {
+  margin-right: 12px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.payment-total {
+  padding: 16px 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+  color: #333;
+  font-weight: 500;
+}
+
+.payment-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
 
 /* Responsive adjustments */

@@ -282,6 +282,7 @@ export default function TableBooking() {
                     onClick={() => {
                       setReservingTable(table.id);
                       setShowPopup(true);
+                      handleReservation(table.id);
                     }}
                   >
                     Reserve Now
@@ -301,7 +302,7 @@ export default function TableBooking() {
         </div>
       )}
 
-      {showPopup && (
+      {/* {showPopup && (
         <div className="popup-overlay">
           <div className="popup-container">
             <button className="popup-close" onClick={() => setShowPopup(false)}>
@@ -342,7 +343,7 @@ export default function TableBooking() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {showNotification && (
         <div className={`notification notification-${popupType}`}>

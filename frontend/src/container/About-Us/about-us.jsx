@@ -3,8 +3,15 @@
 import "./about-us.css";
 import { images } from "../../constants";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { FiX, FiCheck } from "react-icons/fi"; // Import icons from react-icons
 
 export default function Aboutus() {
+  const [showPopup, setShowPopup] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupType, setPopupType] = useState("success");
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -24,11 +31,26 @@ export default function Aboutus() {
 
       if (!response.ok) throw new Error(result.error || "Submission failed");
 
-      alert("Thank you for your feedback!");
+      setPopupMessage("Thank you for your feedback!");
+      setPopupType("success");
+      setShowNotification(true);
+      setShowPopup(false);
       event.target.reset();
+
+      // Hide notification after 5 seconds
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
     } catch (error) {
       console.error("Submission error:", error);
-      alert(error.message);
+      setPopupMessage(error.message);
+      setPopupType("error");
+      setShowNotification(true);
+
+      // Hide notification after 5 seconds
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
     }
   };
 
@@ -59,13 +81,13 @@ export default function Aboutus() {
                 planning a cozy dinner, a grand celebration, or just a quick
                 bite, we bring convenience to your fingertips.
               </p>
-              <Link to="/Booking">
+              <Link to="/table-booking">
                 <button className="exp-button">Book a Table</button>
               </Link>
             </div>
             <div className="vision-image-container">
               <img
-                src={images.FrontView}
+                src={images.FrontView || "/placeholder.svg"}
                 alt="Restaurant interior"
                 className="vision-image"
               />
@@ -134,7 +156,7 @@ export default function Aboutus() {
             <Link to="/specialMenu">
               <button className="exp-button">View our Menu</button>
             </Link>
-            <Link to="/Booking">
+            <Link to="/table-booking">
               <button className="exp-button">Book a Table</button>
             </Link>
           </div>
@@ -150,81 +172,127 @@ export default function Aboutus() {
             with us.
           </p>
 
-          <div className="feedback-form-container">
-            <form className="feedback-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="name">Your Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Enter your name"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="email">Email Address</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="rating">Your Rating</label>
-                  <select id="rating" name="rating" required>
-                    <option value="">Select Rating</option>
-                    <option value="5">Excellent (5 Stars)</option>
-                    <option value="4">Very Good (4 Stars)</option>
-                    <option value="3">Good (3 Stars)</option>
-                    <option value="2">Fair (2 Stars)</option>
-                    <option value="1">Poor (1 Star)</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="feedback_type">Feedback Type</label>
-                  <select id="feedback_type" name="feedback_type" required>
-                    <option value="">Select Type</option>
-                    <option value="food">Food Quality</option>
-                    <option value="service">Customer Service</option>
-                    <option value="ambience">Restaurant Ambience</option>
-                    <option value="website">Website Experience</option>
-                    <option value="reservation">Reservation Process</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="message">Your Feedback</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="5"
-                  placeholder="Please share your experience with us..."
-                  required
-                ></textarea>
-              </div>
-
-              <div className="form-group">
-                <button type="submit" className="primary-button">
-                  SUBMIT FEEDBACK
-                </button>
-              </div>
-
-              <div className="helper-text">
-                Your feedback helps us improve our services
-              </div>
-            </form>
+          <div className="button-group centered">
+            <button className="exp-button" onClick={() => setShowPopup(true)}>
+              Give Feedback
+            </button>
           </div>
         </div>
       </section>
+
+      {/* Feedback Form Popup */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container">
+            <button className="popup-close" onClick={() => setShowPopup(false)}>
+              <FiX size={20} />
+            </button>
+            <h2 className="popup-title">Share Your Feedback</h2>
+            <div className="popup-form">
+              <form className="feedback-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">
+                    Your Name
+                  </label>
+                  <div className="form-input-wrapper">
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      className="form-input"
+                      placeholder="Enter your name"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    Email Address
+                  </label>
+                  <div className="form-input-wrapper">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-input"
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="rating" className="form-label">
+                      Your Rating
+                    </label>
+                    <select
+                      id="rating"
+                      name="rating"
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Select Rating</option>
+                      <option value="5">Excellent (5 Stars)</option>
+                      <option value="4">Very Good (4 Stars)</option>
+                      <option value="3">Good (3 Stars)</option>
+                      <option value="2">Fair (2 Stars)</option>
+                      <option value="1">Poor (1 Star)</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="feedback_type" className="form-label">
+                      Feedback Type
+                    </label>
+                    <select
+                      id="feedback_type"
+                      name="feedback_type"
+                      className="form-input"
+                      required
+                    >
+                      <option value="">Select Type</option>
+                      <option value="food">Food Quality</option>
+                      <option value="service">Customer Service</option>
+                      <option value="ambience">Restaurant Ambience</option>
+                      <option value="website">Website Experience</option>
+                      <option value="reservation">Reservation Process</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="message" className="form-label">
+                    Your Feedback
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    className="form-input"
+                    placeholder="Please share your experience with us..."
+                    required
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="form-submit">
+                  SUBMIT FEEDBACK
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notification */}
+      {showNotification && (
+        <div className={`notification notification-${popupType}`}>
+          {popupType === "success" ? <FiCheck size={20} /> : <FiX size={20} />}
+          <span>{popupMessage}</span>
+        </div>
+      )}
     </div>
   );
 }

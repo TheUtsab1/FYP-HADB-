@@ -217,14 +217,11 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
 # RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
 
-# JAZZMIN_SETTINGS = {
-#     "site_logo": "../media/logo.png",
-#     "site_header": "Himalayan Asian Dining and Bar",
-#     "site_title": "Himalayan Asian Dining and Bar",
-#     "site_icon": "./media/logo.png",
-#     "copyright": "Himalayan Asian Dining and Bar",
-#     "show_ui_builder": False,
-# }
+KHALTI_SECRET_KEY = '93a0639e600648adb274722bdf0afa2f'
+KHALTI_PUBLIC_KEY = '98c492879e8a423fb37558d5a33a6a37'
+
+
+
 
 JAZZMIN_SETTINGS = {
     "site_logo": "../media/logo.png",

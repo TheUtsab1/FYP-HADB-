@@ -22,6 +22,8 @@ import laurels from '../assets/laurels.png';
 // import gericht from '../assets/gericht.png';
 import Banner from '../assets/HADBBanner.png';
 import FrontView from '../assets/OutsideView.jpg';
+import Khalti from '../assets/Khalti.png';
+import esewa from '../assets/esewa.png';
 
 export default {
   bg,
@@ -48,4 +50,6 @@ export default {
   // gericht,
   Banner,
   FrontView,
+  Khalti,
+  esewa,
 };

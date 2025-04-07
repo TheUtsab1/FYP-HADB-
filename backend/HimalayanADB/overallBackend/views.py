@@ -4,9 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-# from .serializer import FoodSerializer, FoodTypeSerializer, CartItemSerializer, ReviewSerializer, CateringBookingSerializer
-
-from .models import Food, FoodType, Cart, CartItem, Review
+from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from .filter import FoodFilter
 from rest_framework.decorators import api_view, permission_classes
@@ -22,15 +20,10 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth import logout
-from django.core.mail import send_mail
-from .models import Feedback
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-# from django.shortcuts import get_object_or_404
-# from .models import Table
 from .serializer import *
 from .models import *
-from django.core.mail import send_mail
 from .utils import send_booking_email
 from django.shortcuts import get_object_or_404
 
@@ -50,7 +43,6 @@ from django.shortcuts import get_object_or_404
 
 
 # client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
-# # Create your views here.
 
 
 from django.contrib.auth.models import User
@@ -113,40 +105,6 @@ def user_signup(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)}, status=500)
         
-# @api_view(['POST'])
-# def user_login(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             username = data.get('username')
-#             password = data.get('password')
-
-#             user = authenticate(username=username, password=password)
-
-#             if user is not None:
-#                 # Create JWT tokens
-#                 refresh = RefreshToken.for_user(user)
-#                 access_token = str(refresh.access_token)
-
-#                 # You can store the refresh token and send it if needed
-#                 return JsonResponse({
-#                     "success": True,
-#                     "access_token": access_token,  # Send the JWT token to the frontend
-#                     "refresh_token": str(refresh),  # Send refresh token if needed
-#                     "message": "Login successful"
-#                 }, status=200)
-
-#             else:
-#                 return JsonResponse({
-#                     "success": False,
-#                     "error": "Invalid username or password"
-#                 }, status=401)
-
-#         except Exception as e:
-#             return JsonResponse({
-#                 "success": False,
-#                 "error": str(e)
-#             }, status=500)
 
 @csrf_exempt
 def user_login(request):
@@ -318,14 +276,6 @@ def get_tables(request):
     return Response(serializer.data)  # DRF auto-sets renderer
 
 
-from django.core.mail import send_mail
-
-from django.core.mail import send_mail
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Table, Reservation
-
 @api_view(['POST'])
 def request_booking(request, table_id):
     try:
@@ -493,105 +443,46 @@ def reject_booking(request, booking_id):
 
 
 
-
-# class create_order(APIView):
-#     def post(self, request):
-#         try:
-#             amount = request.data.get("amount")
-#             currency = "INR"
-#             client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
-#             razorpay_order = client.order.create({'amount': amount, 'currency': currency, 'payment_capture': '1'})
-            
-#             data = {
-#                 "order_id": razorpay_order['id'],
-#                 "amount": amount,
-#                 "currency": currency,
-#                 "razorpay_key_id": settings.RAZORPAY_API_KEY,
-#             }
-#             return Response(data)
-
-#         except Exception as e:
-#             return Response({"msg" : e})
-
-# @method_decorator(csrf_exempt, name="dispatch")
-# class verifyPayment(APIView):
-#     def post(self, request):
-
-#         try:
-#             payment_id = request.data.get('paymentId', '')
-#             razorpay_order_id = request.data.get('orderId', '')
-#             signature = request.data.get('signature', '')
-#             params_dict = {
-#                 'razorpay_order_id': razorpay_order_id,
-#                 'razorpay_payment_id': payment_id,
-#                 'razorpay_signature': signature
-#             }
-#             # verify the payment signature.
-#             result = client.utility.verify_payment_signature(
-#                 params_dict)
-#             if result is not None:
-#                 return Response({"msg" : "payment donew"})
-#             else:
-
-#                 # if signature verification fails.
-#                return Response({"msg" : "payment not done"})
-#         except Exception as e:
-
-#             # if we don't find the required parameters in POST data
-#             return Response({"msg" : f"not find  Request {e}"})
-        
-
-class ReviewFood(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, foodId):
-        user =  request.user 
-        rating = request.data.get("rating")
-        comment = request.data.get("comment")
-        if not(1 <= int(rating) <= 5):
-            return Response({"err" : "rate between 1 to 5"})
-        try:
-            food = Food.objects.get(id = foodId)
-        except:
-            return Response({"err" : "Food item you want to rate does not exist"})
-        
-        review , created = Review.objects.get_or_create(user= user, food_item = food)
-
-        if created:
-            food.food_rating_sum += int(rating)
-            food.food_rating_count += 1
-            food.save()
-            print("********* creted", review)
-        else:
-            food.food_rating_sum = food.food_rating_sum - review.rating + rating
-            food.save()
-            print("********* existing", )
-
-        review.rating = rating
-        review.comment = comment
-        review.save()
-        food.updateAverage()
-        return Response({"msg": "done review"})
-    
-    def get(self, request, foodId):
-        queryset = Review.objects.filter(food_item__id = foodId)
-        serializer = ReviewSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-# class CartClear(APIView):
-#     permission_classes = [IsAuthenticated]
+# class ReviewFood(APIView):
 #     authentication_classes = [JWTAuthentication]
-#     def delete(self, request):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request, foodId):
+#         user =  request.user 
+#         rating = request.data.get("rating")
+#         comment = request.data.get("comment")
+#         if not(1 <= int(rating) <= 5):
+#             return Response({"err" : "rate between 1 to 5"})
 #         try:
-#             allCart = Cart.objects.filter(user = request.user)
-#             allCart.delete()
-#             return Response({"msg" : "Cart Cleared"})
+#             food = Food.objects.get(id = foodId)
+#         except:
+#             return Response({"err" : "Food item you want to rate does not exist"})
         
-#         except Exception as e: 
-#             return Response({"msg" : "Cart not Cleared"})
-        
+#         review , created = Review.objects.get_or_create(user= user, food_item = food)
+
+#         if created:
+#             food.food_rating_sum += int(rating)
+#             food.food_rating_count += 1
+#             food.save()
+#             print("********* creted", review)
+#         else:
+#             food.food_rating_sum = food.food_rating_sum - review.rating + rating
+#             food.save()
+#             print("********* existing", )
+
+#         review.rating = rating
+#         review.comment = comment
+#         review.save()
+#         food.updateAverage()
+#         return Response({"msg": "done review"})
+    
+#     def get(self, request, foodId):
+#         queryset = Review.objects.filter(food_item__id = foodId)
+#         serializer = ReviewSerializer(queryset, many=True)
+#         return Response(serializer.data)
+
+
+
         
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -695,3 +586,20 @@ class FeedbackViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Feedback.objects.all();
     serializer_class = FeedbackSerializer
+    
+    
+def verify_payment(request):
+    token = request.POST.get('token')
+    amount = request.POST.get('amount')
+    url = "https://khalti.com/api/v2/payment/verify/"
+
+    payload = {
+        "token": token,
+        "amount": amount
+    }
+    headers = {
+        "Authorization": f"Key {settings.KHALTI_SECRET_KEY}"
+    }
+
+    response = requests.post(url, data=payload, headers=headers)
+    return JsonResponse(response.json())

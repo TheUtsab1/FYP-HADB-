@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Food, FoodTaste, FoodType, Cart, CartItem, Review, Feedback, Table, Reservation
+from .models import Food, FoodTaste, FoodType, Cart, CartItem, Feedback, Table, Reservation
 from django.contrib import admin
 from django.core.mail import send_mail
 from django.conf import settings
@@ -7,7 +7,7 @@ from django.conf import settings
 
 # Register your models here.
 
-admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, Review))
+admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem))
 
 
 @admin.register(Table)
