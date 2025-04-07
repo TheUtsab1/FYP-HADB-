@@ -15,15 +15,16 @@ router.register(r'topList', FoodTopView, basename='foodtop')
 
 urlpatterns = [
     path("", include(router.urls)),
-    # path('signup/', user_signup, name='signup'),
-    # path('login/', user_login, name='login'),
+    # path('register/', RegisterView.as_view()),
+    # path('verify/', VerifyEmailView.as_view()),
+    # path('login/', LoginView.as_view()),
+    # path('token/refresh/', RefreshTokenView.as_view()),
+    path('signup/', user_signup, name='signup'),
+    path('login/', user_login, name='login'),
     path("api/google-login/", google_login, name="google_login"),
     path('api/submit-booking/', submit_booking, name='submit_booking'),
     path('feedback/', FeedbackApiView.as_view(), name='feedback'),
-    # path('accounts/', include('allauth.urls')),
-    # path('api/reservations/', TabelReservationView.as_view(), name='table_reservations'),
     path("showCart/<item_id>", showCart.as_view()),
-    # path("submit-feedback/", submit_feedback, name="submit_feedback"),
     path("cart/", showCart.as_view()),
     path("cart/update/", updateCartQuantity.as_view()),
     path('cart/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
@@ -31,4 +32,6 @@ urlpatterns = [
     path('api/tables/request-booking/<int:table_id>/', request_booking, name="request_booking"),
     path('api/tables/update-booking/<int:reservation_id>/', update_booking, name="update_booking"),
     path('verify-payment/', verify_payment, name='verify_payment'),
+    path("profile/", user_profile, name="user-profile"),
+    path('profile/update/', update_profile),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

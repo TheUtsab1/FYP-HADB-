@@ -1,10 +1,15 @@
 import { create } from "zustand";
 
 const useAuthStore = create((set) => ({
-  // Initialize state by checking if there's a token in localStorage
-  isUserAuthenticated: !!localStorage.getItem("token"),
-  // Function to update the authentication state
+  isUserAuthenticated: !!localStorage.getItem("access"), // initial check
+
   setIsUserAuthenticated: (value) => set({ isUserAuthenticated: value }),
+
+  logout: () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    set({ isUserAuthenticated: false });
+  },
 }));
 
 export default useAuthStore;

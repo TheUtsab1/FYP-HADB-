@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import images from "../../constants/images";
@@ -9,12 +9,15 @@ import { Link } from "react-router-dom";
 import useAuthStore from "../../store/useAuthStore";
 
 const Navbar = () => {
-  const [toggleMenu, setToggleMenu] = React.useState(false);
+  const [toggleMenu, setToggleMenu] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const { isUserAuthenticated, setIsUserAuthenticated } = useAuthStore();
+  const profileDropdownRef = useRef(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsUserAuthenticated(false);
+    setShowProfileDropdown(false);
     console.log("User logged out.");
   };
 
@@ -23,6 +26,15 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (toggleMenu && !event.target.closest(".app__navbar-smallscreen")) {
         setToggleMenu(false);
+      }
+
+      // Close profile dropdown when clicking outside
+      if (
+        showProfileDropdown &&
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
+        setShowProfileDropdown(false);
       }
     };
 
@@ -38,7 +50,7 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "auto";
     };
-  }, [toggleMenu]);
+  }, [toggleMenu, showProfileDropdown]);
 
   return (
     <nav className="app__navbar">
@@ -69,9 +81,25 @@ const Navbar = () => {
 
       <div className="app__navbar-login">
         {isUserAuthenticated ? (
-          <button onClick={handleLogout} className="p__opensans">
-            Logout
-          </button>
+          <div className="profile-dropdown" ref={profileDropdownRef}>
+            <button
+              className="p__opensans"
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            >
+              Profile
+            </button>
+            {showProfileDropdown && (
+              <div className="profile-dropdown-content">
+                <Link
+                  to="/profile"
+                  onClick={() => setShowProfileDropdown(false)}
+                >
+                  My Profile
+                </Link>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            )}
+          </div>
         ) : (
           <Link to="/login" className="p__opensans">
             Login/Register
@@ -126,15 +154,24 @@ const Navbar = () => {
               </li>
               <div className="mobile-auth-buttons">
                 {isUserAuthenticated ? (
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setToggleMenu(false);
-                    }}
-                    className="p__opensans mobile-auth-btn"
-                  >
-                    Logout
-                  </button>
+                  <>
+                    <Link
+                      to="/profile"
+                      className="p__opensans mobile-auth-btn"
+                      onClick={() => setToggleMenu(false)}
+                    >
+                      My Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setToggleMenu(false);
+                      }}
+                      className="p__opensans mobile-auth-btn"
+                    >
+                      Logout
+                    </button>
+                  </>
                 ) : (
                   <Link
                     to="/login"

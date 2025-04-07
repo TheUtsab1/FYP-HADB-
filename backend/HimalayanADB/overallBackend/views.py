@@ -14,7 +14,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from django.http import HttpResponse
-# from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.http import JsonResponse
@@ -26,6 +25,11 @@ from .serializer import *
 from .models import *
 from .utils import send_booking_email
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.core.cache import cache
+
 
 
 
@@ -72,6 +76,87 @@ def google_login(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
 
+
+
+
+# User = get_user_model()
+
+# class RegisterView(APIView):
+#     def post(self, request):
+#         username = request.data.get("username")
+#         email = request.data.get("email")
+#         password = request.data.get("password")
+        
+#         if User.objects.filter(email=email).exists():
+#             return Response({"error": "Email already in use"}, status=400)
+        
+#         user = User.objects.create_user(username=username, email=email, password=password, is_active=False)
+#         verification_code = get_random_string(length=6, allowed_chars='0123456789')
+#         cache.set(email, verification_code, timeout=600)
+
+#         send_mail(
+#             'Verify Your Email',
+#             f'Your verification code is: {verification_code}',
+#             settings.DEFAULT_FROM_EMAIL,
+#             [email],
+#             fail_silently=False,
+#         )
+#         return Response({"message": "Verification code sent"}, status=201)
+
+# class VerifyEmailView(APIView):
+#     def post(self, request):
+#         email = request.data.get("email")
+#         code = request.data.get("code")
+#         real_code = cache.get(email)
+
+#         if code == real_code:
+#             try:
+#                 user = User.objects.get(email=email)
+#                 user.is_active = True
+#                 user.save()
+#                 return Response({"message": "Email verified successfully"})
+#             except User.DoesNotExist:
+#                 return Response({"error": "User not found"}, status=404)
+#         return Response({"error": "Invalid or expired code"}, status=400)
+
+# class LoginView(APIView):
+#     def post(self, request):
+#         email = request.data.get("email")
+#         password = request.data.get("password")
+#         try:
+#             user = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             return Response({"error": "Invalid credentials"}, status=401)
+
+#         if not user.is_active:
+#             return Response({"error": "Email not verified"}, status=403)
+
+#         user = authenticate(request, username=user.username, password=password)
+#         if user:
+#             refresh = RefreshToken.for_user(user)
+#             return Response({
+#                 "access": str(refresh.access_token),
+#                 "refresh": str(refresh),
+#                 "username": user.username
+#             })
+#         return Response({"error": "Invalid credentials"}, status=401)
+
+# class RefreshTokenView(APIView):
+#     permission_classes = [AllowAny]
+
+#     def post(self, request):
+#         try:
+#             refresh_token = request.data.get("refresh")
+#             token = RefreshToken(refresh_token)
+#             access_token = str(token.access_token)
+#             return Response({"access": access_token})
+#         except Exception as e:
+#             return Response({"error": "Token is invalid or expired"}, status=401)
+        
+# class LogoutAPIView(APIView):
+#     def post(self, request):
+#         logout(request)
+#         return Response({"success": True, "message": "Logged out successfully."})
 
 @csrf_exempt # Add API View for user signup and login
 def user_signup(request):
@@ -130,6 +215,29 @@ def handlelogout(request):
     logout(request)
     messages.success(request, "Successfully logged out")
     return redirect('home') 
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_profile(request):
+    user = request.user
+    return Response({
+        "username": user.username,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+    })
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    user = request.user
+    user.username = request.data.get('name', user.username)
+    user.save()
+    return Response({
+        'name': user.username,
+        'email': user.email,
+    })
+
 
 class FoodPagination(PageNumberPagination):
     page_size = 12

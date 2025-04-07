@@ -4,10 +4,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.validators import MinValueValidator
 
-# Create your models here.
-
-
-
 
 class FoodType(models.Model):
     type_name = [

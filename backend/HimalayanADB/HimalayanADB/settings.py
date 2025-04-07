@@ -175,8 +175,8 @@ SIMPLE_JWT = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Himalayan Asian Dining & Bar',
+    'DESCRIPTION': 'API documentation for Himalayan Asian Dining & Bar',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
@@ -219,6 +219,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 KHALTI_SECRET_KEY = '93a0639e600648adb274722bdf0afa2f'
 KHALTI_PUBLIC_KEY = '98c492879e8a423fb37558d5a33a6a37'
+
+# AUTH_USER_MODEL = 'overallBackend.User'  
 
 
 
