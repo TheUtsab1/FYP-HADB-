@@ -1,73 +1,173 @@
-import React from "react";
+"use client";
 
-import {
-  BsInstagram,
-  BsArrowLeftShort,
-  BsArrowRightShort,
-} from "react-icons/bs";
-import { SubHeading } from "../../components";
-import { images } from "../../constants";
-
+import { useState, useEffect, useRef } from "react";
 import "./Gallery.css";
+import { images } from "../../constants";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const galleryImages = [
-  images.gallery01,
-  images.gallery02,
-  images.gallery03,
-  images.gallery04,
-];
+export default function Gallery({ images = defaultImages }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const timeoutRef = useRef(null);
 
-const Gallery = () => {
-  const scrollRef = React.useRef(null);
+  // Reset the auto-slide timer whenever the current index changes
+  useEffect(() => {
+    resetTimeout();
+    timeoutRef.current = setTimeout(() => {
+      setIsTransitioning(true);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2500); // Change slide every 3 seconds
 
-  const scroll = (direction) => {
-    const { current } = scrollRef;
+    return () => {
+      resetTimeout();
+    };
+  }, [currentIndex, images.length]);
 
-    if (direction === "left") {
-      current.scrollLeft -= 300;
-    } else {
-      current.scrollLeft += 300;
+  const resetTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
   };
-  return (
-    <div className="app__gallery flex__center">
-      <div className="app__gallery-content">
-        <SubHeading title="Instagram" />
-        <h1 className="headtext__cormorant">Photo Gallery</h1>
-        <p className="p__opensans" style={{ color: "#AAA", marginTop: "2rem" }}>
-          Find our photos in the gallery section in our instagram. We have been
-          updating the posts accordingly.
-        </p>
-        <button type="button" className="custom__button">
-          View More
-        </button>
-      </div>
 
-      <div className="app__gallery-images">
-        <div className="app__gallery-images_container" ref={scrollRef}>
-          {galleryImages.map((image, index) => (
+  // Handle transition end
+  const handleTransitionEnd = () => {
+    setIsTransitioning(false);
+  };
+
+  // Calculate indices for the visible slides (5 images)
+  const getVisibleIndices = () => {
+    const indices = [];
+    const prevIndex2 = (currentIndex - 2 + images.length) % images.length;
+    const prevIndex1 = (currentIndex - 1 + images.length) % images.length;
+    const nextIndex1 = (currentIndex + 1) % images.length;
+    const nextIndex2 = (currentIndex + 2) % images.length;
+
+    indices.push(prevIndex2, prevIndex1, currentIndex, nextIndex1, nextIndex2);
+    return indices;
+  };
+
+  // Handle navigation
+  const goToPrevious = () => {
+    resetTimeout();
+    setIsTransitioning(true);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
+  };
+
+  const goToNext = () => {
+    resetTimeout();
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const visibleIndices = getVisibleIndices();
+
+  return (
+    <div className="gallery-section">
+      <h2 className="gallery-title">Our Gallery</h2>
+      <div className="gold-divider"></div>
+      <div className="carousel-container">
+        <button
+          className="carousel-arrow prev"
+          onClick={goToPrevious}
+          aria-label="Previous slide"
+        >
+          <ChevronLeft />
+        </button>
+
+        <div
+          className={`carousel-track ${isTransitioning ? "transitioning" : ""}`}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          {visibleIndices.map((index, i) => (
             <div
-              className="app__gallery-images_card flex__center"
-              key={`gallery_image-${index + 1}`}
+              key={index}
+              className={`carousel-slide ${i === 2 ? "active" : ""}`}
             >
-              <img src={image} alt="gallery" />
-              <BsInstagram className="gallery__image-icon" />
+              <img
+                src={images[index].src || "/placeholder.svg"}
+                alt={images[index].alt || `Slide ${index + 1}`}
+                className="carousel-image"
+              />
             </div>
           ))}
         </div>
-        <div className="app__gallery-images_arrows">
-          <BsArrowLeftShort
-            className="gallery__arrow-icon"
-            onClick={() => scroll("left")}
-          />
-          <BsArrowRightShort
-            className="gallery__arrow-icon"
-            onClick={() => scroll("right")}
-          />
+
+        <button
+          className="carousel-arrow next"
+          onClick={goToNext}
+          aria-label="Next slide"
+        >
+          <ChevronRight />
+        </button>
+
+        <div className="carousel-status" aria-live="polite">
+          <span className="sr-only">
+            Image {currentIndex + 1} of {images.length}
+          </span>
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default Gallery;
+// Default images for demonstration
+const defaultImages = [
+  {
+    src: images.gallery01,
+    alt: "Slide 1",
+  },
+  {
+    src: images.gallery02,
+    alt: "Slide 2",
+  },
+  {
+    src: images.gallery03,
+    alt: "Slide 3",
+  },
+  {
+    src: images.gallery04,
+    alt: "Slide 4",
+  },
+  {
+    src: images.gallery05,
+    alt: "Slide 5",
+  },
+  {
+    src: images.gallery06,
+    alt: "Slide 6",
+  },
+  {
+    src: images.gallery07,
+    alt: "Slide 7",
+  },
+  {
+    src: images.gallery08,
+    alt: "Slide 8",
+  },
+  {
+    src: images.gallery09,
+    alt: "Slide 9",
+  },
+  {
+    src: images.gallery10,
+    alt: "Slide 10",
+  },
+  {
+    src: images.gallery11,
+    alt: "Slide 11",
+  },
+  {
+    src: images.gallery12,
+    alt: "Slide 12",
+  },
+  {
+    src: images.gallery13,
+    alt: "Slide 13",
+  },
+  {
+    src: images.gallery14,
+    alt: "Slide 14",
+  },
+];

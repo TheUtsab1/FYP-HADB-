@@ -85,3 +85,18 @@ class FeedbackSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         feedback = Feedback.objects.create(user=user, **validated_data)
         return feedback
+    
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        read_only_fields = ['email']  # Make email read-only as requested
+
+    def update(self, instance, validated_data):
+        # Update user fields
+        instance.username = validated_data.get('username', instance.username)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
+        return instance

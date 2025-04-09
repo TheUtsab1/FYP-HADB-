@@ -27,8 +27,8 @@ from .utils import send_booking_email
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
-from django.core.cache import cache
+# from .serializers import UserProfileSerializer
+
 
 
 
@@ -216,27 +216,65 @@ def handlelogout(request):
     messages.success(request, "Successfully logged out")
     return redirect('home') 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def user_profile(request):
-    user = request.user
-    return Response({
-        "username": user.username,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email,
-    })
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def user_profile(request):
+#     user = request.user
+#     return Response({
+#         "username": user.username,
+#         "first_name": user.first_name,
+#         "last_name": user.last_name,
+#         "email": user.email,
+#     })
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def update_profile(request):
-    user = request.user
-    user.username = request.data.get('name', user.username)
-    user.save()
-    return Response({
-        'name': user.username,
-        'email': user.email,
-    })
+# @api_view(['PUT'])
+# @permission_classes([IsAuthenticated])
+# def update_profile(request):
+#     user = request.user
+    
+#     # Update user fields from request data with proper validation
+#     username = request.data.get('username')
+#     first_name = request.data.get('first_name')
+#     last_name = request.data.get('last_name')
+    
+#     if username:
+#         user.username = username
+    
+#     if first_name is not None:  # Allow empty string
+#         user.first_name = first_name
+        
+#     if last_name is not None:  # Allow empty string
+#         user.last_name = last_name
+    
+#     # Save the updated user
+#     user.save()
+    
+#     # Return updated user data
+#     return Response({
+#         'username': user.username,
+#         'first_name': user.first_name,
+#         'last_name': user.last_name,
+#         'email': user.email,
+#     })
+
+
+class UserProfileViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileSerializer
+    
+    def list(self, request):
+        # Return current user data
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data)
+    
+    def update(self, request, pk=None):
+        # Update current user
+        serializer = self.serializer_class(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
 
 
 class FoodPagination(PageNumberPagination):

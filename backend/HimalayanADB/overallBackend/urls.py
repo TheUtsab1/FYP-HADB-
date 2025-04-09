@@ -11,6 +11,7 @@ router = DefaultRouter()
 router.register(r"listFood", FoodView, basename="list-food")  # Unique basename
 router.register(r'category', FoodCategoryView)
 router.register(r'topList', FoodTopView, basename='foodtop')
+router.register(r'profile', UserProfileViewSet, basename='profile')
 # router.register('feedback', FeedbackViewSet, basename='feedback')
 
 urlpatterns = [
@@ -32,6 +33,6 @@ urlpatterns = [
     path('api/tables/request-booking/<int:table_id>/', request_booking, name="request_booking"),
     path('api/tables/update-booking/<int:reservation_id>/', update_booking, name="update_booking"),
     path('verify-payment/', verify_payment, name='verify_payment'),
-    path("profile/", user_profile, name="user-profile"),
-    path('profile/update/', update_profile),
+    # path('profile/', user_profile, name='user_profile'),
+    # path('update-profile/', update_profile, name='update_profile'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

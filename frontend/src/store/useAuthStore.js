@@ -1,12 +1,13 @@
 import { create } from "zustand";
 
 const useAuthStore = create((set) => ({
-  isUserAuthenticated: !!localStorage.getItem("access"), // initial check
+  // Check for "token" instead of "access" to match what you store in Login component
+  isUserAuthenticated: !!localStorage.getItem("token"),
 
   setIsUserAuthenticated: (value) => set({ isUserAuthenticated: value }),
 
   logout: () => {
-    localStorage.removeItem("access");
+    localStorage.removeItem("token");
     localStorage.removeItem("refresh");
     set({ isUserAuthenticated: false });
   },

@@ -1,18 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 import useAuthStore from "../../store/useAuthStore";
-import googleIcon from "../../assets/google-icon.svg"; // Add this SVG to your assets folder
+import googleIcon from "../../assets/google-icon.svg";
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // "success" or "error"
+  const [messageType, setMessageType] = useState("");
   const navigate = useNavigate();
 
-  const { setIsUserAuthenticated } = useAuthStore();
+  const { isUserAuthenticated, setIsUserAuthenticated } = useAuthStore();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      navigate("/");
+    }
+  }, [isUserAuthenticated, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,10 +36,11 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        // Store tokens consistently
         localStorage.setItem("token", data.access);
         localStorage.setItem("refresh", data.refresh);
         setIsUserAuthenticated(true);
+
         setMessage("Login successful! Redirecting...");
         setMessageType("success");
         setTimeout(() => {
@@ -50,8 +58,6 @@ function Login() {
   };
 
   const handleGoogleSignIn = () => {
-    // Implement Google Sign-In logic here
-    // This would typically redirect to your OAuth endpoint
     console.log("Google Sign-In clicked");
     setMessage("Google Sign-In feature coming soon!");
     setMessageType("info");

@@ -1,15 +1,178 @@
-.app__header {
+/* Header.css */
+.header-section {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
   background-color: var(--color-red);
+  padding: 80px 40px;
+  position: relative;
+  overflow: hidden;
 }
 
-.app__header-h1 {
-    color: white;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    /* line-height: 117px; */
-    font-size: 40px;
+.header-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 60px;
 }
 
-.app__header-img img{
-    width: 60%;
+.header-text {
+  flex: 1;
+  z-index: 2;
+}
+
+.subtitle {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.subtitle p {
+  /* font-family: "Playfair Display", serif; */
+  font-style: italic;
+  color: var(--color-golden);
+  font-size: 18px;
+}
+
+.subtitle-line {
+  width: 40px;
+  height: 2px;
+  background-color: var(--color-golden);
+}
+
+.header-title {
+  /* font-family: "Playfair Display", serif; */
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-golden);
+  margin-bottom: 20px;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.header-description {
+  font-size: 18px;
+  color: var(--white);
+  margin-bottom: 30px;
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+.header-image {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.image-container {
+  position: relative;
+  padding: 20px;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.5s ease;
+}
+
+.image-container:hover img {
+  transform: translateY(-10px) scale(1.05); /* Added scale(1.05) to enlarge by 5% */
+}
+
+.image-accent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Button styles directly in Header.css */
+.gold-button {
+  background-color: var(--color-golden);
+  color: var(--color-red);
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.gold-button:hover {
+  background-color: #e6c76e; /* Lighter gold on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+}
+
+.gold-button.outline {
+  background-color: transparent;
+  border: 2px solid var(--color-golden);
+  color: var(--color-golden);
+}
+
+.gold-button.outline:hover {
+  background-color: var(--color-golden);
+  color: var(--color-red);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+}
+
+.gold-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.gold-button:hover::before {
+  left: 100%;
+}
+
+@media (max-width: 992px) {
+  .header-content {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .header-title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-section {
+    padding: 60px 20px;
+  }
+
+  .header-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 28px;
+  }
 }

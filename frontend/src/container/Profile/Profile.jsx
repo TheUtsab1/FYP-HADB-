@@ -9,17 +9,17 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
+    username: "",
     first_name: "",
-    last_name: "",
-    email: "",
+    last_name: ""
   });
   const [message, setMessage] = useState({ type: "", text: "" });
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchUserProfile = () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/");
+      navigate("/login");
       return;
     }
 
@@ -35,11 +35,13 @@ function Profile() {
         return res.json();
       })
       .then((data) => {
-        setUser(data);
+        // For DRF viewsets with pagination, check if results exist
+        const userData = Array.isArray(data.results) ? data.results[0] : data;
+        setUser(userData);
         setFormData({
-          first_name: data.first_name || "",
-          last_name: data.last_name || "",
-          email: data.email || "",
+          username: userData.username || "",
+          first_name: userData.first_name || "",
+          last_name: userData.last_name || "",
         });
         setLoading(false);
       })
@@ -47,6 +49,10 @@ function Profile() {
         console.error("Profile error:", err);
         navigate("/login");
       });
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
   }, [navigate]);
 
   const handleEdit = () => {
@@ -57,9 +63,9 @@ function Profile() {
     setIsEditing(false);
     if (user) {
       setFormData({
+        username: user.username || "",
         first_name: user.first_name || "",
         last_name: user.last_name || "",
-        email: user.email || "",
       });
     }
   };
@@ -72,25 +78,65 @@ function Profile() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setUser({
-      ...user,
-      ...formData,
-    });
-    setIsEditing(false);
-    setMessage({
-      type: "success",
-      text: "Profile updated successfully!",
-    });
-
-    setTimeout(() => {
-      setMessage({ type: "", text: "" });
-    }, 3000);
+    
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    
+    try {
+      // With ModelViewSet, we use PATCH to update partial data
+      const response = await fetch(`http://127.0.0.1:8000/profile/${user.id}/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${token}`,
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
+      }
+      
+      const updatedData = await response.json();
+      
+      // Update the local user state and show success message
+      setUser(updatedData);
+      setIsEditing(false);
+      setMessage({
+        type: "success",
+        text: "Profile updated successfully!",
+      });
+      
+      // Refresh the profile data from the server
+      fetchUserProfile();
+      
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 3000);
+    } catch (error) {
+      console.error("Update profile error:", error);
+      setMessage({
+        type: "error",
+        text: "Failed to update profile. Please try again.",
+      });
+      
+      setTimeout(() => {
+        setMessage({ type: "", text: "" });
+      }, 3000);
+    }
   };
 
   const handleGoBack = () => {
-    navigate(-1); // You can replace this with navigate("/") if you want to always go to homepage
+    navigate(-1);
   };
 
   if (loading) {
@@ -122,7 +168,13 @@ function Profile() {
           <form className="app__profile-form" onSubmit={handleSubmit}>
             <div className="app__profile-field">
               <label htmlFor="username">Username</label>
-              <p>{user.username}</p>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="app__profile-field">
@@ -148,14 +200,8 @@ function Profile() {
             </div>
 
             <div className="app__profile-field">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
+              <label htmlFor="email">Email (Read-only)</label>
+              <p>{user.email}</p>
             </div>
 
             <div className="app__profile-actions">

@@ -11,14 +11,20 @@ import useAuthStore from "../../store/useAuthStore";
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const { isUserAuthenticated, setIsUserAuthenticated } = useAuthStore();
+  const { isUserAuthenticated, logout } = useAuthStore();
   const profileDropdownRef = useRef(null);
 
+  // Check token validity on component mount
+  useEffect(() => {
+    // This ensures the authentication state is always up-to-date
+    // You could add token validation logic here as well
+    const token = localStorage.getItem("token");
+    console.log("Token in storage:", !!token);
+    console.log("Auth state:", isUserAuthenticated);
+  }, [isUserAuthenticated]);
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsUserAuthenticated(false);
-    setShowProfileDropdown(false);
-    console.log("User logged out.");
+    logout();
   };
 
   useEffect(() => {
