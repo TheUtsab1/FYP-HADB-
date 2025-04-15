@@ -109,7 +109,7 @@ const Menu = () => {
       {loading ? (
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <p>Loading delicious meals...</p>
+          <p>Loading meals...</p>
         </div>
       ) : error ? (
         <div className="error-container">

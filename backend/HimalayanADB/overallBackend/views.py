@@ -6,49 +6,20 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
-from .filter import FoodFilter
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
 from .serializer import *
 from .models import *
-from .utils import send_booking_email
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
-# from .serializers import UserProfileSerializer
-
-
-
-
-
-# from django.conf import settings 
-# import razorpay
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.csrf import csrf_exempt
-# from rest_framework import status
-# from django.http import JsonResponse
-
-# from rest_framework.parsers import JSONParser
-# from django.contrib.auth import authenticate
-# from rest_framework_simplejwt.tokens import RefreshToken
-# from django.http import JsonResponse
-
-
-# client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET))
-
-
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
@@ -359,62 +330,6 @@ class updateCartQuantity(APIView):
         return Response({"msg" : "there is problem in backend"})
 
 
-# class TabelReservationView(APIView):
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAuthenticated]
-#     serializer_class = TabelReservationSerializer  # Add this
-
-#     def post(self, request):
-#         data = request.data.copy()
-#         data["Booked_by"] = request.user.id
-#         serializer = self.serializer_class(data=data)  # Use self.serializer_class
-
-#         if serializer.is_valid():
-#             reservation = serializer.save()
-#             reservation.send_confirmation_email()  
-#             return Response({"message": "Reservation successfully saved!", "data": serializer.data}, status=201)
-
-#         return Response({"message": "Error in saving reservation", "errors": serializer.errors}, status=400)
-
-
-
-# @api_view(['GET'])
-# def get_tables(request):
-#     tables = Table.objects.all()
-#     serializer = TableSerializer(tables, many=True)
-#     return JsonResponse(serializer.data, safe=False)
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def reserve_table(request, table_id):
-#     table = get_object_or_404(Table, id=table_id)
-
-#     if table.status == 'occupied':
-#         return JsonResponse({"error": "Table is already occupied"}, status=400)
-
-#     table.status = 'occupied'
-#     table.reserved_by = request.user
-#     table.reserved_at = now()
-#     table.save()
-    
-#     return JsonResponse({"message": "Table reserved successfully!"})
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def release_table(request, table_id):
-#     table = get_object_or_404(Table, id=table_id)
-
-#     if table.status == 'available':
-#         return JsonResponse({"error": "Table is already available"}, status=400)
-
-#     table.status = 'available'
-#     table.reserved_by = None
-#     table.reserved_at = None
-#     table.save()
-    
-#     return JsonResponse({"message": "Table released successfully!"})
-
-
 @api_view(['GET'])
 def get_tables(request):
     tables = Table.objects.all()
@@ -634,7 +549,6 @@ def reject_booking(request, booking_id):
 @permission_classes([IsAuthenticated])
 def remove_cart_item(request, item_id):
     try:
-        # print("-------------------------------------------------", item_id)
         cart = Cart.objects.get(user=request.user)
         cart_item = CartItem.objects.get(id=item_id, cart=cart)
         cart_item.delete()
@@ -691,42 +605,6 @@ def submit_booking(request):
             return Response({"message": "Booking submitted successfully!"}, status=201)
         
         return Response(serializer.errors, status=400)
-    
-    
-    
-# @csrf_exempt
-# @login_required
-# def submit_feedback(request):
-#     if request.method == "POST":
-#         try:
-#             data = json.loads(request.body)
-            
-#             # Validate required fields
-#             required_fields = ['name', 'email', 'rating', 'feedbackType', 'message']
-#             if not all(field in data for field in required_fields):
-#                 return JsonResponse({"error": "Missing required fields"}, status=400)
-            
-#             # Create feedback
-#             feedback = Feedback.objects.create(
-#                 user=request.user,
-#                 name=data['name'],
-#                 email=data['email'],
-#                 rating=int(data['rating']),
-#                 feedback_type=data['feedbackType'],
-#                 message=data['message'],
-#             )
-            
-#             return JsonResponse({
-#                 "message": "Feedback submitted successfully!",
-#                 "id": feedback.id
-#             }, status=201)
-            
-#         except ValueError as e:
-#             return JsonResponse({"error": "Invalid data format", "details": str(e)}, status=400)
-#         except Exception as e:
-#             return JsonResponse({"error": "Failed to save feedback", "details": str(e)}, status=500)
-
-#     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 class FeedbackViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -758,3 +636,43 @@ def verify_payment(request):
 
     response = requests.post(url, data=payload, headers=headers)
     return JsonResponse(response.json())
+
+GEMINI_API_KEY = "AIzaSyDC7NCsXpXlOkfEMekZ_O8ViTobUt7zLqI"
+
+@api_view(['POST'])
+def chatbot_reply(request):
+    user_message = request.data.get('message', '')
+
+    ChatMessage.objects.create(sender='user', message=user_message)
+
+    bot_reply = get_gemini_reply(user_message)
+
+    ChatMessage.objects.create(sender='bot', message=bot_reply)
+
+    return Response({'reply': bot_reply})
+
+
+def get_gemini_reply(user_message):
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    body = {
+        "contents": [
+            {
+                "parts": [{"text": user_message}]
+            }
+        ]
+    }
+
+    try:
+        # Here is the POST method to call the Gemini API
+        response = requests.post(url, headers=headers, json=body)  # POST request to Gemini API
+        response.raise_for_status()
+        data = response.json()
+        reply = data["candidates"][0]["content"]["parts"][0]["text"]
+        return reply
+    except Exception as e:
+        return "Sorry, I'm having trouble responding right now."

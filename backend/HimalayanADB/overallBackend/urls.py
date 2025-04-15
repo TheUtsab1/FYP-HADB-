@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import * 
-from .views import FeedbackViewSet
 
 
 
@@ -35,4 +34,5 @@ urlpatterns = [
     path('verify-payment/', verify_payment, name='verify_payment'),
     # path('profile/', user_profile, name='user_profile'),
     # path('update-profile/', update_profile, name='update_profile'),
+    path('chat/', chatbot_reply),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

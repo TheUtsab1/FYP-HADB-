@@ -1,14 +1,23 @@
 from django.contrib import admin
-from .models import Food, FoodTaste, FoodType, Cart, CartItem, Feedback, Table, Reservation
-from django.contrib import admin
+from .models import *
 from django.core.mail import send_mail
 from django.conf import settings
 
 
+
 # Register your models here.
 
-admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem))
+admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, ChatMessage))
 
+
+# from material.admin.sites import MaterialAdminSite
+
+# class MyAdminSite(MaterialAdminSite):
+#     site_header = 'Himalayan Asian Dining & Bar Admin'
+#     site_title = 'Restaurant Admin'
+#     index_title = 'Welcome to the Admin Panel'
+
+# admin.site = MyAdminSite()
 
 @admin.register(Table)
 class TableAdmin(admin.ModelAdmin):
@@ -62,7 +71,12 @@ class ReservationAdmin(admin.ModelAdmin):
         # After sending the email, save the model
         super().save_model(request, obj, form, change)
         
-        
+
+@admin.register(CateringBooking)
+class CateringBookingAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'event_type', 'date', 'time')
+    search_fields = ('first_name', 'last_name', 'email', 'phone')
+    list_filter = ('event_type', 'date')
 
     # actions = ['approve_reservations', 'reject_reservations']
 

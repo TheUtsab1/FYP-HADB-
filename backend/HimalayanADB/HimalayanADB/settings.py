@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 
@@ -39,6 +40,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
+    # 'material.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -196,7 +198,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [ BASE_DIR / "static" ]
+
+
+# STATIC_URL = '/static/'
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -224,21 +235,25 @@ KHALTI_PUBLIC_KEY = '98c492879e8a423fb37558d5a33a6a37'
 
 
 
-
 JAZZMIN_SETTINGS = {
-    "site_logo": "../media/logo.png",
-    "site_title": "HimalayanADB Admin",
+    
+    "site_title": "Himalayan Admin",
     "site_header": "Himalayan Asian Dining & Bar",
-    "welcome_sign": "Welcome to HimalayanADB Admin Panel",
-    "copyright": "Himalayan Asian Dining and Bar",
-    "search_model": "auth.User",  # Enable search in Django Admin
+    "site_brand": "Himalayan Admin",
+    "site_logo": "../media/logo.png",
+    "welcome_sign": "Welcome to Himalayan Admin Portal",
+    "copyright": "© 2025 Himalayan",
 
-    # Side menu customization
+    "site_logo_classes": "img-circle",
+
+    
+    "site_icon": "../media/logo.png",
+    
     "topmenu_links": [
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"model": "auth.User"},
-        {"model": "overallBackend.Reservations"},
     ],
-}
 
+
+    "show_sidebar": True,
+}
 
