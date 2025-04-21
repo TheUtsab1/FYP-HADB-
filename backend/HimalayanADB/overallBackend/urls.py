@@ -32,7 +32,9 @@ urlpatterns = [
     path('api/tables/request-booking/<int:table_id>/', request_booking, name="request_booking"),
     path('api/tables/update-booking/<int:reservation_id>/', update_booking, name="update_booking"),
     path('verify-payment/', verify_payment, name='verify_payment'),
+    path('esewa-verify/', esewa_verify, name='esewa_verify'),
+    path('orders/pending/', save_pending_order, name='save_pending_order'),
     # path('profile/', user_profile, name='user_profile'),
     # path('update-profile/', update_profile, name='update_profile'),
-    path('chat/', chatbot_reply),
+    path("api/chat/", chatbot_reply, name="chatbot_reply"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

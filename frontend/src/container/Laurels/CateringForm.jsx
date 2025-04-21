@@ -1,10 +1,13 @@
 "use client";
 
+// Import necessary hooks and icons
 import { useState } from "react";
 import { MapPin, Calendar, Users, ChefHat } from "lucide-react";
-import "./CateringForm.css";
+import "./CateringForm.css"; // Import custom CSS for styling the form
 
+// Define the CateringForm functional component
 const CateringForm = () => {
+  // State to manage form data input values
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -19,43 +22,50 @@ const CateringForm = () => {
     special_requests: "",
   });
 
+  // State to handle messages shown after form submission (success/error)
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [messageType, setMessageType] = useState(""); // Type can be 'success' or 'error'
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track if the form is being submitted
 
-  // Get today's date in YYYY-MM-DD format for min date attribute
+  // Get today's date in YYYY-MM-DD format to use as the minimum date for event booking
   const today = new Date().toISOString().split("T")[0];
 
+  // Handle changes in input fields (form fields are dynamic)
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; // Get name and value from input field
+    // Update the state with the new value for the corresponding field
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
+  // Handle form submission (POST request to the backend API)
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setMessage("");
+    e.preventDefault(); // Prevent default form submission behavior (page reload)
+    setIsSubmitting(true); // Set submitting state to true to disable the submit button
+    setMessage(""); // Reset any previous messages
 
     try {
+      // Send form data to the backend API
       const response = await fetch(
-        "http://127.0.0.1:8000/api/submit-booking/",
+        "http://127.0.0.1:8000/api/submit-booking/", // API endpoint to handle catering request submission
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          headers: { "Content-Type": "application/json" }, // Define the content type as JSON
+          body: JSON.stringify(formData), // Convert form data to JSON and send it as the body
         }
       );
 
-      const data = await response.json();
+      const data = await response.json(); // Parse the JSON response from the API
 
       if (response.ok) {
+        // If the response is successful (HTTP status 200-299)
         setMessageType("success");
         setMessage(
           "Your catering request has been submitted successfully! We'll contact you within 24 hours to discuss details."
         );
+        // Reset form fields after successful submission
         setFormData({
           first_name: "",
           last_name: "",
@@ -65,25 +75,27 @@ const CateringForm = () => {
           guests: "",
           date: "",
           time: "",
-          // venue_address: "",
           menu_preference: "",
           special_requests: "",
         });
       } else {
+        // If the response has an error (non-2xx status)
         setMessageType("error");
         setMessage(
-          "Unable to submit your request: " +
-            (data.message || "Please try again")
+          "Unable to submit your request: " + (data.message || "Please try again")
         );
       }
     } catch (error) {
+      // If there is a network error or other issue with the request
       setMessageType("error");
       setMessage("Connection error. Please try again later.");
-      console.error("Catering form error:", error);
+      console.error("Catering form error:", error); // Log the error for debugging
     } finally {
+      // Reset submitting state to false once the request is completed
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="catering-wrapper">

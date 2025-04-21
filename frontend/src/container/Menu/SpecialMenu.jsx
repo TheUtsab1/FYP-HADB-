@@ -6,35 +6,59 @@ import axios from "axios";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import "./SpecialMenu.css";
 
+// Menu.jsx - React component for displaying restaurant food menu with pagination and category filters
+
 const Menu = () => {
+  // STATE VARIABLES
+
+  // Stores all menu items fetched from backend
   const [menuItems, setMenuItems] = useState([]);
+
+  // Loading indicator for API requests
   const [loading, setLoading] = useState(true);
+
+  // Stores any fetch-related error
   const [error, setError] = useState(null);
+
+  // For paginated API - next & previous page links
   const [nextPage, setNextPage] = useState(null);
   const [prevPage, setPrevPage] = useState(null);
+
+  // Tracks current page number for UI and smooth scrolling
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Active category selected for filtering
   const [activeCategory, setActiveCategory] = useState("All");
+
+  // All unique categories fetched from food_type field
   const [categories, setCategories] = useState([]);
 
+  // BACKEND FETCH LOGIC FOR MENU ITEMS
   const fetchMenu = (url = "http://127.0.0.1:8000/listFood/") => {
-    setLoading(true);
+    setLoading(true); // Show spinner while fetching
+
     axios
       .get(url)
       .then((response) => {
+        // `results` bhitra data huncha pagination vako case ma, otherwise direct data
         const data = response.data.results || response.data;
         setMenuItems(data);
 
-        // Extract unique categories
+        // Unique categories extract garne from each item's food_type
         const uniqueCategories = [
           ...new Set(
             data.map((item) => item.food_type?.food_type || "Uncategorized")
           ),
         ];
+
+        // 'All' category by default add gareko for reset option
         setCategories(["All", ...uniqueCategories]);
 
+        // Pagination links for next/prev
         setNextPage(response.data.next);
         setPrevPage(response.data.previous);
-        setLoading(false);
+
+        setLoading(false); // Done fetching
       })
       .catch((error) => {
         console.error("Error fetching menu:", error);
@@ -43,18 +67,21 @@ const Menu = () => {
       });
   };
 
+  // INITIAL FETCH on component mount
   useEffect(() => {
-    fetchMenu();
+    fetchMenu(); // Suru ma data load garxa
   }, []);
 
+  // NEXT PAGE CLICK HANDLER
   const handleNextPage = () => {
     if (nextPage) {
-      fetchMenu(nextPage);
-      setCurrentPage((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      fetchMenu(nextPage); // Next API call
+      setCurrentPage((prev) => prev + 1); // Page number update
+      window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scroll to top
     }
   };
 
+  // PREVIOUS PAGE CLICK HANDLER
   const handlePrevPage = () => {
     if (prevPage) {
       fetchMenu(prevPage);
@@ -63,20 +90,24 @@ const Menu = () => {
     }
   };
 
+  // CATEGORY FILTERING
   const filterByCategory = (category) => {
-    setActiveCategory(category);
+    setActiveCategory(category); // UI ma highlight garna
   };
 
+  // FILTER LOGIC
+  // Yo part ma selected category anusar item display garincha
   const filteredItems =
     activeCategory === "All"
-      ? menuItems
+      ? menuItems // All selected vaye sabai item dekhauxa
       : menuItems.filter(
           (item) => item.food_type?.food_type === activeCategory
         );
 
-  // Add this function to limit items to 12 per page (3 rows of 4)
+  // LIMIT DISPLAYED ITEMS TO 12 PER PAGE (3 rows of 4)
+  // Pagination backend bata aako cha, but manually control garna parne vaye, yo use hunchha
   const limitItemsPerPage = (items, limit = 12) => {
-    return items.slice(0, limit);
+    return items.slice(0, limit); // First 12 matra return garxa
   };
 
   return (

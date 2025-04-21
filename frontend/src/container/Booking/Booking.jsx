@@ -4,52 +4,62 @@ import { useState } from "react";
 import "./Booking.css";
 
 const Booking = () => {
+  // USER INPUT STATE FOR RESERVATION FORM
   const [reservationData, setReservationData] = useState({
     first_name: "",
-    last_name: "",
+    last_name: "", 
     phone: "",
-    email: "",
+    email: "", 
     guests: "2",
-    date: "",
-    time: "18:00",
-    special_requests: "",
+    date: "", 
+    time: "18:00", 
+    special_requests: "", 
   });
 
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // FOR DISPLAYING FEEDBACK TO USER
+  const [message, setMessage] = useState(""); // Success or error message
+  const [messageType, setMessageType] = useState(""); // 'success' or 'error' for UI styling
+  const [isSubmitting, setIsSubmitting] = useState(false); // Button disable during submit
 
-  // Get today's date in YYYY-MM-DD format for min date attribute
-  const today = new Date().toISOString().split("T")[0];
+  // GET TODAY’S DATE - prevent past bookings in date picker
+  const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
+  // HANDLE FORM FIELD UPDATES
   const handleReservationData = (e) => {
     const { name, value } = e.target;
+
+    // Update the form values dynamically
     setReservationData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
+  // FORM SUBMISSION HANDLER
   const reservationDataSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setMessage("");
+    e.preventDefault(); // Prevent default browser form submission
+    setIsSubmitting(true); // Show spinner or disable button
+    setMessage(""); // Clear old messages
 
     try {
+      // POST REQUEST to backend API
       const response = await fetch(
         "http://127.0.0.1:8000/api/submit-booking/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(reservationData),
+          body: JSON.stringify(reservationData), // Sends JSON data to Django backend
         }
       );
 
-      const data = await response.json();
+      const data = await response.json(); // Response JSON decode
 
       if (response.ok) {
+        // SUCCESSFUL BOOKING RESPONSE
         setMessageType("success");
         setMessage("Your table has been reserved successfully!");
+
+        // Form reset gareko success pachi, so user can book again easily
         setReservationData({
           first_name: "",
           last_name: "",
@@ -61,18 +71,20 @@ const Booking = () => {
           special_requests: "",
         });
       } else {
+        // BACKEND VALIDATION ERROR
         setMessageType("error");
         setMessage(
           "Unable to complete your reservation: " +
-            (data.message || "Please try again")
+            (data.message || "Please try again") // Backend le message pathaye vane dekhaune
         );
       }
     } catch (error) {
+      // NETWORK/CONNECTION ERROR
       setMessageType("error");
       setMessage("Connection error. Please try again later.");
       console.error("Booking error:", error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Enable button again after completion
     }
   };
 

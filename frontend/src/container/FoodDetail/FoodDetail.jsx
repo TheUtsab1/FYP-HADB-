@@ -7,58 +7,65 @@ import "./FoodDetail.css";
 import { images } from "../../constants";
 
 const FoodDetail = ({ onClose }) => {
-  const { food_slug } = useParams();
-  const [food, setFood] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
+  const { food_slug } = useParams(); // URL bata slug extract garincha (e.g., /food/momo)
 
+  // STATE VARIABLES
+  const [food, setFood] = useState(null); // Store fetched food data
+  const [loading, setLoading] = useState(true); // Loading spinner display control
+  const [error, setError] = useState(null); // Error message display
+  const [quantity, setQuantity] = useState(1); // Cart ma kati quantity add garne
+  const [addedToCart, setAddedToCart] = useState(false); // Track if item was added
+
+  // FETCH SPECIFIC FOOD ITEM DETAILS FROM BACKEND
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // API call using slug (e.g., /food/momo/)
         const response = await axios.get(
           `http://127.0.0.1:8000/food/${food_slug}/`
         );
-        setFood(response.data);
-        setLoading(false);
+        setFood(response.data); // Success: set food detail
+        setLoading(false); // Stop spinner
       } catch (err) {
-        setError("Failed to load food details");
+        setError("Failed to load food details"); // Error handling
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchData(); // Component mount huda call huncha
   }, [food_slug]);
 
+  // ADD ITEM TO CART FUNCTION
   const handleAddToCart = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token"); // Logged-in user ko token
 
     try {
-      setAddedToCart(false); // Reset state before new request
+      setAddedToCart(false); // New request aunu agadi status reset garincha
 
+      // API call to add food item to cart
       const response = await axios.post(
         "http://127.0.0.1:8000/cart/",
         {
-          food_item_id: food.id,
+          food_item_id: food.id, // ID passed from fetched food detail
           quantity: quantity,
         },
         {
           headers: {
-            Authorization: `JWT ${token}`,
+            Authorization: `JWT ${token}`, // Protected endpoint
             "Content-Type": "application/json",
           },
         }
       );
-      console.log("Item added to cart:", response.data);
-      setAddedToCart(true);
 
-      // Reset after 3 seconds
+      console.log("Item added to cart:", response.data);
+      setAddedToCart(true); // UI lai success message dekhauna
+
+      // 3 second pachi confirmation message hide garincha
       setTimeout(() => {
         setAddedToCart(false);
       }, 3000);
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error("Error adding to cart:", error); // Debug help
     }
   };
 

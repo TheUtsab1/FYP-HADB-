@@ -6,29 +6,47 @@ import { Users, Check, X, RefreshCw, ChevronDown } from "lucide-react";
 import "./table-booking.css";
 
 export default function TableBooking() {
+  // Stores all tables from backend
   const [tables, setTables] = useState([]);
+  // Stores tables after applying capacity and status filters
   const [filteredTables, setFilteredTables] = useState([]);
+  // Loading indicator for API calls
   const [loading, setLoading] = useState(true);
+  // Holds any error messages during fetch
   const [error, setError] = useState(null);
-  const [reservingTable, setReservingTable] = useState(null);
+  // Keeps track of the table currently being reserved
+  const [setReservingTable] = useState(null);
+
+  // Filters: by capacity and status
   const [capacityFilter, setCapacityFilter] = useState("all");
-  const [showPopup, setShowPopup] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  // Form inputs for booking
+  const [username] = useState("");
+  const [email] = useState("");
+
+  // Controls visibility and content of popup/notification
+  const [setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [popupType, setPopupType] = useState("success");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+
+  // Controls notification visibility (for success/error messages)
   const [showNotification, setShowNotification] = useState(false);
+
+  // For showing spinner or loading indicator on refresh
   const [refreshing, setRefreshing] = useState(false);
+
+  // Controls dropdown (capacity/status) visibility
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // FETCH DATA FROM BACKEND
   const fetchTables = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get("http://localhost:8000/api/tables/");
-      setTables(response.data);
-      applyFilters(response.data);
+      setTables(response.data); // Set original data
+      applyFilters(response.data); // Filter it immediately
     } catch (err) {
       console.error("Error fetching tables:", err);
       setError("Failed to load tables. Please refresh.");
@@ -37,6 +55,7 @@ export default function TableBooking() {
     }
   };
 
+  // Refresh data manually and show a notification
   const refreshTables = async () => {
     setRefreshing(true);
     try {
@@ -44,7 +63,7 @@ export default function TableBooking() {
       setTables(response.data);
       applyFilters(response.data);
 
-      // Show success notification
+      // Success message on refresh
       setPopupMessage("Tables refreshed successfully!");
       setPopupType("success");
       setShowNotification(true);
@@ -59,7 +78,6 @@ export default function TableBooking() {
       setPopupType("error");
       setShowNotification(true);
 
-      // Hide notification after 3 seconds
       setTimeout(() => {
         setShowNotification(false);
       }, 3000);
@@ -68,17 +86,19 @@ export default function TableBooking() {
     }
   };
 
+  // On component mount, fetch table data and re-fetch every 30 seconds
   useEffect(() => {
     fetchTables();
-    const interval = setInterval(fetchTables, 30000);
+    const interval = setInterval(fetchTables, 30000); // Auto-refresh
     return () => clearInterval(interval);
   }, []);
 
+  // Reapply filters when filter options change
   useEffect(() => {
     applyFilters(tables);
   }, [capacityFilter, statusFilter]);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownOpen && !event.target.closest(".filter-dropdown")) {
@@ -92,16 +112,17 @@ export default function TableBooking() {
     };
   }, [dropdownOpen]);
 
+  // APPLY FILTERS BASED ON SELECTED CAPACITY AND STATUS
   const applyFilters = (tableData) => {
     let filtered = [...tableData];
 
-    // Filter by capacity
+    // Apply capacity filter if selected
     if (capacityFilter !== "all") {
       const capacity = Number.parseInt(capacityFilter);
       filtered = filtered.filter((table) => table.capacity === capacity);
     }
 
-    // Filter by status
+    // Apply status filter (Available / Occupied)
     if (statusFilter !== "all") {
       filtered = filtered.filter((table) => table.status === statusFilter);
     }
@@ -109,21 +130,25 @@ export default function TableBooking() {
     setFilteredTables(filtered);
   };
 
+  // HANDLE TABLE BOOKING REQUEST
   const handleReservation = async (tableId) => {
     try {
       const token = localStorage.getItem("token");
+
+      // Send booking request to backend with JWT auth
       await axios.post(
         `http://localhost:8000/api/tables/request-booking/${tableId}/`,
         { username, email },
         { headers: { Authorization: `JWT ${token}` } }
       );
+
+      // Success feedback
       setPopupMessage("Booking requested! Admin will confirm shortly.");
       setPopupType("success");
       setShowPopup(false);
       setShowNotification(true);
-      fetchTables();
+      fetchTables(); // Refresh table status
 
-      // Hide notification after 5 seconds
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
@@ -133,7 +158,6 @@ export default function TableBooking() {
       setPopupType("error");
       setShowNotification(true);
 
-      // Hide notification after 5 seconds
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
@@ -142,7 +166,7 @@ export default function TableBooking() {
     }
   };
 
-  // Capacity options for dropdown
+  // DROPDOWN OPTIONS FOR CAPACITY FILTER
   const capacityOptions = [
     { value: "all", label: "ALL CAPACITIES" },
     { value: "2", label: "2 PEOPLE" },
@@ -151,14 +175,14 @@ export default function TableBooking() {
     { value: "8", label: "8 PEOPLE" },
   ];
 
-  // Status options for filter - removed "pending" as requested
+  // DROPDOWN OPTIONS FOR STATUS FILTER
   const statusOptions = [
     { value: "all", label: "ALL" },
     { value: "available", label: "AVAILABLE" },
     { value: "occupied", label: "OCCUPIED" },
   ];
 
-  // Get current capacity label
+  // Get the display label for current capacity filter
   const getCurrentCapacityLabel = () => {
     const option = capacityOptions.find((opt) => opt.value === capacityFilter);
     return option ? option.label : "ALL CAPACITIES";
@@ -301,49 +325,6 @@ export default function TableBooking() {
           )}
         </div>
       )}
-
-      {/* {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-container">
-            <button className="popup-close" onClick={() => setShowPopup(false)}>
-              <X size={20} />
-            </button>
-            <h2 className="popup-title">Reserve Table</h2>
-            <div className="popup-form">
-              <div className="form-group">
-                <label className="form-label">Your Name</label>
-                <div className="form-input-wrapper">
-                  <input
-                    className="form-input"
-                    placeholder="Enter your name"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Email Address</label>
-                <div className="form-input-wrapper">
-                  <input
-                    className="form-input"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-              <button
-                className="form-submit"
-                onClick={() => handleReservation(reservingTable)}
-                disabled={!username || !email}
-              >
-                Confirm Reservation
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
 
       {showNotification && (
         <div className={`notification notification-${popupType}`}>

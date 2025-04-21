@@ -621,27 +621,232 @@ class FeedbackApiView(APIView):
             return Response({"message": "Feedback submitted successfully!"}, status=201)
         return Response(serializer.errors, status=400)
     
+
+
 def verify_payment(request):
-    token = request.POST.get('token')
-    amount = request.POST.get('amount')
-    url = "https://khalti.com/api/v2/payment/verify/"
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    try:
+        # Parse JSON data from request body
+        data = json.loads(request.body)
+        token = data.get('token')
+        amount = data.get('amount')
+        
+        if not token or not amount:
+            return JsonResponse({'error': 'Token and amount are required'}, status=400)
+        
+        # Khalti verification URL
+        url = "https://khalti.com/api/v2/payment/verify/"
+        
+        # Get the secret key from settings
+        secret_key = settings.KHALTI_SECRET_KEY
+        if not secret_key:
+            return JsonResponse({'error': 'Khalti secret key is missing'}, status=500)
+        
+        payload = {
+            "token": token,
+            "amount": amount
+        }
+        
+        headers = {
+            "Authorization": f"Key {secret_key}",
+            "Content-Type": "application/json"
+        }
+        
+        # Make the verification request to Khalti
+        response = requests.post(url, json=payload, headers=headers)
+        
+        # Return Khalti's response
+        return JsonResponse(response.json())
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
-    payload = {
-        "token": token,
-        "amount": amount
-    }
-    headers = {
-        "Authorization": f"Key {settings.KHALTI_SECRET_KEY}"
-    }
 
-    response = requests.post(url, data=payload, headers=headers)
-    return JsonResponse(response.json())
+
+
+
+
+
+
+import os
+import logging
+from xml.etree import ElementTree
+import requests
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Cart, CartItem, PendingOrder, Order
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def save_pending_order(request):
+    """Save pending order details before eSewa payment"""
+    try:
+        transaction_id = request.data.get('transactionId')
+        amount = request.data.get('amount')
+        special_instructions = request.data.get('specialInstructions', '')
+        items = request.data.get('items')
+
+        if not all([transaction_id, amount, items]):
+            return Response({
+                'success': False,
+                'message': 'Missing required parameters'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate amount against cart
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        cart_total = sum(item.food_item.food_price * item.quantity for item in cart_items)
+        
+        if float(amount) != float(cart_total):
+            return Response({
+                'success': False,
+                'message': 'Amount mismatch with cart total'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Save pending order
+        PendingOrder.objects.create(
+            user=user,
+            transaction_id=transaction_id,
+            amount=amount,
+            special_instructions=special_instructions,
+            items=items
+        )
+
+        return Response({
+            'success': True,
+            'message': 'Pending order saved successfully',
+            'transaction_id': transaction_id
+        })
+    except Exception as e:
+        logger.error(f"Error saving pending order: {str(e)}", exc_info=True)
+        return Response({
+            'success': False,
+            'message': 'An error occurred while saving pending order',
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def esewa_verify(request):
+    """Verify eSewa payment after redirect"""
+    try:
+        transaction_id = request.data.get('oid')
+        amount = request.data.get('amt')
+        ref_id = request.data.get('refId')
+
+        if not all([transaction_id, amount, ref_id]):
+            return Response({
+                'success': False,
+                'message': 'Missing required parameters'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate pending order
+        try:
+            pending_order = PendingOrder.objects.get(
+                transaction_id=transaction_id,
+                user=request.user
+            )
+            if float(amount) != float(pending_order.amount):
+                return Response({
+                    'success': False,
+                    'message': 'Amount mismatch with pending order'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except PendingOrder.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': 'Invalid transaction ID'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify payment with eSewa
+        verification_url = os.getenv('ESEWA_VERIFICATION_URL', 'https://esewa.com.np/epay/transrec')
+        payload = {
+            'amt': amount,
+            'rid': ref_id,
+            'pid': transaction_id,
+            'scd': os.getenv('ESEWA_MERCHANT_CODE', 'EPAYTEST')
+        }
+
+        response = requests.post(verification_url, payload)
+        try:
+            root = ElementTree.fromstring(response.text)
+            response_code = root.find('response_code').text
+        except ElementTree.ParseError:
+            logger.error(f"Invalid XML response from eSewa: {response.text}")
+            return Response({
+                'success': False,
+                'message': 'Invalid response from eSewa'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if response_code == 'Success':
+            user = request.user
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart)
+
+            # Create order
+            order = Order.objects.create(
+                user=user,
+                transaction_id=transaction_id,
+                amount=amount,
+                payment_method='esewa',
+                status='completed',
+                special_instructions=pending_order.special_instructions
+            )
+
+            # Clear cart and pending order
+            cart_items.delete()
+            pending_order.delete()
+
+            return Response({
+                'success': True,
+                'message': 'Payment verified successfully',
+                'transaction_id': transaction_id,
+                'order_id': order.id
+            })
+        else:
+            logger.warning(f"eSewa verification failed: {response.text}")
+            return Response({
+                'success': False,
+                'message': 'Payment verification failed',
+                'response': response.text
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        logger.error(f"Error verifying eSewa payment: {str(e)}", exc_info=True)
+        return Response({
+            'success': False,
+            'message': 'An error occurred while verifying payment',
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+
+import requests
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import ChatMessage
 
 GEMINI_API_KEY = "AIzaSyDC7NCsXpXlOkfEMekZ_O8ViTobUt7zLqI"
 
 @api_view(['POST'])
 def chatbot_reply(request):
     user_message = request.data.get('message', '')
+
+    if not user_message.strip():
+        return Response({'reply': "Please type something."})
 
     ChatMessage.objects.create(sender='user', message=user_message)
 
@@ -653,6 +858,8 @@ def chatbot_reply(request):
 
 
 def get_gemini_reply(user_message):
+    import json
+
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
 
     headers = {
@@ -668,11 +875,16 @@ def get_gemini_reply(user_message):
     }
 
     try:
-        # Here is the POST method to call the Gemini API
-        response = requests.post(url, headers=headers, json=body)  # POST request to Gemini API
+        response = requests.post(url, headers=headers, json=body)
         response.raise_for_status()
         data = response.json()
+
+        # Debug: log the full response
+        print("Gemini Response:", json.dumps(data, indent=2))
+
         reply = data["candidates"][0]["content"]["parts"][0]["text"]
         return reply
     except Exception as e:
+        print("Gemini Error:", str(e))
         return "Sorry, I'm having trouble responding right now."
+

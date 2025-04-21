@@ -231,15 +231,22 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 KHALTI_SECRET_KEY = '93a0639e600648adb274722bdf0afa2f'
 KHALTI_PUBLIC_KEY = '98c492879e8a423fb37558d5a33a6a37'
 
+
+
+from decouple import config
+ESEWA_MERCHANT_CODE = config('EPAYTEST', default='EPAYTEST')
+ESEWA_VERIFICATION_URL = config('https://esewa.com.np/epay/transrec', default='https://esewa.com.np/epay/transrec')
+
+
 # AUTH_USER_MODEL = 'overallBackend.User'  
 
 
 
 JAZZMIN_SETTINGS = {
     
-    "site_title": "Himalayan Admin",
+    "site_title": "Himalayan ADB",
     "site_header": "Himalayan Asian Dining & Bar",
-    "site_brand": "Himalayan Admin",
+    "site_brand": "Himalayan ADB",
     "site_logo": "../media/logo.png",
     "welcome_sign": "Welcome to Himalayan Admin Portal",
     "copyright": "© 2025 Himalayan",
@@ -255,5 +262,33 @@ JAZZMIN_SETTINGS = {
 
 
     "show_sidebar": True,
+    "custom_css": None,
+"custom_js": None,
+
+"changeform_format": "horizontal_tabs",
+"changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
+
+"related_modal_active": True,
+"use_google_fonts_cdn": True,
+"navigation_expanded": True,
+
+"order_with_respect_to": ["auth", "overallBackend"],
+"icons": {
+    "auth": "fas fa-users-cog",
+    "your_order_model": "fas fa-receipt",  # Update this key to your actual model
+},
+
+"ui_tweaks": {
+    "navbar": "navbar-dark bg-primary",
+    "accent": "accent-info",
+    "body": "hold-transition",
+    "brand_small_text": "HADB",
+    "brand_text_align": "center",
+    "brand_colour": "navbar-navy",
+    "sidebar": "sidebar-dark-primary",
+    "theme": "minty",
+    "dark_mode_theme": "slate",
+},
+
 }
 
