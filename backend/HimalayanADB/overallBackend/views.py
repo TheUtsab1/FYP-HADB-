@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
@@ -543,18 +544,32 @@ def reject_booking(request, booking_id):
 #         return Response(serializer.data)
 
 
-
-        
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def remove_cart_item(request, item_id):
+def remove_cart_item(request):
     try:
         cart = Cart.objects.get(user=request.user)
-        cart_item = CartItem.objects.get(id=item_id, cart=cart)
-        cart_item.delete()
-        return Response({"message": "Item removed from cart"}, status=status.HTTP_200_OK)
-    except CartItem.DoesNotExist:
-        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        CartItem.objects.filter(cart=cart).delete()
+        logger.info(f"Cart items cleared for user: {request.user.username}")
+        return Response({'message': 'Cart cleared successfully'})
+    except Cart.DoesNotExist:
+        logger.warning(f"No cart found for user: {request.user.username}")
+        return Response({'message': 'No cart to clear'})
+    except Exception as e:
+        logger.error(f"Error clearing cart: {str(e)}")
+        return Response({'error': str(e)}, status=400)
+
+        
+# @api_view(['DELETE'])
+# @permission_classes([IsAuthenticated])
+# def remove_cart_item(request, item_id):
+#     try:
+#         cart = Cart.objects.get(user=request.user)
+#         cart_item = CartItem.objects.get(id=item_id, cart=cart)
+#         cart_item.delete()
+#         return Response({"message": "Item removed from cart"}, status=status.HTTP_200_OK)
+#     except CartItem.DoesNotExist:
+#         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def submit_booking(request):
@@ -827,6 +842,278 @@ def esewa_verify(request):
             'message': 'An error occurred while verifying payment',
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+from django.db import IntegrityError
+
+
+@api_view(['GET'])
+def get_food_reviews(request, food_slug):
+    """Get all reviews for a specific food item."""
+    food = get_object_or_404(Food, food_slug=food_slug)
+    reviews = Review.objects.filter(food=food)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_food_review(request, food_slug):
+    """Create a new review for a food item (authenticated user)."""
+    food = get_object_or_404(Food, food_slug=food_slug)
+    
+    # Create review data with food and user
+    data = request.data.copy()
+    
+    # Prepare data for serializer
+    serializer = ReviewSerializer(data=data)
+    if serializer.is_valid():
+        try:
+            # Try to save with food and user association
+            serializer.save(food=food, user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            # This happens if user already reviewed this food (unique_together constraint)
+            return Response(
+                {"detail": "You have already reviewed this item. You can edit your review instead."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def create_anonymous_review(request, food_slug):
+    """Create a new anonymous review for a food item."""
+    food = get_object_or_404(Food, food_slug=food_slug)
+    
+    # Create data for anonymous review
+    data = request.data.copy()
+    
+    # Ensure user_name is set or default to Anonymous
+    if not data.get('user_name'):
+        data['user_name'] = 'Anonymous'
+    
+    serializer = ReviewSerializer(data=data)
+    if serializer.is_valid():
+        # Save review with food but no user (anonymous)
+        serializer.save(food=food, user=None)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def update_delete_review(request, food_slug, review_id):
+    """Update or delete a review."""
+    food = get_object_or_404(Food, food_slug=food_slug)
+    review = get_object_or_404(Review, id=review_id, food=food)
+    
+    # Only allow users to update/delete their own reviews
+    if review.user != request.user:
+        return Response(
+            {"detail": "You don't have permission to edit this review."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    if request.method == 'PUT':
+        serializer = ReviewSerializer(review, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+# Add to your views.py file
+import json
+import stripe
+from django.conf import settings
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+# Set your secret key
+stripe.api_key = "sk_test_51RGzEPEEI2zN8avgfwL5EM7hpXXCzYVF3P2Fn84f27CjjP5Ag2L6MoAEXcNas5SKksZ71nxeU7gfGqJEarOnfip300nqKCkKk0"
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_checkout_session(request):
+    try:
+        data = json.loads(request.body)
+        amount = data.get('amount')
+        currency = data.get('currency', 'npr')
+        items = data.get('items', [])
+        special_instructions = data.get('special_instructions', '')
+        
+        # Create metadata for reference
+        metadata = {
+            'user_id': str(request.user.id),
+            'special_instructions': special_instructions[:500],  # Limit metadata size
+            'item_count': str(len(items))
+        }
+        
+        # Create line items for Stripe
+        line_items = []
+        for idx, item in enumerate(items):
+            line_items.append({
+                'price_data': {
+                    'currency': currency,
+                    'product_data': {
+                        'name': item['name'],
+                        'metadata': {
+                            'food_item_id': str(item['id'])
+                        }
+                    },
+                    'unit_amount': int(item['price'] * 100),  # Convert to cents
+                },
+                'quantity': item['quantity'],
+            })
+            
+            # Add some item details to metadata
+            if idx < 5:  # Limit to first 5 items to prevent metadata size issues
+                metadata[f'item_{idx}'] = f"{item['name']} x{item['quantity']}"
+        
+        # Create Stripe checkout session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            metadata=metadata,
+            success_url=f"{request.build_absolute_uri('/').rstrip('/')}/cart?payment=success&session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{request.build_absolute_uri('/').rstrip('/')}/cart?payment=canceled",
+        )
+        
+        return JsonResponse({'id': checkout_session.id})
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
+import stripe
+import json
+
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
+from .models import Cart  # Ensure Cart model is imported
+import stripe
+import json
+import requests
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def payment_success(request):
+    session_id = request.GET.get('session_id')
+    
+    try:
+        # Retrieve the session to verify payment
+        session = stripe.checkout.Session.retrieve(session_id)
+        
+        # Check if payment was successful
+        if session.payment_status == 'paid':
+            user = request.user
+            logger.info(f"Processing payment success for user: {user.username}, session_id: {session_id}")
+            
+            # Retrieve metadata
+            metadata = session.metadata
+            special_instructions = metadata.get('special_instructions', '')
+            item_count = int(metadata.get('item_count', 0))
+            
+            # Create order
+            order_data = {
+                'payment_method': 'stripe',
+                'payment_details': json.dumps({
+                    'session_id': session_id,
+                    'payment_intent': session.payment_intent,
+                    'amount': session.amount_total / 100,
+                    'currency': session.currency,
+                }),
+                'special_instructions': special_instructions,
+            }
+            
+            # Call the order creation endpoint
+            order_response = requests.post(
+                'http://127.0.0.1:8000/orders/create/',
+                json=order_data,
+                headers={
+                    'Authorization': f'JWT {request.auth}',
+                    'Content-Type': 'application/json',
+                }
+            )
+            
+            if order_response.status_code != 201:
+                logger.error(f"Failed to create order: {order_response.text}")
+                return Response({
+                    'success': False,
+                    'message': 'Failed to create order. Payment was successful, please contact support.'
+                }, status=400)
+            
+            # Clear the user's cart
+            try:
+                cart_items = Cart.objects.filter(user=user)
+                logger.info(f"Found {cart_items.count()} cart items for user: {user.username}")
+                cart_items.delete()
+                logger.info(f"Cart cleared for user: {user.username}")
+            except Exception as e:
+                logger.error(f"Error clearing cart for user {user.username}: {str(e)}")
+                return Response({
+                    'success': False,
+                    'message': f'Error clearing cart: {str(e)}'
+                }, status=400)
+            
+            # Prepare invoice data
+            items = []
+            for i in range(item_count):
+                item_key = f'item_{i}'
+                if item_key in metadata:
+                    items.append(metadata[item_key])
+            
+            return Response({
+                'success': True,
+                'message': 'Payment successful! Your order has been placed.',
+                'invoice': {
+                    'order_id': f"ORD-{session_id[-8:]}",
+                    'order_date': timezone.now().strftime('%Y-%m-%d'),
+                    'items': items,
+                    'total': session.amount_total / 100,
+                    'currency': session.currency,
+                    'special_instructions': special_instructions,
+                    'customer_name': user.get_full_name() or user.username,
+                    'customer_email': user.email,
+                }
+            })
+        else:
+            logger.warning(f"Payment not completed for session_id: {session_id}")
+            return Response({
+                'success': False,
+                'message': 'Payment not completed. Please try again.'
+            }, status=400)
+            
+    except Exception as e:
+        logger.error(f"Error in payment_success: {str(e)}")
+        return Response({
+            'success': False,
+            'message': f'Error verifying payment: {str(e)}'
+        }, status=400)
+        
 
 
 

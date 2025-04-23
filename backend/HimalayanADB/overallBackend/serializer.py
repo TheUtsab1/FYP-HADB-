@@ -1,24 +1,24 @@
 from rest_framework import serializers
-from .models import Food, FoodTaste, FoodType, Cart, CartItem, CateringBooking, Table, Reservation, Feedback
+from .models import Food, FoodTaste, FoodType, Cart, CartItem, CateringBooking, Table, Reservation, Feedback, Review
 from django.contrib.auth.models import User
 
-# class TabelReservationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = TabelReservation
-#         fields = "__all__"
-        
-# class TableReservationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = TableReservations
-#         fields = '__all__'
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    username = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'username', 'food', 'rating', 'comment', 'user_name', 'created_at']
+        read_only_fields = ['user', 'created_at']
+    
+    def get_username(self, obj):
+        if obj.user:
+            return obj.user.username
+        return obj.user_name or "Anonymous"
 
-#     def validate(self, data):
-#         if data['Date'] < models.datetime.date.today():
-#             raise serializers.ValidationError("The reservation date cannot be in the past.")
-#         return data
-
+# Your existing serializers below
 class CartSerializer(serializers.ModelSerializer):
-    class Meta :
+    class Meta:
         model = Cart
         fields = ["user"]
 
@@ -38,25 +38,36 @@ class FoodTypeSerializer(serializers.ModelSerializer):
 class FoodSerializer(serializers.ModelSerializer):
     food_type = FoodTypeSerializer()
     taste = FoodTasteSerializer()
+    reviews = ReviewSerializer(many=True, read_only=True)
+    average_rating = serializers.SerializerMethodField()
+    review_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Food
         fields = "__all__"
+    
+    def get_average_rating(self, obj):
+        reviews = obj.reviews.all()
+        if reviews.exists():
+            return sum(review.rating for review in reviews) / reviews.count()
+        return 0
+    
+    def get_review_count(self, obj):
+        return obj.reviews.count()
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    cart = CartSerializer(read_only = True)
-    food_item_id = serializers.PrimaryKeyRelatedField(queryset= Food.objects.all(), write_only = True, source= "food_item")
-    food_item = FoodSerializer(read_only = True)
+    cart = CartSerializer(read_only=True)
+    food_item_id = serializers.PrimaryKeyRelatedField(queryset=Food.objects.all(), write_only=True, source="food_item")
+    food_item = FoodSerializer(read_only=True)
     class Meta:
         model = CartItem
         fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):
-    class Meta :
+    class Meta:
         model = User
         fields = ["username"]
-
 
 
 class CateringBookingSerializer(serializers.ModelSerializer):
@@ -86,7 +97,6 @@ class FeedbackSerializer(serializers.ModelSerializer):
         feedback = Feedback.objects.create(user=user, **validated_data)
         return feedback
     
-
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

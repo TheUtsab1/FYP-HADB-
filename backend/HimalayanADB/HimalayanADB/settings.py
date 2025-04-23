@@ -228,8 +228,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
 # RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
 
-KHALTI_SECRET_KEY = '93a0639e600648adb274722bdf0afa2f'
-KHALTI_PUBLIC_KEY = '98c492879e8a423fb37558d5a33a6a37'
+KHALTI_SECRET_KEY = 'b20505009f974f32b27cfe6cbf38acdf'
+KHALTI_PUBLIC_KEY = 'ba249fbad6bd4fa79caf3beb353c1748'
 
 
 
@@ -292,3 +292,26 @@ JAZZMIN_SETTINGS = {
 
 }
 
+# settings.py
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

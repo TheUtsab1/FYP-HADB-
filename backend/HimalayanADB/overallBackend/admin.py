@@ -7,7 +7,7 @@ from django.conf import settings
 
 # Register your models here.
 
-admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, ChatMessage))
+admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, ChatMessage, PendingOrder, Order))
 
 
 # from material.admin.sites import MaterialAdminSite
@@ -106,7 +106,20 @@ class CateringBookingAdmin(admin.ModelAdmin):
     
     
     
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('food', 'user', 'user_name', 'rating', 'comment_preview', 'created_at')
+    list_filter = ('rating', 'created_at', 'food')
+    search_fields = ('user__username', 'user_name', 'comment', 'food__food_name')
+    date_hierarchy = 'created_at'
     
+    def comment_preview(self, obj):
+        # Show first 50 characters of comment
+        return obj.comment[:50] + "..." if len(obj.comment) > 50 else obj.comment
+    
+    comment_preview.short_description = 'Comment'
+
+# Use the custom admin class
+admin.site.register(Review, ReviewAdmin)
     
     
     

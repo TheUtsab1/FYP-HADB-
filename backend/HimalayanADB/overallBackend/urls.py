@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import * 
+from . import views
 
 
 
@@ -34,7 +35,11 @@ urlpatterns = [
     path('verify-payment/', verify_payment, name='verify_payment'),
     path('esewa-verify/', esewa_verify, name='esewa_verify'),
     path('orders/pending/', save_pending_order, name='save_pending_order'),
-    # path('profile/', user_profile, name='user_profile'),
-    # path('update-profile/', update_profile, name='update_profile'),
+    path('food/<str:food_slug>/reviews/', views.get_food_reviews, name='get-food-reviews'),
+    path('food/<str:food_slug>/reviews/create/', views.create_food_review, name='create-food-review'),
+    path('food/<str:food_slug>/reviews/anonymous/', views.create_anonymous_review, name='create-anonymous-review'),
+    path('food/<str:food_slug>/reviews/<int:review_id>/', views.update_delete_review, name='update-delete-review'),
+    path('create-checkout-session/', create_checkout_session, name='create-checkout-session'),
+    path('payment-success/', payment_success, name='payment-success'),
     path("api/chat/", chatbot_reply, name="chatbot_reply"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

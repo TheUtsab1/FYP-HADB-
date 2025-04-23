@@ -1,0 +1,46 @@
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /cart/20/
+Not Found: /cart/20/
+Not Found: /cart/20/
+Not Found: /cart/20/
+Not Found: /cart/20/
+Not Found: /cart/20/
+Not Found: /cart/20/
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Chicken+Daal+Bhaat&line_items[0][price_data][product_data][metadata][food_item_id]=21&line_items[0][price_data][unit_amount]=25000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=1&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Chicken+Daal+Bhaat+x1&success_url=http%3A%2F%2F127.0.0.1%3A8000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2F127.0.0.1%3A8000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2763
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1OY2xYnT5M1KTob7kJp8qM5gdneSJZ8ECfl0S1st9uL1icFmEUeFqBM3W",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 25000,\n  "amount_total": 25000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://127.0.0.1:8000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745401171,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1745487571,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Chicken Daal Bhaat x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "1"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://127.0.0.1:8000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1OY2xYnT5M1KTob7kJp8qM5gdneSJZ8ECfl0S1st9uL1icFmEUeFqBM3W#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_5BrB8a7zYACoS5 message='Dashboard link for request'
+Unauthorized: /cart/
+Not Found: /favicon.ico
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader

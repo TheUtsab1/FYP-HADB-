@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from autoslug import AutoSlugField
 from django.contrib.auth.models import User
@@ -55,8 +56,27 @@ class Food(models.Model):
         super(Food, self).save(*args, **kwargs)
 
 
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    food = models.ForeignKey(Food, related_name='reviews', on_delete=models.CASCADE)
+    rating = models.IntegerField(validators=[MinValueValidator(1)])
+    comment = models.TextField(blank=True)
+    user_name = models.CharField(max_length=100, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at']
+        # Prevent multiple reviews from the same user for the same food item
+        unique_together = ('user', 'food')
 
+    def __str__(self):
+        return f"Review by {self.user_name or 'Anonymous'} for {self.food.food_name}"
+
+    def save(self, *args, **kwargs):
+        # If a user is provided but no user_name, use the username
+        if self.user and not self.user_name:
+            self.user_name = self.user.username
+        super(Review, self).save(*args, **kwargs)
 
 
 class Table(models.Model):

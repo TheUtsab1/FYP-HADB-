@@ -2,13 +2,19 @@
 
 import { useState, useEffect, useRef } from "react";
 import { images } from "../../constants";
-import { Link } from "react-router-dom";
-import { X, Download, FileText, Image, Check } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { X, Download, FileText, Image } from "lucide-react";
 import axios from "axios";
 import KhaltiCheckout from "khalti-checkout-web";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { loadStripe } from "@stripe/stripe-js";
 import "./Cart.css";
+
+// Initialize Stripe with your publishable key
+const stripePromise = loadStripe(
+  "pk_test_51RGzEPEEI2zN8avgdcno7NHIORqjeNZFOSekIOxyk55iuqiO2ZcEKJnxH2vLCTN6erkIB0XqRZepvahQm3QGmmrL00N98Huk8M"
+);
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -19,56 +25,111 @@ export default function Cart() {
   const [orderId, setOrderId] = useState(null);
   const [orderDate, setOrderDate] = useState(null);
   const [user, setUser] = useState(null);
+  const [paymentMessage, setPaymentMessage] = useState(null);
+  const [invoiceData, setInvoiceData] = useState(null);
   const invoiceRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const hasProcessedRedirect = useRef(false);
 
-  const KHALTI_PUBLIC_KEY = "98c492879e8a423fb37558d5a33a6a37";
+  const KHALTI_PUBLIC_KEY = "ba249fbad6bd4fa79caf3beb353c1748";
 
   useEffect(() => {
-    fetchCartItems();
     fetchUserProfile();
-  }, []);
+    fetchCartItems();
 
-  const fetchUserProfile = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return;
+    // Handle payment redirect only once
+    if (!hasProcessedRedirect.current) {
+      handlePaymentRedirect();
+      hasProcessedRedirect.current = true;
     }
+  }, [location]);
 
-    fetch("http://127.0.0.1:8000/profile/", {
-      headers: {
-        Authorization: `JWT ${token}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch user");
+  const handlePaymentRedirect = async () => {
+    const params = new URLSearchParams(location.search);
+    const paymentStatus = params.get("payment");
+    const sessionId = params.get("session_id");
+
+    console.log("Checking redirect:", { paymentStatus, sessionId });
+
+    if (paymentStatus === "success" && sessionId) {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/payment-success/?session_id=${sessionId}`,
+          {
+            headers: {
+              Authorization: `JWT ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        console.log("Payment success response:", response.data);
+
+        if (response.data.success) {
+          setPaymentMessage("Payment successful! Your order has been placed.");
+          setInvoiceData(response.data.invoice);
+          setOrderId(response.data.invoice.order_id);
+          setOrderDate(response.data.invoice.order_date);
+          setCartItems([]); // Clear cart immediately
+          setShowInvoicePopup(true);
+        } else {
+          setPaymentMessage(
+            response.data.message || "Payment verification failed."
+          );
         }
-        return res.json();
-      })
-      .then((data) => {
-        const userData = Array.isArray(data.results) ? data.results[0] : data;
-        setUser(userData);
-      })
-      .catch((err) => {
-        console.error("Profile error:", err);
-        setUser({
-          username: localStorage.getItem("username"),
-          email: localStorage.getItem("email"),
-        });
+      } catch (error) {
+        console.error("Error verifying payment:", error);
+        setPaymentMessage("Error verifying payment. Please contact support.");
+      } finally {
+        setLoading(false);
+        // Clear query parameters
+        navigate("/cart", { replace: true });
+      }
+    } else if (paymentStatus === "canceled") {
+      setPaymentMessage("Payment was canceled. Please try again.");
+      navigate("/cart", { replace: true });
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/profile/", {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
       });
+      if (!res.ok) throw new Error("Failed to fetch user");
+      const data = await res.json();
+      const userData = Array.isArray(data.results) ? data.results[0] : data;
+      setUser(userData);
+    } catch (err) {
+      console.error("Profile error:", err);
+      setUser({
+        username: localStorage.getItem("username"),
+        email: localStorage.getItem("email"),
+      });
+    }
   };
 
   const fetchCartItems = async () => {
     const token = localStorage.getItem("token");
+    if (!token) return;
+
     try {
       const response = await axios.get("http://127.0.0.1:8000/cart/", {
         headers: {
           Authorization: `JWT ${token}`,
         },
       });
+      console.log("Fetched cart items:", response.data);
       setCartItems(response.data);
     } catch (error) {
       console.error("Error fetching cart:", error);
+      setCartItems([]);
     }
   };
 
@@ -114,7 +175,6 @@ export default function Cart() {
         onSuccess: async (payload) => {
           console.log("Payment Successful:", payload);
           setLoading(true);
-
           try {
             const response = await axios.post(
               "http://127.0.0.1:8000/verify-payment/",
@@ -129,19 +189,19 @@ export default function Cart() {
                 },
               }
             );
-
             if (response.data.state?.name === "Completed") {
               handlePaymentComplete("khalti", payload);
-              alert("Payment Verified Successfully!");
+              setPaymentMessage("Payment successful! Your order has been placed.");
+              setCartItems([]); // Clear cart
             } else {
-              alert(
+              setPaymentMessage(
                 "Payment Verification Failed: " +
                   (response.data.detail || "Unknown error")
               );
             }
           } catch (error) {
             console.error("Error verifying payment:", error);
-            alert("Payment verification failed. Please try again.");
+            setPaymentMessage("Payment verification failed. Please try again.");
           } finally {
             setLoading(false);
             setShowPaymentPopup(false);
@@ -149,7 +209,7 @@ export default function Cart() {
         },
         onError: (error) => {
           console.log("Payment Error:", error);
-          alert("Payment Failed! Please try again.");
+          setPaymentMessage("Payment Failed! Please try again.");
         },
         onClose: () => {
           console.log("Payment window closed");
@@ -168,10 +228,10 @@ export default function Cart() {
     khaltiCheckout.show({ amount: total * 100 });
   };
 
-  const handleEsewaPayment = async () => {
+  const handleStripePayment = async (total) => {
     if (
       !window.confirm(
-        "You will be redirected to eSewa to complete your payment. Continue?"
+        "You will be redirected to Stripe to complete your payment. Continue?"
       )
     ) {
       return;
@@ -179,23 +239,17 @@ export default function Cart() {
 
     setLoading(true);
     try {
-      const transactionId = `food-order-${Date.now()}`;
-      const productAmount = total;
-      const totalAmount = productAmount;
-
-      // Save pending order to backend
-      const pendingOrderResponse = await axios.post(
-        "http://127.0.0.1:8000/orders/pending/",
+      const response = await axios.post(
+        "http://127.0.0.1:8000/create-checkout-session/",
         {
-          transactionId,
-          amount: totalAmount,
+          amount: total,
+          currency: "npr",
           items: cartItems.map((item) => ({
             id: item.id,
             name: item.food_item.food_name,
             price: item.food_item.food_price,
             quantity: item.quantity,
           })),
-          specialInstructions,
         },
         {
           headers: {
@@ -205,48 +259,23 @@ export default function Cart() {
         }
       );
 
-      if (!pendingOrderResponse.data.success) {
-        throw new Error(
-          pendingOrderResponse.data.message || "Failed to save pending order"
-        );
-      }
-
-      const form = document.createElement("form");
-      form.setAttribute("method", "POST");
-      form.setAttribute(
-        "action",
-        process.env.REACT_APP_ESEWA_URL || "https://uat.esewa.com.np/epay/main"
-      );
-
-      const formInputs = {
-        amt: productAmount,
-        psc: 0,
-        pdc: 0,
-        txAmt: 0,
-        tAmt: totalAmount,
-        pid: transactionId,
-        scd: process.env.REACT_APP_ESEWA_MERCHANT_CODE || "EPAYTEST",
-        su: `${window.location.origin}/esewa-success`,
-        fu: `${window.location.origin}/esewa-failure`,
-      };
-
-      Object.keys(formInputs).forEach((key) => {
-        const input = document.createElement("input");
-        input.setAttribute("type", "hidden");
-        input.setAttribute("name", key);
-        input.setAttribute("value", formInputs[key]);
-        form.appendChild(input);
+      const stripe = await stripePromise;
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: response.data.id,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      if (error) {
+        console.error("Stripe checkout error:", error);
+        setPaymentMessage("Payment failed! " + error.message);
+      }
     } catch (error) {
-      console.error("Error setting up eSewa payment:", error);
-      alert(
-        `Failed to initiate eSewa payment: ${
-          error.message || "Please try again."
+      console.error("Error setting up Stripe payment:", error);
+      setPaymentMessage(
+        `Failed to initiate Stripe payment: ${
+          error.response?.data?.message || error.message || "Please try again."
         }`
       );
+    } finally {
       setLoading(false);
       setShowPaymentPopup(false);
     }
@@ -255,13 +284,26 @@ export default function Cart() {
   const handleCashPayment = () => {
     const newOrderId = "ORD-" + Math.floor(Math.random() * 10000);
     setOrderId(newOrderId);
-
-    const currentDate = new Date().toISOString().split("T")[0];
-    setOrderDate(currentDate);
-
+    setOrderDate(new Date().toISOString().split("T")[0]);
+    setInvoiceData({
+      order_id: newOrderId,
+      order_date: new Date().toISOString().split("T")[0],
+      items: cartItems.map(
+        (item) => `${item.food_item.food_name} x${item.quantity}`
+      ),
+      total,
+      currency: "npr",
+      special_instructions: specialInstructions,
+      customer_name: user
+        ? user.first_name
+          ? `${user.first_name} ${user.last_name}`
+          : user.username
+        : "Customer",
+      customer_email: user?.email || "",
+      payment_method: "Cash",
+    });
     setShowInvoicePopup(true);
     setShowPaymentPopup(false);
-
     handlePaymentComplete("cash");
   };
 
@@ -280,19 +322,20 @@ export default function Cart() {
           },
         }
       );
-
       if (method !== "cash") {
-        alert(
+        setPaymentMessage(
           `Your order has been placed successfully with ${method} payment!`
         );
+        setCartItems([]); // Clear cart
       }
-
+      // Fetch cart to confirm it's empty
       fetchCartItems();
     } catch (error) {
       console.error("Error creating order:", error);
-
       if (method !== "cash") {
-        alert("There was an error processing your order. Please try again.");
+        setPaymentMessage(
+          "There was an error processing your order. Please try again."
+        );
       }
     }
   };
@@ -349,12 +392,18 @@ export default function Cart() {
             </button>
 
             <button
-              className="payment-option esewa"
-              onClick={handleEsewaPayment}
+              className="payment-option stripe"
+              onClick={() => handleStripePayment(total)}
               disabled={loading}
             >
-              <img src={images.esewa} alt="eSewa" />
-              Pay with eSewa
+              <img
+                src={
+                  images.stripe ||
+                  "https://cdnjs.cloudflare.com/ajax/libs/simple-icons/4.25.0/stripe.svg"
+                }
+                alt="Stripe"
+              />
+              Pay with Stripe
             </button>
 
             <button
@@ -380,14 +429,8 @@ export default function Cart() {
     );
   };
 
-  const InvoicePopup = ({ total }) => {
-    if (!showInvoicePopup) return null;
-
-    const customerName = user
-      ? user.first_name && user.last_name
-        ? `${user.first_name} ${user.last_name}`
-        : user.username
-      : "Customer";
+  const InvoicePopup = ({ invoice }) => {
+    if (!showInvoicePopup || !invoice) return null;
 
     return (
       <div className="invoice-modal-overlay">
@@ -424,19 +467,18 @@ export default function Cart() {
           <div className="invoice-content" ref={invoiceRef}>
             <div className="invoice-details">
               <div className="invoice-number">
-                <p>Date: {orderDate}</p>
-                <p>Payment Method: Cash</p>
+                <p>Order ID: {invoice.order_id}</p>
+                <p>Date: {invoice.order_date}</p>
+                <p>Payment Method: {invoice.payment_method || "Stripe"}</p>
               </div>
               <div className="customer-details">
                 <h3>Customer Information</h3>
                 <p>
-                  <strong>Name:</strong> {customerName}
+                  <strong>Name:</strong> {invoice.customer_name}
                 </p>
-                {user && user.email && (
-                  <p>
-                    <strong>Email:</strong> {user.email}
-                  </p>
-                )}
+                <p>
+                  <strong>Email:</strong> {invoice.customer_email}
+                </p>
               </div>
             </div>
 
@@ -446,41 +488,37 @@ export default function Cart() {
                   <tr>
                     <th>Item</th>
                     <th>Qty</th>
-                    <th>Price</th>
                     <th>Amount</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {cartItems.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.food_item.food_name}</td>
-                      <td>{item.quantity}</td>
-                      <td>NPR {item.food_item.food_price.toFixed(2)}</td>
-                      <td>
-                        NPR{" "}
-                        {(item.food_item.food_price * item.quantity).toFixed(2)}
-                      </td>
-                    </tr>
-                  ))}
+                  {invoice.items.map((item, index) => {
+                    const [name, quantity] = item.split(" x");
+                    return (
+                      <tr key={index}>
+                        <td>{name}</td>
+                        <td>{quantity}</td>
+                        <td>-</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
 
             <div className="invoice-summary">
-              <div className="summary-row">
-                <span>Subtotal:</span>
-                <span>NPR {total.toFixed(2)}</span>
-              </div>
               <div className="summary-row total">
                 <span>Total:</span>
-                <span>NPR {total.toFixed(2)}</span>
+                <span>
+                  {invoice.currency.toUpperCase()} {invoice.total.toFixed(2)}
+                </span>
               </div>
             </div>
 
-            {specialInstructions && (
+            {invoice.special_instructions && (
               <div className="invoice-notes">
                 <h3>Special Instructions</h3>
-                <p>{specialInstructions}</p>
+                <p>{invoice.special_instructions}</p>
               </div>
             )}
 
@@ -503,7 +541,7 @@ export default function Cart() {
     );
   };
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 && !paymentMessage) {
     return (
       <div className="cart-container">
         <div className="cart-empty">
@@ -527,6 +565,16 @@ export default function Cart() {
     <div className="cart-container">
       <h1 className="cart-title">Your Order</h1>
 
+      {paymentMessage && (
+        <div
+          className={`payment-message ${
+            paymentMessage.includes("successful") ? "success" : "error"
+          }`}
+        >
+          {paymentMessage}
+        </div>
+      )}
+
       {user && (
         <div className="welcome-message">
           <p>
@@ -539,92 +587,94 @@ export default function Cart() {
         </div>
       )}
 
-      <div className="cart-content">
-        <div className="cart-items">
-          {cartItems.map((item) => (
-            <div className="cart-item" key={item.id}>
-              <div className="item-image">
-                <img
-                  src={`http://127.0.0.1:8000${item.food_item.food_img_url}`}
-                  alt={item.food_item.food_name}
-                />
-              </div>
+      {cartItems.length > 0 && (
+        <div className="cart-content">
+          <div className="cart-items">
+            {cartItems.map((item) => (
+              <div className="cart-item" key={item.id}>
+                <div className="item-image">
+                  <img
+                    src={`http://127.0.0.1:8000${item.food_item.food_img_url}`}
+                    alt={item.food_item.food_name}
+                  />
+                </div>
 
-              <div className="item-details">
-                <h3>{item.food_item.food_name}</h3>
-                <p className="item-price">
-                  NPR {item.food_item.food_price.toFixed(2)}
-                </p>
-              </div>
+                <div className="item-details">
+                  <h3>{item.food_item.food_name}</h3>
+                  <p className="item-price">
+                    NPR {item.food_item.food_price.toFixed(2)}
+                  </p>
+                </div>
 
-              <div className="item-actions">
-                <div className="quantity-controls">
+                <div className="item-actions">
+                  <div className="quantity-controls">
+                    <button
+                      className="quantity-btn"
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
+                      -
+                    </button>
+                    <span className="quantity">{item.quantity}</span>
+                    <button
+                      className="quantity-btn"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
-                    className="quantity-btn"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    className="remove-btn"
+                    onClick={() => removeItem(item.id)}
                   >
-                    -
-                  </button>
-                  <span className="quantity">{item.quantity}</span>
-                  <button
-                    className="quantity-btn"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  >
-                    +
+                    Remove
                   </button>
                 </div>
-                <button
-                  className="remove-btn"
-                  onClick={() => removeItem(item.id)}
-                >
-                  Remove
-                </button>
-              </div>
 
-              <div className="item-total">
-                NPR {(item.food_item.food_price * item.quantity).toFixed(2)}
+                <div className="item-total">
+                  NPR {(item.food_item.food_price * item.quantity).toFixed(2)}
+                </div>
               </div>
+            ))}
+
+            <div className="special-instructions">
+              <h3>Special Instructions</h3>
+              <textarea
+                placeholder="Add notes about your order (allergies, spice level preferences, etc.)"
+                value={specialInstructions}
+                onChange={(e) => setSpecialInstructions(e.target.value)}
+              ></textarea>
             </div>
-          ))}
+          </div>
 
-          <div className="special-instructions">
-            <h3>Special Instructions</h3>
-            <textarea
-              placeholder="Add notes about your order (allergies, spice level preferences, etc.)"
-              value={specialInstructions}
-              onChange={(e) => setSpecialInstructions(e.target.value)}
-            ></textarea>
+          <div className="order-summary">
+            <h2>Order Summary</h2>
+
+            <div className="summary-row">
+              <span>Subtotal</span>
+              <span>NPR {subtotal.toFixed(2)}</span>
+            </div>
+
+            <div className="summary-row total">
+              <span>Total</span>
+              <span>NPR {total.toFixed(2)}</span>
+            </div>
+
+            <button
+              className="btn-checkout"
+              onClick={() => setShowPaymentPopup(true)}
+            >
+              Proceed to Payment
+            </button>
+
+            <Link to="/specialMenu" className="continue-shopping">
+              Continue Shopping
+            </Link>
           </div>
         </div>
-
-        <div className="order-summary">
-          <h2>Order Summary</h2>
-
-          <div className="summary-row">
-            <span>Subtotal</span>
-            <span>NPR {subtotal.toFixed(2)}</span>
-          </div>
-
-          <div className="summary-row total">
-            <span>Total</span>
-            <span>NPR {total.toFixed(2)}</span>
-          </div>
-
-          <button
-            className="btn-checkout"
-            onClick={() => setShowPaymentPopup(true)}
-          >
-            Proceed to Payment
-          </button>
-
-          <Link to="/specialMenu" className="continue-shopping">
-            Continue Shopping
-          </Link>
-        </div>
-      </div>
+      )}
 
       <PaymentPopup total={total} />
-      <InvoicePopup total={total} />
+      <InvoicePopup invoice={invoiceData} />
     </div>
   );
 }
