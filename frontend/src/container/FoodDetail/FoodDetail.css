@@ -125,7 +125,11 @@ body {
   left: 0;
   width: 100%;
   height: 6px;
-  background: linear-gradient(90deg, var(--color-golden) 0%, var(--color-red) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-golden) 0%,
+    var(--color-red) 100%
+  );
 }
 
 /* Title */
@@ -379,7 +383,12 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: 0.5s;
 }
 
@@ -684,7 +693,7 @@ body {
 }
 
 .write-review-btn {
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   background-color: var(--color-red);
   color: var(--color-white);
   font-weight: 600;
@@ -693,6 +702,7 @@ body {
   cursor: pointer;
   transition: var(--transition);
   box-shadow: 0 4px 15px rgba(91, 0, 23, 0.2);
+  font-size: 0.9rem;
 }
 
 .write-review-btn:hover {
@@ -992,10 +1002,32 @@ body {
   gap: 1.5rem;
 }
 
+/* New form row for side-by-side layout */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.rating-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.anonymous-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 1.5rem;
 }
 
 .form-label {
@@ -1053,7 +1085,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-top: 0.5rem;
+  flex-direction: column;
 }
 
 .checkbox-input {
@@ -1112,49 +1144,6 @@ body {
   font-weight: 500;
 }
 
-/* Rating form group */
-.rating-form-group {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.rating-form-group .form-label {
-  min-width: 60px;
-}
-
-.rating-form-group .rating-stars {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.rating-text {
-  margin-left: 0.5rem;
-  min-width: 80px;
-}
-
-/* Anonymous option */
-.anonymous-form-group {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.anonymous-form-group .form-input {
-  flex: 1;
-  min-width: 200px;
-}
-
-.write-review-btn {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-}
-
 /* Responsive adjustments */
 @media (max-width: 991px) {
   .food-detail-page {
@@ -1177,14 +1166,13 @@ body {
     align-items: flex-start;
   }
 
-  .rating-form-group,
-  .anonymous-form-group {
+  .form-row {
     flex-direction: column;
-    align-items: flex-start;
+    gap: 1rem;
   }
 
-  .rating-form-group .rating-stars {
-    width: 100%;
+  .anonymous-group {
+    padding-top: 0;
   }
 }
 

@@ -97,16 +97,11 @@ class FeedbackSerializer(serializers.ModelSerializer):
         feedback = Feedback.objects.create(user=user, **validated_data)
         return feedback
     
+from rest_framework import serializers
+from django.contrib.auth.models import User
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email']
-        read_only_fields = ['email']  # Make email read-only as requested
-
-    def update(self, instance, validated_data):
-        # Update user fields
-        instance.username = validated_data.get('username', instance.username)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.save()
-        return instance
+        read_only_fields = ['email']  # Email is read-only as per your frontend

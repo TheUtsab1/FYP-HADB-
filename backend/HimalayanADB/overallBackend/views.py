@@ -230,22 +230,41 @@ def handlelogout(request):
 #     })
 
 
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from .serializer import UserProfileSerializer
+
 class UserProfileViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerializer
     
-    def list(self, request):
+    def get_queryset(self):
+        # Only return the current user's data
+        return User.objects.filter(id=self.request.user.id)
+    
+    def list(self, request, *args, **kwargs):
         # Return current user data
         serializer = self.serializer_class(request.user)
         return Response(serializer.data)
     
-    def update(self, request, pk=None):
+    def update(self, request, *args, **kwargs):
         # Update current user
-        serializer = self.serializer_class(request.user, data=request.data, partial=True)
+        user = request.user
+        serializer = self.serializer_class(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        # Prevent retrieving other users' profiles
+        if pk and int(pk) != request.user.id:
+            return Response({"detail": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data)
 
 
 
@@ -544,32 +563,44 @@ def reject_booking(request, booking_id):
 #         return Response(serializer.data)
 
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def remove_cart_item(request):
-    try:
-        cart = Cart.objects.get(user=request.user)
-        CartItem.objects.filter(cart=cart).delete()
-        logger.info(f"Cart items cleared for user: {request.user.username}")
-        return Response({'message': 'Cart cleared successfully'})
-    except Cart.DoesNotExist:
-        logger.warning(f"No cart found for user: {request.user.username}")
-        return Response({'message': 'No cart to clear'})
-    except Exception as e:
-        logger.error(f"Error clearing cart: {str(e)}")
-        return Response({'error': str(e)}, status=400)
-
-        
 # @api_view(['DELETE'])
 # @permission_classes([IsAuthenticated])
 # def remove_cart_item(request, item_id):
 #     try:
 #         cart = Cart.objects.get(user=request.user)
-#         cart_item = CartItem.objects.get(id=item_id, cart=cart)
-#         cart_item.delete()
-#         return Response({"message": "Item removed from cart"}, status=status.HTTP_200_OK)
-#     except CartItem.DoesNotExist:
-#         return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+#         CartItem.objects.filter(cart=cart).delete()
+#         logger.info(f"Cart items cleared for user: {request.user.username}")
+#         return Response({'message': 'Cart cleared successfully'})
+#     except Cart.DoesNotExist:
+#         logger.warning(f"No cart found for user: {request.user.username}")
+#         return Response({'message': 'No cart to clear'})
+#     except Exception as e:
+#         logger.error(f"Error clearing cart: {str(e)}")
+#         return Response({'error': str(e)}, status=400)
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def clear_Cart(request):
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart.delete()  # This will delete the cart and all associated items
+        return Response({"message": "Cart cleared successfully"}, status=status.HTTP_200_OK)
+    except Cart.DoesNotExist:
+        return Response({"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_cart_item(request, item_id):
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_item = CartItem.objects.get(id=item_id, cart=cart)
+        cart_item.delete()
+        return Response({"message": "Item removed from cart"}, status=status.HTTP_200_OK)
+    except CartItem.DoesNotExist:
+        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def submit_booking(request):
@@ -750,9 +781,6 @@ def save_pending_order(request):
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def esewa_verify(request):
     """Verify eSewa payment after redirect"""
     try:
         transaction_id = request.data.get('oid')
@@ -988,14 +1016,18 @@ def create_checkout_session(request):
             line_items=line_items,
             mode='payment',
             metadata=metadata,
-            success_url=f"{request.build_absolute_uri('/').rstrip('/')}/cart?payment=success&session_id={{CHECKOUT_SESSION_ID}}",
-            cancel_url=f"{request.build_absolute_uri('/').rstrip('/')}/cart?payment=canceled",
+            # success_url=f"{request.build_absolute_uri('/').rstrip('/')}/cart?payment=success&session_id={{CHECKOUT_SESSION_ID}}",
+            success_url="http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",
+            cancel_url="http://localhost:3000/cart?payment=canceled",
+            # cancel_url=f"{request.build_absolute_uri('/').rstrip('/')}/cart?payment=canceled",
         )
         
         return JsonResponse({'id': checkout_session.id})
     
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+
 
 
 from rest_framework.response import Response
@@ -1174,4 +1206,5 @@ def get_gemini_reply(user_message):
     except Exception as e:
         print("Gemini Error:", str(e))
         return "Sorry, I'm having trouble responding right now."
+
 

@@ -210,3 +210,48 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.transaction_id}"
+    
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+
+    
+class Payment(models.Model):
+    STATUS_CHOICES = (
+        ('paid', 'Paid'),
+        ('unpaid', 'Unpaid'),
+    )
+    
+    cart_item = models.ForeignKey(CartItem, on_delete=models.CASCADE, related_name='payments')
+    payment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    is_paid = models.CharField(
+        max_length=6,
+        choices=STATUS_CHOICES,
+        default='unpaid',
+        help_text="Indicates if the payment has been completed"
+    )
+    amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        validators=[MinValueValidator(0)],
+        help_text="Payment amount in NPR"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Payment"
+        verbose_name_plural = "Payments"
+
+    def __str__(self):
+        status = '✓' if self.is_paid == 'paid' else '✗'
+        return f"Payment {self.payment_id} - {status} for {self.cart_item}"

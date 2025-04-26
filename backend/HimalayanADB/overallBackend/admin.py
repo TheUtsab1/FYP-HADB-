@@ -2,12 +2,13 @@ from django.contrib import admin
 from .models import *
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.html import format_html
 
 
 
 # Register your models here.
 
-admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, ChatMessage, PendingOrder, Order))
+admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, ChatMessage, Order))
 
 
 # from material.admin.sites import MaterialAdminSite
@@ -129,7 +130,14 @@ admin.site.register(Review, ReviewAdmin)
     
     
     
-    
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+
+# Customize UserAdmin to include Profile (if applicable)
+
+
     
     
     
@@ -215,3 +223,27 @@ admin.site.register(Feedback, FeedbackAdmin)
 
 #     approve_reservation.short_description = "Mark selected reservations as Booked"
 #     reject_reservation.short_description = "Mark selected reservations as Rejected"
+
+
+
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('payment_id', 'cart_item', 'display_is_paid', 'amount', 'created_at')
+    list_filter = ('is_paid', 'created_at')
+    search_fields = ('payment_id', 'cart_item__food_item__food_name')
+    readonly_fields = ('payment_id', 'created_at', 'updated_at')
+    list_per_page = 20
+    
+    def display_is_paid(self, obj):
+        """Display tick or cross for payment status in admin panel"""
+        return '✓ Paid' if obj.is_paid == 'paid' else '✗ Unpaid'
+    
+    display_is_paid.short_description = 'Payment Status'
+    
+    # Calculate amount based on cart item if not set
+    def save_model(self, request, obj, form, change):
+        if not obj.amount:
+            obj.amount = obj.cart_item.food_item.food_price * obj.cart_item.quantity
+        super().save_model(request, obj, form, change)

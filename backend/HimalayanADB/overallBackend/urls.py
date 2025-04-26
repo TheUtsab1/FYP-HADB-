@@ -29,11 +29,12 @@ urlpatterns = [
     path("cart/", showCart.as_view()),
     path("cart/update/", updateCartQuantity.as_view()),
     path('cart/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
+    path('cart/delete/', clear_Cart, name='clear_cart'),
+    # path('')
     path('api/tables/', get_tables, name="get_tables"),
     path('api/tables/request-booking/<int:table_id>/', request_booking, name="request_booking"),
     path('api/tables/update-booking/<int:reservation_id>/', update_booking, name="update_booking"),
     path('verify-payment/', verify_payment, name='verify_payment'),
-    path('esewa-verify/', esewa_verify, name='esewa_verify'),
     path('orders/pending/', save_pending_order, name='save_pending_order'),
     path('food/<str:food_slug>/reviews/', views.get_food_reviews, name='get-food-reviews'),
     path('food/<str:food_slug>/reviews/create/', views.create_food_review, name='create-food-review'),
