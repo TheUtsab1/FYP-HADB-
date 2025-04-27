@@ -36,16 +36,16 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        // Store tokens consistently
         localStorage.setItem("token", data.access);
         localStorage.setItem("refresh", data.refresh);
         setIsUserAuthenticated(true);
 
-        setMessage("Login successful! Redirecting...");
+        setMessage("Login successful! Redirecting to homepage...");
         setMessageType("success");
+
         setTimeout(() => {
           navigate("/");
-        }, 1500);
+        }, 3000); // 3 seconds is perfect!
       } else {
         setMessage("Invalid username or password. Please try again.");
         setMessageType("error");

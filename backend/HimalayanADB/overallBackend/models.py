@@ -18,17 +18,18 @@ class FoodType(models.Model):
         ("SNACKS", "Snacks"),
         ("BUFFET", "Buffet"),
         ("SMOOTIES", "Smooties"),
-
     ]
     food_type = models.CharField(choices=type_name, max_length=40)
 
     def __str__(self):
         return f"{self.food_type}"
-    
+
 class FoodTaste(models.Model):
     taste_type = [
-        ("VEG", "veg"),
-        ("NON-VEG", "non-veg"),
+        ("VEG", "VEG"),
+        ("NON-VEG", "NON-VEG"),
+        ("DRINKS", "DRINKS"),     
+        ("SNACKS", "SNACKS"),   
     ]
     taste_type = models.CharField(choices=taste_type, max_length=40)
 
@@ -40,8 +41,7 @@ class FoodTaste(models.Model):
 class Food(models.Model):
     food_name = models.CharField(max_length=500, null=False)
     food_content = models.CharField(max_length=500, null=False)
-    # food_slug = models.SlugField(max_length=500, null=True, blank=True)
-    food_slug = AutoSlugField(populate_from = "food_name", unique=True, null=True)
+    food_slug = AutoSlugField(populate_from="food_name", unique=True, null=True)
     food_img_url = models.ImageField(upload_to='products/', null=True, blank=True)
     food_price = models.IntegerField(null=False, validators=[MinValueValidator(0)]) 
     food_type = models.ForeignKey(FoodType, on_delete=models.CASCADE, null=True)
@@ -49,11 +49,6 @@ class Food(models.Model):
 
     def __str__(self):
         return f"{self.food_name}"
-    
-    def save(self, *args, **kwargs):
-        if not self.food_slug:
-            self.food_slug = AutoSlugField(populate_from='food_name', unique=True)
-        super(Food, self).save(*args, **kwargs)
 
 
 class Review(models.Model):
@@ -174,13 +169,7 @@ class Feedback(models.Model):
     def __str__(self):
         return f"{self.name} - {self.feedback_type}"
     
-class ChatMessage(models.Model):
-    sender = models.CharField(max_length=10, choices=(('user', 'User'), ('bot', 'Bot')))
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.sender.capitalize()} @ {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
     
     
     
@@ -230,8 +219,19 @@ class Payment(models.Model):
         ('unpaid', 'Unpaid'),
     )
     
-    cart_item = models.ForeignKey(CartItem, on_delete=models.CASCADE, related_name='payments')
+    PAYMENT_METHOD_CHOICES = (
+        ('stripe', 'Stripe'),
+        ('cash', 'Cash on Delivery'),
+    )
+    
+    cart_item = models.ForeignKey('CartItem', on_delete=models.CASCADE, related_name='payments')
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_METHOD_CHOICES,
+        default='cash',
+        help_text="Method used for payment"
+    )
     is_paid = models.CharField(
         max_length=6,
         choices=STATUS_CHOICES,
@@ -246,6 +246,7 @@ class Payment(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    stripe_session_id = models.CharField(max_length=100, null=True, blank=True)  # Add to track Stripe session
 
     class Meta:
         ordering = ['-created_at']
@@ -254,4 +255,4 @@ class Payment(models.Model):
 
     def __str__(self):
         status = '✓' if self.is_paid == 'paid' else '✗'
-        return f"Payment {self.payment_id} - {status} for {self.cart_item}"
+        return f"Payment {self.payment_id} - {status} for {self.cart_item.food_item.food_name}"

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Food, FoodTaste, FoodType, Cart, CartItem, CateringBooking, Table, Reservation, Feedback, Review
+from .models import Food, FoodTaste, FoodType, Cart, CartItem, CateringBooking, Table, Reservation, Feedback, Review, Payment
 from django.contrib.auth.models import User
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -105,3 +105,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email']
         read_only_fields = ['email']  # Email is read-only as per your frontend
+        
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'cart_item', 'payment_id', 'payment_method', 'is_paid', 'amount', 'created_at', 'updated_at', 'stripe_session_id']

@@ -42,5 +42,4 @@ urlpatterns = [
     path('food/<str:food_slug>/reviews/<int:review_id>/', views.update_delete_review, name='update-delete-review'),
     path('create-checkout-session/', create_checkout_session, name='create-checkout-session'),
     path('payment-success/', payment_success, name='payment-success'),
-    path("api/chat/", chatbot_reply, name="chatbot_reply"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

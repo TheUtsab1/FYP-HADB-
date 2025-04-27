@@ -8,7 +8,7 @@ from django.utils.html import format_html
 
 # Register your models here.
 
-admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem, ChatMessage, Order))
+admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem))
 
 
 # from material.admin.sites import MaterialAdminSite
@@ -108,10 +108,9 @@ class CateringBookingAdmin(admin.ModelAdmin):
     
     
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('food', 'user', 'user_name', 'rating', 'comment_preview', 'created_at')
+    list_display = ('food', 'user', 'user_name', 'rating', 'comment_preview')
     list_filter = ('rating', 'created_at', 'food')
     search_fields = ('user__username', 'user_name', 'comment', 'food__food_name')
-    date_hierarchy = 'created_at'
     
     def comment_preview(self, obj):
         # Show first 50 characters of comment
@@ -165,19 +164,14 @@ from .models import Feedback
 
 class FeedbackAdmin(admin.ModelAdmin):
     # Include the 'user' field in list_display to ensure it shows up in the list view
-    list_display = ('id', 'name', 'email', 'rating', 'feedback_type', 'message', 'created_at', 'user')  # Added 'message'
+    list_display = ('id', 'name', 'email', 'rating', 'feedback_type', 'message',  'user')  # Added 'message'
     
     # Allow filtering by 'user' field in the admin
-    list_filter = ('rating', 'feedback_type', 'created_at', 'user')  # Added 'user' to filter
+    list_filter = ('rating', 'feedback_type', 'user')  # Added 'user' to filter
     
     # Allow searching by these fields
     search_fields = ('name', 'email', 'message')
     
-    # Mark the 'created_at' field as read-only in the admin
-    readonly_fields = ('created_at',)
-    
-    # Enable date-based filtering in the admin
-    date_hierarchy = 'created_at'
 
     # If the user field is not showing correctly, we can manually define the save_model method
     def save_model(self, request, obj, form, change):
@@ -230,19 +224,22 @@ admin.site.register(Feedback, FeedbackAdmin)
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('payment_id', 'cart_item', 'display_is_paid', 'amount', 'created_at')
-    list_filter = ('is_paid', 'created_at')
-    search_fields = ('payment_id', 'cart_item__food_item__food_name')
-    readonly_fields = ('payment_id', 'created_at', 'updated_at')
+    list_display = ('food_name', 'payment_method', 'display_is_paid', 'amount', 'created_at', 'stripe_session_id')
+    list_filter = ('is_paid', 'payment_method', 'created_at')
+    search_fields = ('payment_id', 'cart_item__food_item__food_name', 'stripe_session_id')
+    readonly_fields = ('payment_id', 'created_at', 'updated_at', 'stripe_session_id')
     list_per_page = 20
     
+    def food_name(self, obj):
+        return obj.cart_item.food_item.food_name
+    
+    food_name.short_description = 'Food Name'
+    
     def display_is_paid(self, obj):
-        """Display tick or cross for payment status in admin panel"""
         return '✓ Paid' if obj.is_paid == 'paid' else '✗ Unpaid'
     
-    display_is_paid.short_description = 'Payment Status'
+    display_is_paid.short_description = 'Is Paid'
     
-    # Calculate amount based on cart item if not set
     def save_model(self, request, obj, form, change):
         if not obj.amount:
             obj.amount = obj.cart_item.food_item.food_price * obj.cart_item.quantity
