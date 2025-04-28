@@ -29,7 +29,7 @@ export default function Aboutus() {
       const result = await response.json();
       console.log("Server response:", result);
 
-      if (!response.ok) throw new Error(result.error || "Submission failed");
+      if (!response.ok) throw new Error(result.error || "Submission failed. Please login.");
 
       setPopupMessage("Thank you for your feedback!");
       setPopupType("success");

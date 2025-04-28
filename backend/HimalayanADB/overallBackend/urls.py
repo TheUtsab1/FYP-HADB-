@@ -22,6 +22,8 @@ urlpatterns = [
     # path('token/refresh/', RefreshTokenView.as_view()),
     path('signup/', user_signup, name='signup'),
     path('login/', user_login, name='login'),
+    path('auth/password/reset/', views.PasswordResetRequestView.as_view(), name='password_reset_request'),
+    path('auth/password/reset/confirm/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path("api/google-login/", google_login, name="google_login"),
     path('api/submit-booking/', submit_booking, name='submit_booking'),
     path('feedback/', FeedbackApiView.as_view(), name='feedback'),

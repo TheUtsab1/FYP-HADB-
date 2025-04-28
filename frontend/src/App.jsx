@@ -17,8 +17,9 @@ import FoodDetail from "./container/FoodDetail/FoodDetail";
 import TableBooking from "./container/Table-Booking/table-booking";
 import Profile from "./container/Profile/Profile";
 import WhatsAppButton from "./container/Chatbot/Chatbot";
-import EsewaSuccess from "./container/Payment/EsewaSuccess";
-import EsewaFailure from "./container/Payment/EsewaFailure";
+import ForgotPassword from "./components/routes/ForgotPassword";
+import ResetPassword from "./components/routes/ResetPassword";
+
 
 const App = () => {
   const { setIsUserAuthenticated } = useAuthStore();
@@ -37,8 +38,12 @@ const App = () => {
         <Route path="/" element={<Applayout />}>
           <Route index element={<LandingPage />} />
           <Route path="Signup" element={<Signup />} />
-          <Route path="Verify" element={<VerifyEmail />} />
           <Route path="Login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/reset-password/:uidb64/:token"
+            element={<ResetPassword />}
+          />
           <Route path="profile" element={<Profile />} />
           <Route path="aboutUs" element={<AboutUs />} />
           <Route path="about-us" element={<Aboutus />} />
@@ -47,8 +52,6 @@ const App = () => {
           <Route path="specialMenu" element={<SpecialMenu />} />
           <Route path="/food/:food_slug" element={<FoodDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/esewa-success" element={<EsewaSuccess />} />
-          <Route path="/esewa-failure" element={<EsewaFailure />} />
           <Route path="CateringForm" element={<CateringForm />} />
         </Route>
       </Routes>

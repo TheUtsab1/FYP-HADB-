@@ -188,6 +188,105 @@ def handlelogout(request):
     messages.success(request, "Successfully logged out")
     return redirect('home') 
 
+
+
+# views.py
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+import json
+
+class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+
+            if not email:
+                return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({"error": "No user found with this email"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Generate reset token
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # Create reset link
+            reset_link = f"http://localhost:3000/reset-password/{uid}/{token}/"  # Adjust URL for your frontend
+
+            # Send email
+            subject = "Password Reset Request"
+            message = (
+                f"Hi {user.username},\n\n"
+                f"You requested a password reset. Click the link below to reset your password:\n\n"
+                f"{reset_link}\n\n"
+                "If you didn’t request this, please ignore this email.\n\n"
+                "Thanks,\nYour Team"
+            )
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Password reset link sent to your email"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        
+        
+# views.py
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            new_password = request.data.get("new_password")
+            confirm_password = request.data.get("confirm_password")
+
+            if not new_password or not confirm_password:
+                return Response({"error": "New password and confirmation are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if new_password != confirm_password:
+                return Response({"error": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.set_password(new_password)
+            user.save()
+            return Response({"message": "Password reset successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Invalid token or user"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 # @api_view(["GET"])
 # @permission_classes([IsAuthenticated])
 # def user_profile(request):

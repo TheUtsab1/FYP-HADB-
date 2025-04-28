@@ -1,11 +1,10 @@
-/* FoodDetail.css */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 :root {
-  --color-golden: #d0b03d;
+  /* --color-golden: #d0b03d; */
   --color-golden-light: #e6cc6e;
   --color-golden-dark: #b39729;
-  --color-red: #5b0017;
+  /* --color-red: #5b0017; */
   --color-red-light: #7c0020;
   --color-red-dark: #3a0010;
   --color-white: #ffffff;
@@ -125,11 +124,7 @@ body {
   left: 0;
   width: 100%;
   height: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--color-golden) 0%,
-    var(--color-red) 100%
-  );
+  background: linear-gradient(90deg, var(--color-golden) 0%, var(--color-red) 100%);
 }
 
 /* Title */
@@ -383,12 +378,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: 0.5s;
 }
 
@@ -1142,6 +1132,139 @@ body {
   color: var(--color-golden-dark);
   text-decoration: underline;
   font-weight: 500;
+}
+
+/* Login Popup Styles */
+.login-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.login-popup {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  text-align: center;
+  animation: scaleIn 0.4s ease;
+}
+
+.popup-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-gray);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.popup-close-btn:hover {
+  color: var(--color-red);
+  transform: scale(1.1);
+}
+
+.popup-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--color-golden);
+}
+
+.popup-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin-bottom: 1rem;
+}
+
+.popup-message {
+  font-size: 1.1rem;
+  color: var(--color-gray);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 480px) {
+  .popup-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.popup-login-btn {
+  padding: 0.8rem 1.5rem;
+  background-color: var(--color-red);
+  color: var(--color-white);
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(91, 0, 23, 0.2);
+  flex: 1;
+}
+
+.popup-login-btn:hover {
+  background-color: var(--color-red-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(91, 0, 23, 0.3);
+}
+
+.popup-cancel-btn {
+  padding: 0.8rem 1.5rem;
+  background-color: transparent;
+  color: var(--color-gray-dark);
+  font-weight: 600;
+  border: 1px solid #eee;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+  flex: 1;
+}
+
+.popup-cancel-btn:hover {
+  background-color: var(--color-gray-lighter);
+  border-color: var(--color-gray);
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Responsive adjustments */

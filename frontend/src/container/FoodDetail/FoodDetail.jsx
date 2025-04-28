@@ -27,6 +27,7 @@ const FoodDetail = ({ onClose }) => {
   const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
   const [activeTab, setActiveTab] = useState("all"); // Active filter tab
   const [sortOption, setSortOption] = useState("newest"); // Sort option
+  const [showLoginPopup, setShowLoginPopup] = useState(false); // New state for login popup
 
   // Check if user is logged in
   useEffect(() => {
@@ -136,7 +137,8 @@ const FoodDetail = ({ onClose }) => {
     const token = localStorage.getItem("token"); // Logged-in user ko token
 
     if (!token) {
-      alert("Please log in to add items to your cart");
+      // Show login popup instead of alert
+      setShowLoginPopup(true);
       return;
     }
 
@@ -168,6 +170,16 @@ const FoodDetail = ({ onClose }) => {
         alert("Your session has expired. Please log in again.");
       }
     }
+  };
+
+  // Close login popup
+  const closeLoginPopup = () => {
+    setShowLoginPopup(false);
+  };
+
+  // Navigate to login page
+  const navigateToLogin = () => {
+    window.location.href = "/login";
   };
 
   // SUBMIT REVIEW FUNCTION
@@ -315,18 +327,14 @@ const FoodDetail = ({ onClose }) => {
               <span className="meta-icon type-icon"></span>
               <div>
                 <span className="meta-label">Type</span>
-                <span className="meta-value">
-                  {food.food_type?.food_type || "Traditional"}
-                </span>
+                <span className="meta-value">{food.food_type?.food_type}</span>
               </div>
             </div>
             <div className="food-meta-item">
               <span className="meta-icon taste-icon"></span>
               <div>
                 <span className="meta-label">Taste</span>
-                <span className="meta-value">
-                  {food.taste?.taste_type || "Savory"}
-                </span>
+                <span className="meta-value">{food.taste?.taste_type}</span>
               </div>
             </div>
           </div>
@@ -621,6 +629,30 @@ const FoodDetail = ({ onClose }) => {
           </form>
         </div>
       </div>
+
+      {/* Login Popup */}
+      {showLoginPopup && (
+        <div className="login-popup-overlay" onClick={closeLoginPopup}>
+          <div className="login-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="popup-close-btn" onClick={closeLoginPopup}>
+              ×
+            </button>
+            <div className="popup-icon">🔒</div>
+            <h3 className="popup-title">Login Required</h3>
+            <p className="popup-message">
+              Please log in to add items to your cart
+            </p>
+            <div className="popup-actions">
+              <button className="popup-login-btn" onClick={navigateToLogin}>
+                Log In
+              </button>
+              <button className="popup-cancel-btn" onClick={closeLoginPopup}>
+                Continue Browsing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

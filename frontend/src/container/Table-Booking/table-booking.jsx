@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Users, Check, X, RefreshCw, ChevronDown } from "lucide-react";
+import {
+  Users,
+  Check,
+  X,
+  RefreshCw,
+  ChevronDown,
+  Calendar,
+  Clock,
+  Lock,
+} from "lucide-react";
 import "./table-booking.css";
 
 export default function TableBooking() {
@@ -21,10 +30,15 @@ export default function TableBooking() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [popupType, setPopupType] = useState("success");
+  const [selectedTable, setSelectedTable] = useState(null);
 
   const [showNotification, setShowNotification] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Add new state variables for popups
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const fetchTables = async () => {
     setLoading(true);
@@ -88,7 +102,7 @@ export default function TableBooking() {
     let filtered = [...tableData];
 
     if (capacityFilter !== "all") {
-      const capacity = parseInt(capacityFilter);
+      const capacity = Number.parseInt(capacityFilter);
       filtered = filtered.filter((table) => table.capacity === capacity);
     }
 
@@ -99,26 +113,59 @@ export default function TableBooking() {
     setFilteredTables(filtered);
   };
 
-  const handleReservation = async (tableId) => {
-    try {
-      const token = localStorage.getItem("token");
+  const openReservationPopup = (table) => {
+    setSelectedTable(table);
+    setShowPopup(true);
+  };
 
+  const closeReservationPopup = () => {
+    setShowPopup(false);
+    setSelectedTable(null);
+  };
+
+  // Close login popup
+  const closeLoginPopup = () => {
+    setShowLoginPopup(false);
+  };
+
+  // Navigate to login page
+  const navigateToLogin = () => {
+    window.location.href = "/login";
+  };
+
+  // Close success popup
+  const closeSuccessPopup = () => {
+    setShowSuccessPopup(false);
+  };
+
+  const handleReservation = async (tableId) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // Show login popup instead of notification
+      setShowLoginPopup(true);
+      setShowPopup(false);
+      return;
+    }
+
+    setReservingTable(tableId);
+    try {
       await axios.post(
         `http://localhost:8000/api/tables/request-booking/${tableId}/`,
         { username, email },
         { headers: { Authorization: `JWT ${token}` } }
       );
 
-      setPopupMessage("Booking requested! Admin will confirm shortly.");
-      setPopupType("success");
+      // Close reservation popup and show success popup
       setShowPopup(false);
-      setShowNotification(true);
-      fetchTables();
+      setShowSuccessPopup(true);
 
-      setTimeout(() => setShowNotification(false), 5000);
+      fetchTables();
     } catch (error) {
       console.error("Booking error:", error);
-      setPopupMessage(error.response?.data?.error || "Failed to book table.");
+      setPopupMessage(
+        error.response?.data?.error || "Failed to book table. Please try again."
+      );
       setPopupType("error");
       setShowNotification(true);
       setTimeout(() => setShowNotification(false), 5000);
@@ -258,11 +305,7 @@ export default function TableBooking() {
                 {table.status === "available" ? (
                   <button
                     className="table-action action-reserve"
-                    onClick={() => {
-                      setReservingTable(table.id);
-                      setShowPopup(true);
-                      handleReservation(table.id);
-                    }}
+                    onClick={() => openReservationPopup(table)}
                   >
                     Reserve Now
                   </button>
@@ -278,6 +321,123 @@ export default function TableBooking() {
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {/* Reservation Popup */}
+      {showPopup && selectedTable && (
+        <div
+          className="reservation-popup-overlay"
+          onClick={closeReservationPopup}
+        >
+          <div
+            className="reservation-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="popup-header">
+              <div className="popup-header-line"></div>
+              <button
+                className="popup-close-btn"
+                onClick={closeReservationPopup}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="popup-content">
+              <div className="popup-icon">
+                <Calendar size={32} />
+              </div>
+              <h3 className="popup-title">
+                Reserve Table {selectedTable.table_number}
+              </h3>
+
+              <div className="table-details">
+                <div className="detail-item">
+                  <Users size={18} />
+                  <span>{selectedTable.capacity} People</span>
+                </div>
+                <div className="detail-item">
+                  <Clock size={18} />
+                  <span>Available Now</span>
+                </div>
+              </div>
+
+              <p className="popup-message">
+                Would you like to reserve this table? Our staff will confirm
+                your reservation shortly.
+              </p>
+
+              <div className="popup-actions">
+                <button
+                  className="popup-cancel-btn"
+                  onClick={closeReservationPopup}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="popup-confirm-btn"
+                  onClick={() => handleReservation(selectedTable.id)}
+                  disabled={reservingTable === selectedTable.id}
+                >
+                  {reservingTable === selectedTable.id ? (
+                    <span className="loading-text">
+                      <div className="button-spinner"></div>
+                      Processing...
+                    </span>
+                  ) : (
+                    "Confirm Reservation"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login Popup */}
+      {showLoginPopup && (
+        <div className="login-popup-overlay" onClick={closeLoginPopup}>
+          <div className="login-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="popup-close-btn" onClick={closeLoginPopup}>
+              ×
+            </button>
+            <div className="popup-icon">🔒</div>
+            <h3 className="popup-title">Login Required</h3>
+            <p className="popup-message">Please log in to reserve a table</p>
+            <div className="popup-actions">
+              <button className="popup-login-btn" onClick={navigateToLogin}>
+                Log In
+              </button>
+              <button className="popup-cancel-btn" onClick={closeLoginPopup}>
+                Continue Browsing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="success-popup-overlay" onClick={closeSuccessPopup}>
+          <div className="success-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="popup-close-btn" onClick={closeSuccessPopup}>
+              ×
+            </button>
+            <div className="popup-icon">
+              <Check size={24} />
+            </div>
+            <h3 className="popup-title">Reservation Requested</h3>
+            <p className="popup-message">
+              Your table reservation has been requested successfully. You will
+              be contacted soon.
+            </p>
+            <div className="popup-actions">
+              <button className="popup-cancel-btn" onClick={closeSuccessPopup}>
+                Continue Browsing
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
