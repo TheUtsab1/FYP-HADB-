@@ -130,63 +130,132 @@ def google_login(request):
 #         logout(request)
 #         return Response({"success": True, "message": "Logged out successfully."})
 
-@csrf_exempt # Add API View for user signup and login
-def user_signup(request):
-    if request.method == "POST":
+class SignupView(APIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this endpoint
+
+    def post(self, request):
         try:
-            data = json.loads(request.body)
-            username = data.get("username")
-            fname = data.get("fname")
-            lname = data.get("lname")
-            email = data.get("email")
-            password1 = data.get("password1")
-            password2 = data.get("password2")
+            username = request.data.get("username")
+            fname = request.data.get("fname")
+            lname = request.data.get("lname")
+            email = request.data.get("email")
+            password1 = request.data.get("password1")
+            password2 = request.data.get("password2")
 
             # Check if passwords match
             if password1 != password2:
-                return JsonResponse({"success": False, "error": "Passwords do not match"}, status=400)
+                return Response({"success": False, "error": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Check if user already exists
             if User.objects.filter(username=username).exists():
-                return JsonResponse({"success": False, "error": "Username already taken"}, status=400)
+                return Response({"success": False, "error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
 
             if User.objects.filter(email=email).exists():
-                return JsonResponse({"success": False, "error": "Email already registered"}, status=400)
+                return Response({"success": False, "error": "Email already registered"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Create the user
-            user = User.objects.create_user(username=username, email=email, password=password1, first_name=fname, last_name=lname)
+            # Create the user (inactive until verified)
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password1,
+                first_name=fname,
+                last_name=lname,
+                is_active=False  # User is inactive until email is verified
+            )
             user.save()
 
-            return JsonResponse({"success": True, "message": "Account created successfully!"}, status=201)
+            # Generate verification token
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # Create verification link
+            verification_link = f"http://localhost:3000/verify-email/{uid}/{token}/"
+
+            # Send verification email
+            subject = "Verify Your Email Address"
+            message = (
+                f"Hi {user.username},\n\n"
+                f"Thank you for signing up! Please verify your email by clicking the link below:\n\n"
+                f"{verification_link}\n\n"
+                "If you didn’t register, please ignore this email.\n\n"
+                "Thanks,\nYour Team"
+            )
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            return Response(
+                {"success": True, "message": "Account created! Please check your email to verify your account."},
+                status=status.HTTP_201_CREATED
+            )
 
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
+            return Response({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-@csrf_exempt
-def user_login(request):
-    if request.method == "POST":
+class LoginView(APIView):
+    permission_classes = [AllowAny]  # Allow anyone to access this endpoint
+
+    def post(self, request):
         try:
-            data = json.loads(request.body)
-            username = data.get("username")
-            password = data.get("password")
+            username = request.data.get("username")
+            password = request.data.get("password")
 
             user = authenticate(username=username, password=password)
 
             if user is not None:
+                if not user.is_active:
+                    return Response(
+                        {"success": False, "error": "Please verify your email before logging in."},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
                 login(request, user)
-                return JsonResponse({"success": True, "token": "dummy-token"}, status=200)  # Token handling is optional
+                return Response({"success": True, "token": "dummy-token"}, status=status.HTTP_200_OK)  # Token handling is optional
             else:
-                return JsonResponse({"success": False, "error": "Invalid credentials"}, status=401)
+                return Response({"success": False, "error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
         except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
+            return Response({"success": False, "error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def handlelogout(request):
     logout(request)
     messages.success(request, "Successfully logged out")
     return redirect('home') 
+
+
+class VerifyEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, uidb64, token):
+        print(f"Received UID: {uidb64}, Token: {token}")
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            print(f"Decoded UID: {uid}")
+            user = User.objects.get(pk=uid)
+            print(f"Found User: {user.username}")
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+            print(f"Error decoding UID or finding user: {str(e)}")
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            print("Token is valid")
+            if not user.is_active:
+                user.is_active = True
+                user.save()
+                return Response(
+                    {"message": "Email verified successfully! You can now log in."},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response({"message": "Email already verified."}, status=status.HTTP_200_OK)
+        else:
+            print("Token validation failed or user not found")
+            return Response({"error": "Invalid or expired verification link"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

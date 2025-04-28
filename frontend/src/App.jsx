@@ -21,9 +21,9 @@ import ForgotPassword from "./components/routes/ForgotPassword";
 import ResetPassword from "./components/routes/ResetPassword";
 
 
+
 const App = () => {
   const { setIsUserAuthenticated } = useAuthStore();
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   useEffect(() => {
     const access = localStorage.getItem("access");
@@ -44,6 +44,7 @@ const App = () => {
             path="/reset-password/:uidb64/:token"
             element={<ResetPassword />}
           />
+          <Route path="verify-email/:uidb64/:token" element={<VerifyEmail />} />
           <Route path="profile" element={<Profile />} />
           <Route path="aboutUs" element={<AboutUs />} />
           <Route path="about-us" element={<Aboutus />} />

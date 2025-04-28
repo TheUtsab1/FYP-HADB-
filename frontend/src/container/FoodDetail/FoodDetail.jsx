@@ -23,7 +23,7 @@ const FoodDetail = ({ onClose }) => {
   const [anonymous, setAnonymous] = useState(false); // For anonymous reviews
   const [anonymousName, setAnonymousName] = useState(""); // For anonymous name
   const [reviewError, setReviewError] = useState(""); // For review error messages
-  const [reviewsPerPage, setReviewsPerPage] = useState(2); // Changed from 3 to 2
+  const [reviewsPerPage] = useState(2); // Changed from 3 to 2
   const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
   const [activeTab, setActiveTab] = useState("all"); // Active filter tab
   const [sortOption, setSortOption] = useState("newest"); // Sort option

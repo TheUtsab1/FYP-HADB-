@@ -1,10 +1,5 @@
-:root {
-  --color-white: #ffffff;
-  --font-base: "Poppins", sans-serif;
-}
-
-/* Verify Email Page Styles */
-.app__verify {
+/* Email Verification Page Styles */
+.app__verify-email {
   background: linear-gradient(135deg, var(--color-red) 0%, #3a0010 100%);
   display: flex;
   justify-content: center;
@@ -15,21 +10,7 @@
   box-sizing: border-box;
 }
 
-.app__verify-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.1;
-  overflow: hidden;
-}
-
-.app__verify-overlay img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.app__verify-content {
+.app__verify-email-content {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 3rem 2.5rem;
   border-radius: 15px;
@@ -43,11 +24,11 @@
   transition: transform 0.3s ease;
 }
 
-.app__verify-content:hover {
+.app__verify-email-content:hover {
   transform: translateY(-5px);
 }
 
-.app__verify-content h2 {
+.app__verify-email-content h2 {
   font-family: var(--font-base);
   text-transform: uppercase;
   margin-bottom: 1.5rem;
@@ -58,7 +39,7 @@
   display: inline-block;
 }
 
-.app__verify-content h2::after {
+.app__verify-email-content h2::after {
   content: "";
   position: absolute;
   bottom: -10px;
@@ -70,121 +51,33 @@
   border-radius: 2px;
 }
 
-.app__verify-message {
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+.app__verify-email-message {
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 8px;
   font-weight: 500;
+  font-family: var(--font-base);
   animation: fadeIn 0.5s ease;
+  line-height: 1.5;
+  font-size: 16px;
 }
 
-.app__verify-message.success {
+.app__verify-email-message.success {
   background-color: rgba(76, 175, 80, 0.1);
   color: #2e7d32;
   border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
-.app__verify-message.error {
+.app__verify-email-message.error {
   background-color: rgba(244, 67, 54, 0.1);
   color: #d32f2f;
   border: 1px solid rgba(244, 67, 54, 0.3);
 }
 
-.app__verify-content form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  margin-top: 1.5rem;
-}
-
-.app__verify-input-group {
-  position: relative;
-  text-align: left;
-}
-
-.app__verify-input-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #555;
-  font-weight: 500;
-}
-
-.app__verify-content input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background-color: #f9f9f9;
-  color: #333;
-  box-sizing: border-box;
-}
-
-.app__verify-content input:focus {
-  outline: none;
-  border-color: var(--color-golden);
-  box-shadow: 0 0 0 2px rgba(208, 176, 61, 0.2);
-  background-color: #fff;
-}
-
-.app__verify-content input::placeholder {
-  color: #aaa;
-}
-
-.app__verify-content button {
-  font-family: var(--font-base);
-  background-color: var(--color-red);
-  color: var(--color-white);
-  padding: 14px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.app__verify-content button:hover {
-  background-color: #4d0014;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-}
-
-.app__verify-content button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.app__verify-links {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.app__verify-links p {
-  font-family: var(--font-base);
-  margin: 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.app__verify-links a {
-  color: var(--color-red);
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s ease;
-}
-
-.app__verify-links a:hover {
-  color: var(--color-golden);
-  text-decoration: underline;
+.app__verify-email-message.info {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #1976d2;
+  border: 1px solid rgba(33, 150, 243, 0.3);
 }
 
 @keyframes fadeIn {
@@ -200,29 +93,24 @@
 
 /* Responsive Styling */
 @media screen and (max-width: 900px) {
-  .app__verify-content {
+  .app__verify-email-content {
     width: 90%;
     padding: 2.5rem 2rem;
   }
 }
 
 @media screen and (max-width: 650px) {
-  .app__verify-content {
+  .app__verify-email-content {
     padding: 2rem 1.5rem;
   }
 
-  .app__verify-content h2 {
+  .app__verify-email-content h2 {
     font-size: 24px;
-  }
-
-  .app__verify-content input,
-  .app__verify-content button {
-    padding: 12px;
   }
 }
 
 @media screen and (max-width: 400px) {
-  .app__verify-content {
+  .app__verify-email-content {
     padding: 1.5rem 1rem;
   }
 }

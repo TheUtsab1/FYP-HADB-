@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import "./Signup.css"
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./Signup.css";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -12,30 +12,30 @@ function Signup() {
     email: "",
     password1: "",
     password2: "",
-  })
+  });
 
-  const [errors, setErrors] = useState({})
-  const [message, setMessage] = useState("")
-  const [messageType, setMessageType] = useState("") // "success" or "error"
-  const [passwordStrength, setPasswordStrength] = useState("") // "weak", "medium", "strong"
+  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); // "success" or "error"
+  const [passwordStrength, setPasswordStrength] = useState(""); // "weak", "medium", "strong"
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
 
     // Clear specific field error when user types
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: "",
-      })
+      });
     }
 
     // Check password strength
     if (name === "password1") {
-      checkPasswordStrength(value)
+      checkPasswordStrength(value);
     }
 
     // Check if passwords match
@@ -44,63 +44,63 @@ function Signup() {
         setErrors({
           ...errors,
           password2: "Passwords do not match",
-        })
+        });
       } else {
         setErrors({
           ...errors,
           password2: "",
-        })
+        });
       }
     }
-  }
+  };
 
   const checkPasswordStrength = (password) => {
     // Simple password strength check
     if (password.length < 6) {
-      setPasswordStrength("weak")
+      setPasswordStrength("weak");
     } else if (password.length < 10) {
-      setPasswordStrength("medium")
+      setPasswordStrength("medium");
     } else {
-      setPasswordStrength("strong")
+      setPasswordStrength("strong");
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
     // Username validation
     if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters"
+      newErrors.username = "Username must be at least 3 characters";
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
+      newErrors.email = "Please enter a valid email address";
     }
 
     // Password validation
     if (formData.password1.length < 6) {
-      newErrors.password1 = "Password must be at least 6 characters"
+      newErrors.password1 = "Password must be at least 6 characters";
     }
 
     // Confirm password
     if (formData.password1 !== formData.password2) {
-      newErrors.password2 = "Passwords do not match"
+      newErrors.password2 = "Passwords do not match";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Validate form before submission
     if (!validateForm()) {
-      setMessage("Please fix the errors in the form")
-      setMessageType("error")
-      return
+      setMessage("Please fix the errors in the form");
+      setMessageType("error");
+      return;
     }
 
     try {
@@ -108,31 +108,31 @@ function Signup() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
-        setMessage("Account created successfully! Redirecting to login...")
-        setMessageType("success")
+        setMessage("A email has been sent to your email, please verify");
+        setMessageType("success");
         setTimeout(() => {
-          navigate("/login")
-        }, 2000)
+          navigate("/login");
+        }, 3000);
       } else {
-        setMessage(data.error || "An error occurred during signup")
-        setMessageType("error")
+        setMessage(data.error || "An error occurred during signup");
+        setMessageType("error");
 
         // Handle specific field errors if returned from API
         if (data.fieldErrors) {
-          setErrors(data.fieldErrors)
+          setErrors(data.fieldErrors);
         }
       }
     } catch (error) {
-      console.error("Signup error:", error)
-      setMessage("Connection error. Please try again later.")
-      setMessageType("error")
+      console.error("Signup error:", error);
+      setMessage("Connection error. Please try again later.");
+      setMessageType("error");
     }
-  }
+  };
 
   return (
     <div className="app__signup">
@@ -142,7 +142,9 @@ function Signup() {
       <div className="app__signup-content">
         <h2>Create Account</h2>
 
-        {message && <div className={`app__signup-message ${messageType}`}>{message}</div>}
+        {message && (
+          <div className={`app__signup-message ${messageType}`}>{message}</div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="app__signup-input-group">
@@ -157,7 +159,9 @@ function Signup() {
               className={errors.username ? "error" : ""}
               required
             />
-            {errors.username && <span className="input-error-message">{errors.username}</span>}
+            {errors.username && (
+              <span className="input-error-message">{errors.username}</span>
+            )}
           </div>
 
           <div className="app__signup-form-row">
@@ -173,7 +177,9 @@ function Signup() {
                 className={errors.fname ? "error" : ""}
                 required
               />
-              {errors.fname && <span className="input-error-message">{errors.fname}</span>}
+              {errors.fname && (
+                <span className="input-error-message">{errors.fname}</span>
+              )}
             </div>
 
             <div className="app__signup-input-group">
@@ -188,7 +194,9 @@ function Signup() {
                 className={errors.lname ? "error" : ""}
                 required
               />
-              {errors.lname && <span className="input-error-message">{errors.lname}</span>}
+              {errors.lname && (
+                <span className="input-error-message">{errors.lname}</span>
+              )}
             </div>
           </div>
 
@@ -204,7 +212,9 @@ function Signup() {
               className={errors.email ? "error" : ""}
               required
             />
-            {errors.email && <span className="input-error-message">{errors.email}</span>}
+            {errors.email && (
+              <span className="input-error-message">{errors.email}</span>
+            )}
           </div>
 
           <div className="app__signup-input-group">
@@ -221,10 +231,14 @@ function Signup() {
             />
             {passwordStrength && (
               <div className="password-strength">
-                <div className={`password-strength-bar ${passwordStrength}`}></div>
+                <div
+                  className={`password-strength-bar ${passwordStrength}`}
+                ></div>
               </div>
             )}
-            {errors.password1 && <span className="input-error-message">{errors.password1}</span>}
+            {errors.password1 && (
+              <span className="input-error-message">{errors.password1}</span>
+            )}
           </div>
 
           <div className="app__signup-input-group">
@@ -239,7 +253,9 @@ function Signup() {
               className={errors.password2 ? "error" : ""}
               required
             />
-            {errors.password2 && <span className="input-error-message">{errors.password2}</span>}
+            {errors.password2 && (
+              <span className="input-error-message">{errors.password2}</span>
+            )}
           </div>
 
           <button type="submit">Create Account</button>
@@ -252,7 +268,7 @@ function Signup() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Signup
+export default Signup;

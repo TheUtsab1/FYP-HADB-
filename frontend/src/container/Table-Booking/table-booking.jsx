@@ -10,7 +10,6 @@ import {
   ChevronDown,
   Calendar,
   Clock,
-  Lock,
 } from "lucide-react";
 import "./table-booking.css";
 
