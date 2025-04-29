@@ -23199,3 +23199,2860 @@ Unauthorized: /profile/
 Unauthorized: /profile/
 Unauthorized: /auth/jwt/create/
 Unauthorized: /feedback/
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\HimalayanADB\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\HimalayanADB\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\HimalayanADB\settings.py changed, reloading.
+Watching for file changes with StatReloader
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Dhido+Set&line_items[0][price_data][product_data][metadata][food_item_id]=65&line_items[0][price_data][unit_amount]=60000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=21&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Dhido+Set+x1&success_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2755
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745858612,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1745945012,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_rGSwXZWuLYmMe1 message='Dashboard link for request'
+Unauthorized: /profile/
+Unauthorized: /profile/
+Unauthorized: /cart/
+Unauthorized: /cart/
+Unauthorized: /profile/
+Unauthorized: /profile/
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Dhido+Set&line_items[0][price_data][product_data][metadata][food_item_id]=65&line_items[0][price_data][unit_amount]=60000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=21&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Dhido+Set+x1&success_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2755
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1qYfPTNpVfz0r9yrTMncXQcoSMZYB5g4TlPFL6DX1PDrc5qQEyxqeWJjh",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745858656,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1745945056,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1qYfPTNpVfz0r9yrTMncXQcoSMZYB5g4TlPFL6DX1PDrc5qQEyxqeWJjh#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_dmwrNjP7jP6m9B message='Dashboard link for request'
+message='Request to Stripe api' method=get url=https://api.stripe.com/v1/checkout/sessions/cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN
+api_version=2025-03-31.basil message='Post details' post_data=
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "GET /v1/checkout/sessions/cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN HTTP/1.1" 200 2711
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions/cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN response_code=200
+body='{\n  "id": "cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745858612,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": {\n    "address": {\n      "city": null,\n      "country": "NP",\n      "line1": null,\n      "line2": null,\n      "postal_code": null,\n      "state": null\n    },\n    "email": "info.utsab10@gmail.com",\n    "name": "Utsab Devkota",\n    "phone": null,\n    "tax_exempt": "none",\n    "tax_ids": []\n  },\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1745945012,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": "pi_3RIunLEEI2zN8avg1tGmAHqh",\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "paid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "complete",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": null,\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_x4Kat41CrmnHgM message='Dashboard link for request'
+Processing payment success for user: Utsab, session_id: cs_test_a1bsPnSqIWHQxba9LeTfOritH0zWBkwDcYeN1qQ4BS5cBqyHkF3gHfAhwN
+Starting new HTTP connection (1): 127.0.0.1:8000
+Not Found: /orders/create/
+http://127.0.0.1:8000 "POST /orders/create/ HTTP/1.1" 404 17492
+Failed to create order: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Page not found at /orders/create/</title>
+  <meta name="robots" content="NONE,NOARCHIVE">
+  <style>
+    html * { padding:0; margin:0; }
+    body * { padding:10px 20px; }
+    body * * { padding:0; }
+    body { font-family: sans-serif; background:#eee; color:#000; }
+    body > :where(header, main, footer) { border-bottom:1px solid #ddd; }
+    h1 { font-weight:normal; margin-bottom:.4em; }
+    h1 small { font-size:60%; color:#666; font-weight:normal; }
+    table { border:none; border-collapse: collapse; width:100%; }
+    td, th { vertical-align:top; padding:2px 3px; }
+    th { width:12em; text-align:right; color:#666; padding-right:.5em; }
+    #info { background:#f6f6f6; }
+    #info ol { margin: 0.5em 4em; }
+    #info ol li { font-family: monospace; }
+    #summary { background: #ffc; }
+    #explanation { background:#eee; border-bottom: 0px none; }
+    pre.exception_value { font-family: sans-serif; color: #575757; font-size: 1.5em; margin: 10px 0 10px 0; }
+  </style>
+</head>
+<body>
+  <header id="summary">
+    <h1>Page not found <small>(404)</small></h1>
+    
+    <table class="meta">
+      <tr>
+        <th scope="row">Request Method:</th>
+        <td>POST</td>
+      </tr>
+      <tr>
+        <th scope="row">Request URL:</th>
+        <td>http://127.0.0.1:8000/orders/create/</td>
+      </tr>
+      
+    </table>
+  </header>
+
+  <main id="info">
+    
+      <p>
+      Using the URLconf defined in <code>HimalayanADB.urls</code>,
+      Django tried these URL patterns, in this order:
+      </p>
+      <ol>
+        
+          <li>
+            
+              <code>
+                admin/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                accounts/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/$
+                [name='list-food-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='list-food-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/(?P&lt;food_slug&gt;[^/.]+)/$
+                [name='list-food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/(?P&lt;food_slug&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='list-food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/$
+                [name='foodtype-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtype-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/(?P&lt;pk&gt;[^/.]+)/$
+                [name='foodtype-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtype-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/$
+                [name='foodtop-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtop-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/(?P&lt;pk&gt;[^/.]+)/$
+                [name='foodtop-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtop-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/$
+                [name='profile-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='profile-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/(?P&lt;pk&gt;[^/.]+)/$
+                [name='profile-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='profile-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                [name='api-root']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                &lt;drf_format_suffix:format&gt;
+                [name='api-root']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                signup/
+                [name='signup']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                login/
+                [name='login']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                verify-email/&lt;uidb64&gt;/&lt;token&gt;/
+                [name='verify_email']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                auth/password/reset/
+                [name='password_reset_request']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                auth/password/reset/confirm/&lt;uidb64&gt;/&lt;token&gt;/
+                [name='password_reset_confirm']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/google-login/
+                [name='google_login']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/submit-booking/
+                [name='submit_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                feedback/
+                [name='feedback']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                showCart/&lt;item_id&gt;
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/update/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/&lt;int:item_id&gt;/
+                [name='remove_cart_item']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/delete/
+                [name='clear_cart']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/
+                [name='get_tables']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/request-booking/&lt;int:table_id&gt;/
+                [name='request_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/update-booking/&lt;int:reservation_id&gt;/
+                [name='update_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                verify-payment/
+                [name='verify_payment']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                orders/pending/
+                [name='save_pending_order']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/
+                [name='get-food-reviews']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/create/
+                [name='create-food-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/anonymous/
+                [name='create-anonymous-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/&lt;int:review_id&gt;/
+                [name='update-delete-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                create-checkout-session/
+                [name='create-checkout-session']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                payment-success/
+                [name='payment-success']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^media/(?P&lt;path&gt;.*)$
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^auth/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^auth/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                food/&lt;slug:food_slug&gt;/
+                [name='food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/schema/
+                [name='schema']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/docs/
+                [name='swagger-ui']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/redocs/
+                [name='redoc']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^media/(?P&lt;path&gt;.*)$
+                
+              </code>
+            
+          </li>
+        
+      </ol>
+      <p>
+        
+          The current path, <code>orders/create/</code>,
+        
+        didn’t match any of these.
+      </p>
+    
+  </main>
+
+  <footer id="explanation">
+    <p>
+      You’re seeing this error because you have <code>DEBUG = True</code> in
+      your Django settings file. Change that to <code>False</code>, and Django
+      will display a standard 404 page.
+    </p>
+  </footer>
+</body>
+</html>
+
+Bad Request: /payment-success/
+Internal Server Error: /auth/jwt/create/
+Traceback (most recent call last):
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework_simplejwt\views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 223, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 445, in run_validation
+    value = self.validate(value)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework_simplejwt\serializers.py", line 73, in validate
+    data = super().validate(attrs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework_simplejwt\serializers.py", line 54, in validate
+    self.user = authenticate(**authenticate_kwargs)
+                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\views\decorators\debug.py", line 75, in sensitive_variables_wrapper
+    return func(*func_args, **func_kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\contrib\auth\__init__.py", line 79, in authenticate
+    user = backend.authenticate(request, **credentials)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\allauth\account\auth_backends.py", line 27, in authenticate
+    ret = self._authenticate_by_username(**credentials)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\allauth\account\auth_backends.py", line 41, in _authenticate_by_username
+    user = filter_users_by_username(username).get()
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\db\models\query.py", line 652, in get
+    raise self.model.MultipleObjectsReturned(
+    ...<5 lines>...
+    )
+django.contrib.auth.models.User.MultipleObjectsReturned: get() returned more than one User -- it returned 2!
+Internal Server Error: /auth/jwt/create/
+Traceback (most recent call last):
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework_simplejwt\views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 223, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework\serializers.py", line 445, in run_validation
+    value = self.validate(value)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework_simplejwt\serializers.py", line 73, in validate
+    data = super().validate(attrs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\rest_framework_simplejwt\serializers.py", line 54, in validate
+    self.user = authenticate(**authenticate_kwargs)
+                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\views\decorators\debug.py", line 75, in sensitive_variables_wrapper
+    return func(*func_args, **func_kwargs)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\contrib\auth\__init__.py", line 79, in authenticate
+    user = backend.authenticate(request, **credentials)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\allauth\account\auth_backends.py", line 27, in authenticate
+    ret = self._authenticate_by_username(**credentials)
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\allauth\account\auth_backends.py", line 41, in _authenticate_by_username
+    user = filter_users_by_username(username).get()
+  File "C:\Users\utsab\Downloads\FYP\backend\.venv\Lib\site-packages\django\db\models\query.py", line 652, in get
+    raise self.model.MultipleObjectsReturned(
+    ...<5 lines>...
+    )
+django.contrib.auth.models.User.MultipleObjectsReturned: get() returned more than one User -- it returned 2!
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Dhido+Set&line_items[0][price_data][product_data][metadata][food_item_id]=66&line_items[0][price_data][unit_amount]=60000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=21&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Dhido+Set+x1&success_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2755
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745860773,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1745947173,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_ztKbmyftptGVp3 message='Dashboard link for request'
+message='Request to Stripe api' method=get url=https://api.stripe.com/v1/checkout/sessions/cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ
+api_version=2025-03-31.basil message='Post details' post_data=
+https://api.stripe.com:443 "GET /v1/checkout/sessions/cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ HTTP/1.1" 200 2711
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions/cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ response_code=200
+body='{\n  "id": "cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745860773,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": {\n    "address": {\n      "city": null,\n      "country": "NP",\n      "line1": null,\n      "line2": null,\n      "postal_code": null,\n      "state": null\n    },\n    "email": "info.utsab10@gmail.com",\n    "name": "Utsab Devkota",\n    "phone": null,\n    "tax_exempt": "none",\n    "tax_ids": []\n  },\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1745947173,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": "pi_3RIvLGEEI2zN8avg1g3pMcS7",\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "paid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "complete",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": null,\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_02Dv1nA4kOSb59 message='Dashboard link for request'
+Processing payment success for user: Utsab, session_id: cs_test_a1vX5ORY2HZgqXYfcCpQmuYwl8xFmL6gR0lCbZ1YoyofzJ3AyAQypHUDUJ
+Starting new HTTP connection (1): 127.0.0.1:8000
+Not Found: /orders/create/
+http://127.0.0.1:8000 "POST /orders/create/ HTTP/1.1" 404 17492
+Failed to create order: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Page not found at /orders/create/</title>
+  <meta name="robots" content="NONE,NOARCHIVE">
+  <style>
+    html * { padding:0; margin:0; }
+    body * { padding:10px 20px; }
+    body * * { padding:0; }
+    body { font-family: sans-serif; background:#eee; color:#000; }
+    body > :where(header, main, footer) { border-bottom:1px solid #ddd; }
+    h1 { font-weight:normal; margin-bottom:.4em; }
+    h1 small { font-size:60%; color:#666; font-weight:normal; }
+    table { border:none; border-collapse: collapse; width:100%; }
+    td, th { vertical-align:top; padding:2px 3px; }
+    th { width:12em; text-align:right; color:#666; padding-right:.5em; }
+    #info { background:#f6f6f6; }
+    #info ol { margin: 0.5em 4em; }
+    #info ol li { font-family: monospace; }
+    #summary { background: #ffc; }
+    #explanation { background:#eee; border-bottom: 0px none; }
+    pre.exception_value { font-family: sans-serif; color: #575757; font-size: 1.5em; margin: 10px 0 10px 0; }
+  </style>
+</head>
+<body>
+  <header id="summary">
+    <h1>Page not found <small>(404)</small></h1>
+    
+    <table class="meta">
+      <tr>
+        <th scope="row">Request Method:</th>
+        <td>POST</td>
+      </tr>
+      <tr>
+        <th scope="row">Request URL:</th>
+        <td>http://127.0.0.1:8000/orders/create/</td>
+      </tr>
+      
+    </table>
+  </header>
+
+  <main id="info">
+    
+      <p>
+      Using the URLconf defined in <code>HimalayanADB.urls</code>,
+      Django tried these URL patterns, in this order:
+      </p>
+      <ol>
+        
+          <li>
+            
+              <code>
+                admin/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                accounts/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/$
+                [name='list-food-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='list-food-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/(?P&lt;food_slug&gt;[^/.]+)/$
+                [name='list-food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/(?P&lt;food_slug&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='list-food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/$
+                [name='foodtype-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtype-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/(?P&lt;pk&gt;[^/.]+)/$
+                [name='foodtype-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtype-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/$
+                [name='foodtop-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtop-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/(?P&lt;pk&gt;[^/.]+)/$
+                [name='foodtop-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtop-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/$
+                [name='profile-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='profile-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/(?P&lt;pk&gt;[^/.]+)/$
+                [name='profile-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='profile-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                [name='api-root']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                &lt;drf_format_suffix:format&gt;
+                [name='api-root']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                signup/
+                [name='signup']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                login/
+                [name='login']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                verify-email/&lt;uidb64&gt;/&lt;token&gt;/
+                [name='verify_email']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                auth/password/reset/
+                [name='password_reset_request']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                auth/password/reset/confirm/&lt;uidb64&gt;/&lt;token&gt;/
+                [name='password_reset_confirm']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/google-login/
+                [name='google_login']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/submit-booking/
+                [name='submit_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                feedback/
+                [name='feedback']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                showCart/&lt;item_id&gt;
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/update/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/&lt;int:item_id&gt;/
+                [name='remove_cart_item']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/delete/
+                [name='clear_cart']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/
+                [name='get_tables']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/request-booking/&lt;int:table_id&gt;/
+                [name='request_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/update-booking/&lt;int:reservation_id&gt;/
+                [name='update_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                verify-payment/
+                [name='verify_payment']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                orders/pending/
+                [name='save_pending_order']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/
+                [name='get-food-reviews']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/create/
+                [name='create-food-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/anonymous/
+                [name='create-anonymous-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/&lt;int:review_id&gt;/
+                [name='update-delete-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                create-checkout-session/
+                [name='create-checkout-session']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                payment-success/
+                [name='payment-success']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^media/(?P&lt;path&gt;.*)$
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^auth/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^auth/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                food/&lt;slug:food_slug&gt;/
+                [name='food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/schema/
+                [name='schema']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/docs/
+                [name='swagger-ui']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/redocs/
+                [name='redoc']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^media/(?P&lt;path&gt;.*)$
+                
+              </code>
+            
+          </li>
+        
+      </ol>
+      <p>
+        
+          The current path, <code>orders/create/</code>,
+        
+        didn’t match any of these.
+      </p>
+    
+  </main>
+
+  <footer id="explanation">
+    <p>
+      You’re seeing this error because you have <code>DEBUG = True</code> in
+      your Django settings file. Change that to <code>False</code>, and Django
+      will display a standard 404 page.
+    </p>
+  </footer>
+</body>
+</html>
+
+Bad Request: /payment-success/
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\HimalayanADB\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\utsab\Downloads\FYP\backend\HimalayanADB\overallBackend\views.py changed, reloading.
+Watching for file changes with StatReloader
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Chicken+Wings&line_items[0][price_data][product_data][metadata][food_item_id]=67&line_items[0][price_data][unit_amount]=25000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=21&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Chicken+Wings+x1&success_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2759
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 25000,\n  "amount_total": 25000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745919468,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1746005868,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Chicken Wings x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_6HCBXn8asPPicm message='Dashboard link for request'
+message='Request to Stripe api' method=get url=https://api.stripe.com/v1/checkout/sessions/cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g
+api_version=2025-03-31.basil message='Post details' post_data=
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "GET /v1/checkout/sessions/cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g HTTP/1.1" 200 2714
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions/cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g response_code=200
+body='{\n  "id": "cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 25000,\n  "amount_total": 25000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745919468,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": {\n    "address": {\n      "city": null,\n      "country": "NP",\n      "line1": null,\n      "line2": null,\n      "postal_code": null,\n      "state": null\n    },\n    "email": "utsabmessi6@gmail.com",\n    "name": "Utsab Devkota",\n    "phone": null,\n    "tax_exempt": "none",\n    "tax_ids": []\n  },\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1746005868,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Chicken Wings x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": "pi_3RJAbxEEI2zN8avg1hv748b4",\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "paid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "complete",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": null,\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_aY0iOv23MUOUSZ message='Dashboard link for request'
+Processing payment success for user: Utsab, session_id: cs_test_a1XlvnYwpdfu3BbCiq7NPfkSCNMmdHjXNmGxEOkHqby4r3zpVxvEIYKB0g
+Starting new HTTP connection (1): 127.0.0.1:8000
+Not Found: /orders/create/
+http://127.0.0.1:8000 "POST /orders/create/ HTTP/1.1" 404 17492
+Failed to create order: <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Page not found at /orders/create/</title>
+  <meta name="robots" content="NONE,NOARCHIVE">
+  <style>
+    html * { padding:0; margin:0; }
+    body * { padding:10px 20px; }
+    body * * { padding:0; }
+    body { font-family: sans-serif; background:#eee; color:#000; }
+    body > :where(header, main, footer) { border-bottom:1px solid #ddd; }
+    h1 { font-weight:normal; margin-bottom:.4em; }
+    h1 small { font-size:60%; color:#666; font-weight:normal; }
+    table { border:none; border-collapse: collapse; width:100%; }
+    td, th { vertical-align:top; padding:2px 3px; }
+    th { width:12em; text-align:right; color:#666; padding-right:.5em; }
+    #info { background:#f6f6f6; }
+    #info ol { margin: 0.5em 4em; }
+    #info ol li { font-family: monospace; }
+    #summary { background: #ffc; }
+    #explanation { background:#eee; border-bottom: 0px none; }
+    pre.exception_value { font-family: sans-serif; color: #575757; font-size: 1.5em; margin: 10px 0 10px 0; }
+  </style>
+</head>
+<body>
+  <header id="summary">
+    <h1>Page not found <small>(404)</small></h1>
+    
+    <table class="meta">
+      <tr>
+        <th scope="row">Request Method:</th>
+        <td>POST</td>
+      </tr>
+      <tr>
+        <th scope="row">Request URL:</th>
+        <td>http://127.0.0.1:8000/orders/create/</td>
+      </tr>
+      
+    </table>
+  </header>
+
+  <main id="info">
+    
+      <p>
+      Using the URLconf defined in <code>HimalayanADB.urls</code>,
+      Django tried these URL patterns, in this order:
+      </p>
+      <ol>
+        
+          <li>
+            
+              <code>
+                admin/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                accounts/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/$
+                [name='list-food-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='list-food-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/(?P&lt;food_slug&gt;[^/.]+)/$
+                [name='list-food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^listFood/(?P&lt;food_slug&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='list-food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/$
+                [name='foodtype-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtype-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/(?P&lt;pk&gt;[^/.]+)/$
+                [name='foodtype-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^category/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtype-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/$
+                [name='foodtop-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtop-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/(?P&lt;pk&gt;[^/.]+)/$
+                [name='foodtop-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^topList/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='foodtop-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/$
+                [name='profile-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='profile-list']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/(?P&lt;pk&gt;[^/.]+)/$
+                [name='profile-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^profile/(?P&lt;pk&gt;[^/.]+)\.(?P&lt;format&gt;[a-z0-9]+)/?$
+                [name='profile-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                [name='api-root']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                &lt;drf_format_suffix:format&gt;
+                [name='api-root']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                signup/
+                [name='signup']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                login/
+                [name='login']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                verify-email/&lt;uidb64&gt;/&lt;token&gt;/
+                [name='verify_email']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                auth/password/reset/
+                [name='password_reset_request']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                auth/password/reset/confirm/&lt;uidb64&gt;/&lt;token&gt;/
+                [name='password_reset_confirm']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/google-login/
+                [name='google_login']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/submit-booking/
+                [name='submit_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                feedback/
+                [name='feedback']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                showCart/&lt;item_id&gt;
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/update/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/&lt;int:item_id&gt;/
+                [name='remove_cart_item']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                cart/delete/
+                [name='clear_cart']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/
+                [name='get_tables']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/request-booking/&lt;int:table_id&gt;/
+                [name='request_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                api/tables/update-booking/&lt;int:reservation_id&gt;/
+                [name='update_booking']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                verify-payment/
+                [name='verify_payment']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                orders/pending/
+                [name='save_pending_order']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/
+                [name='get-food-reviews']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/create/
+                [name='create-food-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/anonymous/
+                [name='create-anonymous-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                food/&lt;str:food_slug&gt;/reviews/&lt;int:review_id&gt;/
+                [name='update-delete-review']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                create-checkout-session/
+                [name='create-checkout-session']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                payment-success/
+                [name='payment-success']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                
+                
+              </code>
+            
+              <code>
+                ^media/(?P&lt;path&gt;.*)$
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^auth/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^auth/
+                
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                food/&lt;slug:food_slug&gt;/
+                [name='food-detail']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/schema/
+                [name='schema']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/docs/
+                [name='swagger-ui']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                api/redocs/
+                [name='redoc']
+              </code>
+            
+          </li>
+        
+          <li>
+            
+              <code>
+                ^media/(?P&lt;path&gt;.*)$
+                
+              </code>
+            
+          </li>
+        
+      </ol>
+      <p>
+        
+          The current path, <code>orders/create/</code>,
+        
+        didn’t match any of these.
+      </p>
+    
+  </main>
+
+  <footer id="explanation">
+    <p>
+      You’re seeing this error because you have <code>DEBUG = True</code> in
+      your Django settings file. Change that to <code>False</code>, and Django
+      will display a standard 404 page.
+    </p>
+  </footer>
+</body>
+</html>
+
+Bad Request: /payment-success/
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Dhido+Set&line_items[0][price_data][product_data][metadata][food_item_id]=68&line_items[0][price_data][unit_amount]=60000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=21&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Dhido+Set+x1&success_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2755
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1XHKXl6loai16LK9dzxf8u5iUecdP0TwgFk7NxwpZ0W63cVr796q1mMq8",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745919967,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1746006367,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1XHKXl6loai16LK9dzxf8u5iUecdP0TwgFk7NxwpZ0W63cVr796q1mMq8#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_gzTWIG3JAa6kZA message='Dashboard link for request'
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-03-31.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=npr&line_items[0][price_data][product_data][name]=Dhido+Set&line_items[0][price_data][product_data][metadata][food_item_id]=68&line_items[0][price_data][unit_amount]=60000&line_items[0][quantity]=1&mode=payment&metadata[user_id]=21&metadata[special_instructions]=&metadata[item_count]=1&metadata[item_0]=Dhido+Set+x1&success_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dsuccess%26session_id%3D%7BCHECKOUT_SESSION_ID%7D&cancel_url=http%3A%2F%2Flocalhost%3A3000%2Fcart%3Fpayment%3Dcanceled
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2755
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_a1g67mZutbMiZ7IPDKA83LT1ceoWMvqid1f56wMj8XsYv9GPQZKxGBOPRl",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 60000,\n  "amount_total": 60000,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://localhost:3000/cart?payment=canceled",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1745920083,\n  "currency": "npr",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1746006483,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "item_0": "Dhido Set x1",\n    "item_count": "1",\n    "special_instructions": "",\n    "user_id": "21"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://localhost:3000/cart?payment=success&session_id={CHECKOUT_SESSION_ID}",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_a1g67mZutbMiZ7IPDKA83LT1ceoWMvqid1f56wMj8XsYv9GPQZKxGBOPRl#fidkdWxOYHwnPyd1blpxYHZxWjA0V0J%2FQFVAQEw3f0s9ZHNiYWZrajJLTUxKV3RvYEtfQ0pWYG5MSn18bjAwbHB0bEo3X2ZATk9rfU03c0lGUUszYHduTEc1XXRXX2B1c2RtVGg2VEJoaHdJNTVLPD1NcG49SCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_TKLctk3ZJuARt9 message='Dashboard link for request'

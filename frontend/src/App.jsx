@@ -11,7 +11,6 @@ import Signup from "./components/routes/Signup";
 import VerifyEmail from "./components/routes/VerifyEmail";
 import CateringForm from "./container/Laurels/CateringForm";
 import Cart from "./container/Cart/Cart";
-import Booking from "./container/Booking/Booking";
 import Aboutus from "./container/About-Us/about-us";
 import FoodDetail from "./container/FoodDetail/FoodDetail";
 import TableBooking from "./container/Table-Booking/table-booking";
@@ -48,7 +47,6 @@ const App = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="aboutUs" element={<AboutUs />} />
           <Route path="about-us" element={<Aboutus />} />
-          <Route path="Booking" element={<Booking />} />
           <Route path="table-booking" element={<TableBooking />} />
           <Route path="specialMenu" element={<SpecialMenu />} />
           <Route path="/food/:food_slug" element={<FoodDetail />} />

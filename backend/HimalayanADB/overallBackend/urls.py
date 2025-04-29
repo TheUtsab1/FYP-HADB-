@@ -8,18 +8,13 @@ from . import views
 
 
 router = DefaultRouter()
-router.register(r"listFood", FoodView, basename="list-food")  # Unique basename
+router.register(r"listFood", FoodView, basename="list-food")
 router.register(r'category', FoodCategoryView)
 router.register(r'topList', FoodTopView, basename='foodtop')
 router.register(r'profile', UserProfileViewSet, basename='profile')
-# router.register('feedback', FeedbackViewSet, basename='feedback')
 
 urlpatterns = [
     path("", include(router.urls)),
-    # path('register/', RegisterView.as_view()),
-    # path('verify/', VerifyEmailView.as_view()),
-    # path('login/', LoginView.as_view()),
-    # path('token/refresh/', RefreshTokenView.as_view()),
     path('signup/', views.SignupView.as_view(), name='signup'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('verify-email/<uidb64>/<token>/', views.VerifyEmailView.as_view(), name='verify_email'),
@@ -33,7 +28,6 @@ urlpatterns = [
     path("cart/update/", updateCartQuantity.as_view()),
     path('cart/<int:item_id>/', remove_cart_item, name='remove_cart_item'),
     path('cart/delete/', clear_Cart, name='clear_cart'),
-    # path('')
     path('api/tables/', get_tables, name="get_tables"),
     path('api/tables/request-booking/<int:table_id>/', request_booking, name="request_booking"),
     path('api/tables/update-booking/<int:reservation_id>/', update_booking, name="update_booking"),

@@ -2,23 +2,10 @@ from django.contrib import admin
 from .models import *
 from django.core.mail import send_mail
 from django.conf import settings
-from django.utils.html import format_html
 
-
-
-# Register your models here.
 
 admin.site.register((Food, FoodTaste, FoodType, Cart, CartItem))
 
-
-# from material.admin.sites import MaterialAdminSite
-
-# class MyAdminSite(MaterialAdminSite):
-#     site_header = 'Himalayan Asian Dining & Bar Admin'
-#     site_title = 'Restaurant Admin'
-#     index_title = 'Welcome to the Admin Panel'
-
-# admin.site = MyAdminSite()
 
 @admin.register(Table)
 class TableAdmin(admin.ModelAdmin):
@@ -79,32 +66,6 @@ class CateringBookingAdmin(admin.ModelAdmin):
     search_fields = ('first_name', 'last_name', 'email', 'phone')
     list_filter = ('event_type', 'date')
 
-    # actions = ['approve_reservations', 'reject_reservations']
-
-    # def approve_reservations(self, request, queryset):
-    #     for reservation in queryset:
-    #         if reservation.table:  # Ensure table is assigned
-    #             reservation.status = 'approved'
-    #             reservation.table.status = 'occupied'
-    #             reservation.table.save()  # Save table update
-    #             reservation.save()  # Save reservation update
-
-    # approve_reservations.short_description = "Approve selected reservations and mark tables as occupied"
-
-    # def reject_reservations(self, request, queryset):
-    #     queryset.update(status='rejected')
-
-    # reject_reservations.short_description = "Reject selected reservations"
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 class ReviewAdmin(admin.ModelAdmin):
@@ -118,50 +79,17 @@ class ReviewAdmin(admin.ModelAdmin):
     
     comment_preview.short_description = 'Comment'
 
-# Use the custom admin class
 admin.site.register(Review, ReviewAdmin)
-    
-    
-    
-    
-    
-    
-    
+   
+  
     
     
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'Profile'
-
-# Customize UserAdmin to include Profile (if applicable)
-
-
-    
-    
-    
-    
-    
-    
-
-# @admin.register(TabelReservation)
-# class TabelReservationAdmin(admin.ModelAdmin):
-#     list_display = ('Booking_name', 'email', 'No_of_person', 'Date', 'time', 'status')
-#     list_filter = ('status', 'Date')
-#     search_fields = ('Booking_name', 'email')
-
-#     # Add editing functionality for the "status" field
-#     def save_model(self, request, obj, form, change):
-#         if change and 'status' in form.changed_data and obj.status == 'Booked':
-#             # Send success email notification for booked status
-#             obj.send_booking_confirmation()
-#         super().save_model(request, obj, form, change)
         
         
-from django import forms
-from django.contrib import admin
-from .models import Feedback
-
 class FeedbackAdmin(admin.ModelAdmin):
     # Include the 'user' field in list_display to ensure it shows up in the list view
     list_display = ('id', 'name', 'email', 'rating', 'feedback_type', 'message',  'user')  # Added 'message'
@@ -181,45 +109,6 @@ class FeedbackAdmin(admin.ModelAdmin):
 
 # Register the Feedback model with the custom admin class
 admin.site.register(Feedback, FeedbackAdmin)
-
-
-        
-# @admin.register(TableReservations)
-# class TableReservationAdmin(admin.ModelAdmin):
-#     list_display = ('Booking_name', 'email', 'No_of_person', 'Date', 'time', 'status')
-#     list_filter = ('status', 'Date')
-#     search_fields = ('Booking_name', 'email')
-
-#     def save_model(self, request, obj, form, change):
-#         if change and 'status' in form.changed_data:
-#             if obj.status == 'Booked':
-#                 obj.send_confirmation_email()
-#         super().save_model(request, obj, form, change)
-
-# @admin.register(TabelReservation)
-# class TabelReservationAdmin(admin.ModelAdmin):
-#     list_display = ('Booking_name', 'email', 'No_of_person', 'Date', 'time', 'status')
-#     list_filter = ('status', 'Date')
-#     search_fields = ('Booking_name', 'email')
-#     actions = ['approve_reservation', 'reject_reservation']
-
-#     def approve_reservation(self, request, queryset):
-#         queryset.update(status='Booked')
-#         for reservation in queryset:
-#             reservation.send_booking_confirmation()
-#         self.message_user(request, "Selected reservations have been approved.")
-
-#     def reject_reservation(self, request, queryset):
-#         queryset.update(status='Rejected')
-#         for reservation in queryset:
-#             reservation.send_booking_confirmation()
-#         self.message_user(request, "Selected reservations have been rejected.")
-
-#     approve_reservation.short_description = "Mark selected reservations as Booked"
-#     reject_reservation.short_description = "Mark selected reservations as Rejected"
-
-
-
 
 
 @admin.register(Payment)

@@ -410,3 +410,22 @@
     padding: 0.7rem 1rem;
   }
 }
+
+/* Add these new styles for active links */
+.app__navbar-links li a.active::after {
+  width: 100%;
+}
+
+.app__navbar-smallscreen-links li a.active {
+  color: var(--color-red);
+}
+
+.mobile-auth-btn.active,
+.mobile-book-btn.active {
+  background-color: var(--color-red);
+  color: white;
+}
+
+.app__navbar-login a.active::after {
+  width: 100%;
+}

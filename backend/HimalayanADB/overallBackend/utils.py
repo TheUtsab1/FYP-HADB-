@@ -8,7 +8,7 @@ def send_booking_email(subject, message, recipient_email):
     send_mail(
         subject,
         message,
-        "utsabmessi6@gmail.com",  # Change this to your actual sender email
+        "utsabmessi6@gmail.com",
         [recipient_email],
         fail_silently=False,
     )

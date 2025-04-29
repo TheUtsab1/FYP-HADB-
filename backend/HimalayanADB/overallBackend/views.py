@@ -1,5 +1,4 @@
 from datetime import timezone
-from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -21,13 +20,16 @@ from .serializer import *
 from .models import *
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from django.http import JsonResponse
-import json
-from django.views.decorators.csrf import csrf_exempt
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+import json
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 
 
 
@@ -50,85 +52,6 @@ def google_login(request):
 
 
 
-
-# User = get_user_model()
-
-# class RegisterView(APIView):
-#     def post(self, request):
-#         username = request.data.get("username")
-#         email = request.data.get("email")
-#         password = request.data.get("password")
-        
-#         if User.objects.filter(email=email).exists():
-#             return Response({"error": "Email already in use"}, status=400)
-        
-#         user = User.objects.create_user(username=username, email=email, password=password, is_active=False)
-#         verification_code = get_random_string(length=6, allowed_chars='0123456789')
-#         cache.set(email, verification_code, timeout=600)
-
-#         send_mail(
-#             'Verify Your Email',
-#             f'Your verification code is: {verification_code}',
-#             settings.DEFAULT_FROM_EMAIL,
-#             [email],
-#             fail_silently=False,
-#         )
-#         return Response({"message": "Verification code sent"}, status=201)
-
-# class VerifyEmailView(APIView):
-#     def post(self, request):
-#         email = request.data.get("email")
-#         code = request.data.get("code")
-#         real_code = cache.get(email)
-
-#         if code == real_code:
-#             try:
-#                 user = User.objects.get(email=email)
-#                 user.is_active = True
-#                 user.save()
-#                 return Response({"message": "Email verified successfully"})
-#             except User.DoesNotExist:
-#                 return Response({"error": "User not found"}, status=404)
-#         return Response({"error": "Invalid or expired code"}, status=400)
-
-# class LoginView(APIView):
-#     def post(self, request):
-#         email = request.data.get("email")
-#         password = request.data.get("password")
-#         try:
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             return Response({"error": "Invalid credentials"}, status=401)
-
-#         if not user.is_active:
-#             return Response({"error": "Email not verified"}, status=403)
-
-#         user = authenticate(request, username=user.username, password=password)
-#         if user:
-#             refresh = RefreshToken.for_user(user)
-#             return Response({
-#                 "access": str(refresh.access_token),
-#                 "refresh": str(refresh),
-#                 "username": user.username
-#             })
-#         return Response({"error": "Invalid credentials"}, status=401)
-
-# class RefreshTokenView(APIView):
-#     permission_classes = [AllowAny]
-
-#     def post(self, request):
-#         try:
-#             refresh_token = request.data.get("refresh")
-#             token = RefreshToken(refresh_token)
-#             access_token = str(token.access_token)
-#             return Response({"access": access_token})
-#         except Exception as e:
-#             return Response({"error": "Token is invalid or expired"}, status=401)
-        
-# class LogoutAPIView(APIView):
-#     def post(self, request):
-#         logout(request)
-#         return Response({"success": True, "message": "Logged out successfully."})
 
 class SignupView(APIView):
     permission_classes = [AllowAny]  # Allow anyone to access this endpoint
@@ -259,17 +182,6 @@ class VerifyEmailView(APIView):
 
 
 
-# views.py
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.core.mail import send_mail
-from django.conf import settings
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
-import json
 
 class PasswordResetRequestView(APIView):
     permission_classes = [AllowAny]
@@ -318,14 +230,6 @@ class PasswordResetRequestView(APIView):
         
         
         
-# views.py
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
 
 class PasswordResetConfirmView(APIView):
     permission_classes = [AllowAny]
@@ -354,56 +258,6 @@ class PasswordResetConfirmView(APIView):
             return Response({"error": "Invalid token or user"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-# @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-# def user_profile(request):
-#     user = request.user
-#     return Response({
-#         "username": user.username,
-#         "first_name": user.first_name,
-#         "last_name": user.last_name,
-#         "email": user.email,
-#     })
-
-# @api_view(['PUT'])
-# @permission_classes([IsAuthenticated])
-# def update_profile(request):
-#     user = request.user
-    
-#     # Update user fields from request data with proper validation
-#     username = request.data.get('username')
-#     first_name = request.data.get('first_name')
-#     last_name = request.data.get('last_name')
-    
-#     if username:
-#         user.username = username
-    
-#     if first_name is not None:  # Allow empty string
-#         user.first_name = first_name
-        
-#     if last_name is not None:  # Allow empty string
-#         user.last_name = last_name
-    
-#     # Save the updated user
-#     user.save()
-    
-#     # Return updated user data
-#     return Response({
-#         'username': user.username,
-#         'first_name': user.first_name,
-#         'last_name': user.last_name,
-#         'email': user.email,
-#     })
-
-
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
-from .serializer import UserProfileSerializer
 
 class UserProfileViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -435,7 +289,6 @@ class UserProfileViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-
 class FoodPagination(PageNumberPagination):
     page_size = 12
     page_query_param = "page_size"
@@ -456,9 +309,11 @@ class FoodCategoryView(ModelViewSet):
     queryset = FoodType.objects.all()
     serializer_class = FoodTypeSerializer
 
+
 class FoodTopView(ModelViewSet):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
+
 
 @api_view(["GET"])
 def food_detail(request, food_slug):
@@ -468,7 +323,6 @@ def food_detail(request, food_slug):
         return Response(serializer.data)
     except Food.DoesNotExist:
         return Response({"error": "Food not found"}, status=404)
-
 
 
 class showCart(APIView):
@@ -692,62 +546,6 @@ def reject_booking(request, booking_id):
 
 
 
-# class ReviewFood(APIView):
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAuthenticated]
-
-#     def post(self, request, foodId):
-#         user =  request.user 
-#         rating = request.data.get("rating")
-#         comment = request.data.get("comment")
-#         if not(1 <= int(rating) <= 5):
-#             return Response({"err" : "rate between 1 to 5"})
-#         try:
-#             food = Food.objects.get(id = foodId)
-#         except:
-#             return Response({"err" : "Food item you want to rate does not exist"})
-        
-#         review , created = Review.objects.get_or_create(user= user, food_item = food)
-
-#         if created:
-#             food.food_rating_sum += int(rating)
-#             food.food_rating_count += 1
-#             food.save()
-#             print("********* creted", review)
-#         else:
-#             food.food_rating_sum = food.food_rating_sum - review.rating + rating
-#             food.save()
-#             print("********* existing", )
-
-#         review.rating = rating
-#         review.comment = comment
-#         review.save()
-#         food.updateAverage()
-#         return Response({"msg": "done review"})
-    
-#     def get(self, request, foodId):
-#         queryset = Review.objects.filter(food_item__id = foodId)
-#         serializer = ReviewSerializer(queryset, many=True)
-#         return Response(serializer.data)
-
-
-# @api_view(['DELETE'])
-# @permission_classes([IsAuthenticated])
-# def remove_cart_item(request, item_id):
-#     try:
-#         cart = Cart.objects.get(user=request.user)
-#         CartItem.objects.filter(cart=cart).delete()
-#         logger.info(f"Cart items cleared for user: {request.user.username}")
-#         return Response({'message': 'Cart cleared successfully'})
-#     except Cart.DoesNotExist:
-#         logger.warning(f"No cart found for user: {request.user.username}")
-#         return Response({'message': 'No cart to clear'})
-#     except Exception as e:
-#         logger.error(f"Error clearing cart: {str(e)}")
-#         return Response({'error': str(e)}, status=400)
-
-
-
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -949,99 +747,6 @@ def save_pending_order(request):
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    """Verify eSewa payment after redirect"""
-    try:
-        transaction_id = request.data.get('oid')
-        amount = request.data.get('amt')
-        ref_id = request.data.get('refId')
-
-        if not all([transaction_id, amount, ref_id]):
-            return Response({
-                'success': False,
-                'message': 'Missing required parameters'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        # Validate pending order
-        try:
-            pending_order = PendingOrder.objects.get(
-                transaction_id=transaction_id,
-                user=request.user
-            )
-            if float(amount) != float(pending_order.amount):
-                return Response({
-                    'success': False,
-                    'message': 'Amount mismatch with pending order'
-                }, status=status.HTTP_400_BAD_REQUEST)
-        except PendingOrder.DoesNotExist:
-            return Response({
-                'success': False,
-                'message': 'Invalid transaction ID'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        # Verify payment with eSewa
-        verification_url = os.getenv('ESEWA_VERIFICATION_URL', 'https://esewa.com.np/epay/transrec')
-        payload = {
-            'amt': amount,
-            'rid': ref_id,
-            'pid': transaction_id,
-            'scd': os.getenv('ESEWA_MERCHANT_CODE', 'EPAYTEST')
-        }
-
-        response = requests.post(verification_url, payload)
-        try:
-            root = ElementTree.fromstring(response.text)
-            response_code = root.find('response_code').text
-        except ElementTree.ParseError:
-            logger.error(f"Invalid XML response from eSewa: {response.text}")
-            return Response({
-                'success': False,
-                'message': 'Invalid response from eSewa'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        if response_code == 'Success':
-            user = request.user
-            cart = Cart.objects.get(user=user)
-            cart_items = CartItem.objects.filter(cart=cart)
-
-            # Create order
-            order = Order.objects.create(
-                user=user,
-                transaction_id=transaction_id,
-                amount=amount,
-                payment_method='esewa',
-                status='completed',
-                special_instructions=pending_order.special_instructions
-            )
-
-            # Clear cart and pending order
-            cart_items.delete()
-            pending_order.delete()
-
-            return Response({
-                'success': True,
-                'message': 'Payment verified successfully',
-                'transaction_id': transaction_id,
-                'order_id': order.id
-            })
-        else:
-            logger.warning(f"eSewa verification failed: {response.text}")
-            return Response({
-                'success': False,
-                'message': 'Payment verification failed',
-                'response': response.text
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-    except Exception as e:
-        logger.error(f"Error verifying eSewa payment: {str(e)}", exc_info=True)
-        return Response({
-            'success': False,
-            'message': 'An error occurred while verifying payment',
-            'error': str(e)
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
 
 from django.db import IntegrityError
 
@@ -1125,10 +830,6 @@ def update_delete_review(request, food_slug, review_id):
 
 
 
-
-
-
-# Add to your views.py file
 import json
 import stripe
 from django.conf import settings
@@ -1137,7 +838,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-# Set your secret key
 stripe.api_key = "sk_test_51RGzEPEEI2zN8avgfwL5EM7hpXXCzYVF3P2Fn84f27CjjP5Ag2L6MoAEXcNas5SKksZ71nxeU7gfGqJEarOnfip300nqKCkKk0"
 
 @api_view(['POST'])
@@ -1150,14 +850,12 @@ def create_checkout_session(request):
         items = data.get('items', [])
         special_instructions = data.get('special_instructions', '')
         
-        # Create metadata for reference
         metadata = {
             'user_id': str(request.user.id),
             'special_instructions': special_instructions[:500],  # Limit metadata size
             'item_count': str(len(items))
         }
         
-        # Create line items for Stripe
         line_items = []
         for idx, item in enumerate(items):
             line_items.append({
@@ -1174,7 +872,6 @@ def create_checkout_session(request):
                 'quantity': item['quantity'],
             })
             
-            # Add some item details to metadata
             if idx < 5:  # Limit to first 5 items to prevent metadata size issues
                 metadata[f'item_{idx}'] = f"{item['name']} x{item['quantity']}"
         
@@ -1314,7 +1011,3 @@ def payment_success(request):
             'message': f'Error verifying payment: {str(e)}'
         }, status=400)
         
-
-
-
-

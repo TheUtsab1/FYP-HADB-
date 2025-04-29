@@ -199,7 +199,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [ BASE_DIR / "static" ]
+
 
 
 # STATIC_URL = '/static/'
@@ -225,17 +225,12 @@ SESSION_SAVE_EVERY_REQUEST = True
 # Ensure sessions are persistent (not expiring when the browser is closed)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
+
+
 # RAZORPAY_API_KEY = "rzp_test_UMgkOOx558UEJQ"
 # RAZORPAY_API_SECRET = "cOrHiQIi6bFZW4xg1K3owvXh"
 
-KHALTI_SECRET_KEY = 'b20505009f974f32b27cfe6cbf38acdf'
-KHALTI_PUBLIC_KEY = 'ba249fbad6bd4fa79caf3beb353c1748'
 
-
-
-from decouple import config
-ESEWA_MERCHANT_CODE = config('EPAYTEST', default='EPAYTEST')
-ESEWA_VERIFICATION_URL = config('https://esewa.com.np/epay/transrec', default='https://esewa.com.np/epay/transrec')
 
 
 # AUTH_USER_MODEL = 'overallBackend.User'  
