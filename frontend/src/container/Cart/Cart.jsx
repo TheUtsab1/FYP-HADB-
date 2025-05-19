@@ -21,13 +21,13 @@ const stripePromise = loadStripe(
 );
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState([]);
+const [cartItems, setCartItems] = useState([]);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [showInvoicePopup, setShowInvoicePopup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [setOrderId] = useState(null);
-  const [setOrderDate] = useState(null);
+  const [orderId, setOrderId] = useState(null); // Fixed
+  const [orderDate, setOrderDate] = useState(null); // Fixed
   const [user, setUser] = useState(null);
   const [paymentMessage, setPaymentMessage] = useState(null);
   const [invoiceData, setInvoiceData] = useState(null);
